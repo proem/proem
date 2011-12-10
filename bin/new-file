@@ -29,7 +29,20 @@ $header = <<<EOD
  */
 
 
+/**
+ * @namespace Proem\
+ */
+namespace Proem\;
 
+/**
+ * Proem\
+ *
+ *
+ */
+class
+{
+
+}
 EOD;
 
 if ($argc == 2) {

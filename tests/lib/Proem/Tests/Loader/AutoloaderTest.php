@@ -20,12 +20,12 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
 
     public function getData()
     {
-        return array(
-            array('\\Namespaced\\Foo', 'Namespaced\\Foo',   'Including Namespaced\Foo class'),
-            array('\\Pear_Foo',        'Pear_Foo',          'Including Pear_Foo class'),
-            array('\\Namespaced\\Bar', '\\Namespaced\\Bar', 'Including \Namespaced\Bar class'),
-            array('\\Pear_Bar',        '\\Pear_Bar',        'Including \Pear_Bar class')
-        );
+        return [
+            ['\\Namespaced\\Foo', 'Namespaced\\Foo',   'Including Namespaced\Foo class'],
+            ['\\Pear_Foo',        'Pear_Foo',          'Including Pear_Foo class'],
+            ['\\Namespaced\\Bar', '\\Namespaced\\Bar', 'Including \Namespaced\Bar class'],
+            ['\\Pear_Bar',        '\\Pear_Bar',        'Including \Pear_Bar class']
+        ];
     }
 
 }

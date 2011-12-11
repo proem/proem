@@ -4,9 +4,6 @@ namespace Proem\Tests;
 
 use Proem\Proem;
 
-require_once 'PHPUnit/Autoload.php';
-require_once 'lib/Proem/Proem.php';
-
 class ProemTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiate()

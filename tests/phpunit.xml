@@ -1,4 +1,4 @@
-<phpunit color="true">
+<phpunit color="true" bootstrap="bootstrap.php">
     <testsuite name="Proem Test Suite">
         <directory>./</directory>
     </testsuite>

@@ -7,5 +7,5 @@ use Proem\Loader\Autoloader;
 $loader = new AutoLoader();
 $loader->registerNamespaces([
     'Proem\\Tests'  => 'tests/lib',
-    'Proem'       => 'lib'
-])->registerPearPrefix('PHPUnit_', '/usr/share/php/PHPUnit')->register();
+    'Proem'         => 'lib'
+])->register();

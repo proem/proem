@@ -24,16 +24,13 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Loader
  */
 namespace Proem\Loader;
 
 /**
- * Proem\
- *
- *
+ * Proem\Autoloader
  */
 class Autoloader
 {
@@ -48,8 +45,8 @@ class Autoloader
      */
     public function registerNamespaces(array $namespaces)
     {
-        foreach ($namespaces as $namespace => $path) {
-            $this->registerNamespace($namespace, $path);
+        foreach ($namespaces as $namespace => $paths) {
+            $this->registerNamespace($namespace, $paths);
         }
         return $this;
     }
@@ -61,9 +58,9 @@ class Autoloader
      * @param array|string $paths     The path to the namespace
      * @return Proem\Loader\Autoloader
      */
-    public function registerNamespace($namespace, $path)
+    public function registerNamespace($namespace, $paths)
     {
-        $this->namespaces[$namespace] = $path;
+        $this->namespaces[$namespace] = (array) $paths;
         return $this;
     }
 
@@ -75,8 +72,8 @@ class Autoloader
      */
     public function registerPearPrefixes(array $classes)
     {
-        foreach ($classes as $prefix => $path) {
-            $this->registerPearPrefix($prefix, $path);
+        foreach ($classes as $prefix => $paths) {
+            $this->registerPearPrefix($prefix, $paths);
         }
         return $this;
     }
@@ -88,9 +85,9 @@ class Autoloader
      * @param array|string $paths   The path
      * @return Proem\Loader\Autoloader
      */
-    public function registerPearPrefix($prefix, $path)
+    public function registerPearPrefix($prefix, $paths)
     {
-        $this->pearPrefixes[$prefix] = $path;
+        $this->pearPrefixes[$prefix] = (array) $paths;
         return $this;
     }
 
@@ -99,7 +96,7 @@ class Autoloader
      */
     public function register()
     {
-        spl_autoload_register(array($this, 'load'), true);
+        spl_autoload_register([$this, 'load'], true);
     }
 
     /**
@@ -131,31 +128,36 @@ class Autoloader
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);
             $normalized = str_replace('\\', '/', $namespace) . '/' . str_replace('_', '/', $className) . '.php';
-            foreach ($this->namespaces as $space => $path) {
+            foreach ($this->namespaces as $space => $paths) {
                 if (strpos($namespace, $space) !== 0) {
                     continue;
                 }
 
-                $file = $path . '/' . $normalized;
+                var_dump($paths);
 
-                if (is_file($file)) {
-                    return $file;
+                foreach ($paths as $path) {
+                    $file = $path . '/' . $normalized;
+
+                    if (is_file($file)) {
+                        return $file;
+                    }
                 }
             }
 
         } else {
             $normalized = str_replace('_', '/', $class) . '.php';
-            foreach ($this->pearPrefixes as $prefix => $path) {
+            foreach ($this->pearPrefixes as $prefix => $paths) {
                 if (0 !== strpos($class, $prefix)) {
                     continue;
                 }
 
-                $file = $path . '/' . $normalized;
-                if (is_file($file)) {
-                    return $file;
+                foreach ($paths as $path) {
+                    $file = $path . '/' . $normalized;
+                    if (is_file($file)) {
+                        return $file;
+                    }
                 }
             }
-
         }
     }
 }

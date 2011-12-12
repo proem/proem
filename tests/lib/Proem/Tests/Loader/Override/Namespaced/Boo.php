@@ -6,6 +6,6 @@ class Boo
 {
     public function getMessage()
     {
-        return 'original';
+        return 'override';
     }
 }

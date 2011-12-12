@@ -3,6 +3,7 @@
 namespace Proem\Tests\Proem\Loader;
 
 use Proem\Loader\Autoloader;
+use Namespaced;
 
 class AutoloaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,11 +22,22 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     public function getData()
     {
         return [
-            ['\\Namespaced\\Foo', 'Namespaced\\Foo',   'Including Namespaced\Foo class'],
-            ['\\Pear_Foo',        'Pear_Foo',          'Including Pear_Foo class'],
-            ['\\Namespaced\\Bar', '\\Namespaced\\Bar', 'Including \Namespaced\Bar class'],
-            ['\\Pear_Bar',        '\\Pear_Bar',        'Including \Pear_Bar class']
+            ['\Namespaced\Foo', 'Namespaced\Foo',   'Including Namespaced\Foo class'],
+            ['\Pear_Foo',       'Pear_Foo',         'Including Pear_Foo class'],
+            ['\Namespaced\Bar', '\Namespaced\Bar',  'Including \Namespaced\Bar class'],
+            ['\Pear_Bar',       '\Pear_Bar',        'Including \Pear_Bar class']
         ];
     }
 
+    public function testOverload()
+    {
+        $loader = new AutoLoader();
+        $loader->registerNamespace('Namespaced', [
+            __DIR__ . '/Override',
+            __DIR__ . '/Fixtures'
+        ]);
+        $loader->load('Namespaced\Boo');
+        $boo = new Namespaced\Boo;
+        $this->assertEquals($boo->getMessage(), 'override', 'Including overriden Proem\Boo');
+    }
 }

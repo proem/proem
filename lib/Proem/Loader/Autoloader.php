@@ -110,7 +110,7 @@ class Autoloader
     public function load($class)
     {
         if ($file = $this->locate($class)) {
-            require_once $file;
+            include $file;
         }
     }
 

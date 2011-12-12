@@ -133,8 +133,6 @@ class Autoloader
                     continue;
                 }
 
-                var_dump($paths);
-
                 foreach ($paths as $path) {
                     $file = $path . '/' . $normalized;
 

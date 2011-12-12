@@ -6,6 +6,6 @@ use Proem\Loader\Autoloader;
 
 $loader = new AutoLoader();
 $loader->registerNamespaces([
-    'Proem\\Tests'  => 'tests/lib',
+    'Proem\Tests'   => 'tests/lib',
     'Proem'         => 'lib'
 ])->register();

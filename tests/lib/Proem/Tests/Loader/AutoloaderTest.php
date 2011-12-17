@@ -20,6 +20,19 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(class_exists($className), $message);
     }
 
+    /**
+     * @dataProvider getData
+     */
+    public function testRegister($className, $testClassName, $message)
+    {
+        (new AutoLoader())
+            ->registerNamespace('Namespaced', __DIR__ . '/Fixtures')
+            ->registerPearPrefix('Pear_', __DIR__ . '/Fixtures')
+            ->register();
+
+        $this->assertTrue(class_exists($className), $message);
+    }
+
     public function getData()
     {
         return [

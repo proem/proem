@@ -97,6 +97,7 @@ class Autoloader
     public function register()
     {
         spl_autoload_register([$this, 'load'], true);
+        return $this;
     }
 
     /**
@@ -109,6 +110,7 @@ class Autoloader
         if ($file = $this->locate($class)) {
             include $file;
         }
+        return $this;
     }
 
     /**
@@ -118,7 +120,7 @@ class Autoloader
      *
      * @return string|null The path, if found
      */
-    public function locate($class)
+    private function locate($class)
     {
         if ($class[0] == '\\') {
             $class = substr($class, 1);

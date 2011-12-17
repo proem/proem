@@ -12,10 +12,11 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoad($className, $testClassName, $message)
     {
-        $loader = new AutoLoader();
-        $loader->registerNamespace('Namespaced', __DIR__ . '/Fixtures');
-        $loader->registerPearPrefix('Pear_', __DIR__ . '/Fixtures');
-        $loader->load($testClassName);
+        (new AutoLoader())
+            ->registerNamespace('Namespaced', __DIR__ . '/Fixtures')
+            ->registerPearPrefix('Pear_', __DIR__ . '/Fixtures')
+            ->load($testClassName);
+
         $this->assertTrue(class_exists($className), $message);
     }
 
@@ -31,13 +32,15 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverload()
     {
-        $loader = new AutoLoader();
-        $loader->registerNamespace('Namespaced', [
-            __DIR__ . '/Override',
-            __DIR__ . '/Fixtures'
-        ]);
-        $loader->load('Namespaced\Boo');
+        (new AutoLoader())
+            ->registerNamespace('Namespaced', [
+                __DIR__ . '/Override',
+                __DIR__ . '/Fixtures'
+            ])
+            ->load('Namespaced\Boo');
+
         $boo = new Namespaced\Boo;
+
         $this->assertEquals($boo->getMessage(), 'override', 'Including overriden Proem\Boo');
     }
 }

@@ -129,14 +129,14 @@ class Autoloader
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);
-            $normalized = str_replace('\\', '/', $namespace) . '/' . str_replace('_', '/', $className) . '.php';
+            $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
             foreach ($this->namespaces as $space => $paths) {
                 if (strpos($namespace, $space) !== 0) {
                     continue;
                 }
 
                 foreach ($paths as $path) {
-                    $file = $path . '/' . $normalized;
+                    $file = $path . DIRECTORY_SEPARATOR . $normalized;
 
                     if (is_file($file)) {
                         return $file;
@@ -145,14 +145,14 @@ class Autoloader
             }
 
         } else {
-            $normalized = str_replace('_', '/', $class) . '.php';
+            $normalized = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
             foreach ($this->pearPrefixes as $prefix => $paths) {
                 if (0 !== strpos($class, $prefix)) {
                     continue;
                 }
 
                 foreach ($paths as $path) {
-                    $file = $path . '/' . $normalized;
+                    $file = $path . DIRECTORY_SEPARATOR . $normalized;
                     if (is_file($file)) {
                         return $file;
                     }

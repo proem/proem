@@ -1,3 +1,3 @@
 #!/bin/bash
 
-phpunit --colors --verbose --configuration tests/phpunit.xml
+phpunit --colors --debug --verbose --configuration tests/phpunit.xml

@@ -10,4 +10,4 @@
 
 Website:            http://proemframework.org
 Code:               http://github.com/proem/proem
-irc:                #proem @ irc.freenode.net
+irc:                #proem on irc.freenode.net

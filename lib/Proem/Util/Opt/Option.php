@@ -39,6 +39,7 @@ class Option
     private $is_required        = false;
     private $is_type;
     private $is_object;
+    private $is_classof;
     private $unless             = [];
     private $type_validators    = [];
 
@@ -98,6 +99,12 @@ class Option
         return $this;
     }
 
+    public function classof($class)
+    {
+        $this->is_classof = $class;
+        return $this;
+    }
+
     public function validate($options) {
         if ($this->unless) {
             $keys = array_keys($options);
@@ -112,7 +119,7 @@ class Option
             }
         }
 
-        if ($this->is_type) {
+        if ($this->is_type && $this->value) {
             if (isset($this->type_validators[$this->is_type])) {
                 $func = $this->type_validators[$this->is_type];
                 if (!$func($this->value)) {
@@ -123,9 +130,17 @@ class Option
             }
         }
 
-        if ($this->is_object) {
-            if (!$this->value instanceof $this->is_object) {
-                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
+        if ($this->is_object && $this->value) {
+            if (is_object($this->value)) {
+                if (!$this->value instanceof $this->is_object) {
+                    throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
+                }
+            }
+        }
+
+        if ($this->is_classof && $this->value) {
+            if (!$this->value == $this->is_classof && !is_subclass_of($this->is_classof, $this->value)) {
+                throw new \InvalidArgumentException(' is required to be a string representation of the class of type ' . $this->is_classof);
             }
         }
 

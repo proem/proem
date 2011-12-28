@@ -26,29 +26,8 @@
 
 namespace Proem\Tests\Util\Opt\Fixtures;
 
-use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
+use Proem\Proem;
 
-class OptionFixture2
+class ProemFixture extends Proem
 {
-    use Options;
-
-    public function __construct(array $options = array())
-    {
-        $this->options = $this->setOptions([
-            'foo' => (new Option())->required()->unless('bar'),
-            'obj' => (new Option())->classof('Proem\Proem')
-        ], $options);
-    }
-
-    public function getFoo()
-    {
-        return $this->options->foo;
-    }
-
-    public function getBar()
-    {
-        return $this->options->bar;
-    }
-
 }

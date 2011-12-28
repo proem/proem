@@ -106,7 +106,8 @@ class OptionTest extends \PHPUnit_Framework_TestCase
     public function testUnless()
     {
         $fixture = new OptionFixture2([
-            'bar' => 'bar!'
+            'bar' => 'bar!',
+            'obj' => 'ProemFixture'
         ]);
 
         $this->assertEquals($fixture->getBar(), 'bar!');

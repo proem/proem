@@ -27,6 +27,7 @@
 namespace Proem\Tests;
 
 use Proem\Tests\Util\Opt\Fixtures\OptionFixture,
+    Proem\Tests\Util\Opt\Fixtures\OptionFixture2,
     Proem\Proem;
 
 class OptionTest extends \PHPUnit_Framework_TestCase
@@ -101,4 +102,14 @@ class OptionTest extends \PHPUnit_Framework_TestCase
             'bob' => new \StdClass
         ]);
     }
+
+    public function testUnless()
+    {
+        $fixture = new OptionFixture2([
+            'bar' => 'bar!'
+        ]);
+
+        $this->assertEquals($fixture->getBar(), 'bar!');
+    }
+
 }

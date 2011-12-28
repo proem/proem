@@ -49,8 +49,10 @@ trait Options
             try {
                 $value->validate($options);
                 $defaults[$key] = $value->getValue();
-            } catch (InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
                 throw new \InvalidArgumentException($key . $e->getMessage());
+            } catch (\RuntimeException $e) {
+                throw new \RuntimeException($e->getMessage());
             }
         }
         return (object) $defaults;

@@ -38,6 +38,7 @@ class Option
     private $value;
     private $is_required        = false;
     private $is_type;
+    private $is_object;
     private $unless             = [];
     private $type_validators    = [];
 
@@ -82,11 +83,18 @@ class Option
         } else {
             $this->unless[] = $options;
         }
+        return $this;
     }
 
     public function type($type)
     {
         $this->is_type = $type;
+        return $this;
+    }
+
+    public function object($object)
+    {
+        $this->is_object = $object;
         return $this;
     }
 
@@ -100,7 +108,7 @@ class Option
 
         if ($this->is_required) {
             if (!isset($this->value)) {
-                throw new \InvalidArgumentException(' is required');
+                throw new \InvalidArgumentException(' is a required option');
             }
         }
 
@@ -110,8 +118,17 @@ class Option
                 if (!$func($this->value)) {
                     throw new \InvalidArgumentException(' is required to be of type ' . $this->is_type);
                 }
+            } else {
+                throw new \RuntimeException('No validator found for type ' . $this->is_type);
             }
         }
+
+        if ($this->is_object) {
+            if (!$this->value instanceof $this->is_object) {
+                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
+            }
+        }
+
         return true;
     }
 }

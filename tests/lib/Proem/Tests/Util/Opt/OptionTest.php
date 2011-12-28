@@ -113,4 +113,16 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($fixture->getBar(), 'bar!');
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidObject()
+    {
+        $fixture = new OptionFixture2([
+            'emptytest' => false
+        ]);
+
+        $this->assertEquals($fixture->getBar(), 'bar!');
+    }
+
 }

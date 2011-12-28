@@ -43,7 +43,9 @@ class Option
     private $unless             = [];
     private $type_validators    = [];
 
-    public function __construct($value = null) {
+
+
+    public function __construct($value = __FILE__) {
         $this->value = $value;
 
         $this
@@ -114,12 +116,12 @@ class Option
         }
 
         if ($this->is_required) {
-            if (!isset($this->value)) {
+            if ($this->value === __FILE__) {
                 throw new \InvalidArgumentException(' is a required option');
             }
         }
 
-        if ($this->is_type && $this->value) {
+        if ($this->is_type && $this->value !== __FILE__) {
             if (isset($this->type_validators[$this->is_type])) {
                 $func = $this->type_validators[$this->is_type];
                 if (!$func($this->value)) {
@@ -130,15 +132,13 @@ class Option
             }
         }
 
-        if ($this->is_object && $this->value) {
-            if (is_object($this->value)) {
-                if (!$this->value instanceof $this->is_object) {
-                    throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
-                }
+        if ($this->is_object && $this->value !== __FILE__) {
+            if (!$this->value instanceof $this->is_object) {
+                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
             }
         }
 
-        if ($this->is_classof && $this->value) {
+        if ($this->is_classof && $this->value !== __FILE__) {
             if (!$this->value == $this->is_classof && !is_subclass_of($this->is_classof, $this->value)) {
                 throw new \InvalidArgumentException(' is required to be a string representation of the class of type ' . $this->is_classof);
             }

@@ -37,7 +37,8 @@ class OptionFixture2
     {
         $this->options = $this->setOptions([
             'foo' => (new Option())->required()->unless('bar'),
-            'obj' => (new Option())->classof('Proem\Proem')
+            'obj' => (new Option())->classof('Proem\Proem'),
+            'emptytest' => (new Option())->object('Proem\Proem')
         ], $options);
     }
 

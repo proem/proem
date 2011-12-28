@@ -36,9 +36,10 @@ class OptionFixture2
     public function __construct(array $options = array())
     {
         $this->options = $this->setOptions([
-            'foo' => (new Option())->required()->unless('bar'),
-            'obj' => (new Option())->classof('Proem\Proem'),
-            'emptytest' => (new Option())->object('Proem\Proem')
+            'foo'           => (new Option())->required()->unless('bar'),
+            'obj'           => (new Option())->classof('Proem\Proem'),
+            'emptytest'     => (new Option())->object('Proem\Proem'),
+            'custom-arg'    => (new Option())->addValidator('custom', function($value) { return preg_match('/[a-z]/', $value); })->type('custom')
         ], $options);
     }
 

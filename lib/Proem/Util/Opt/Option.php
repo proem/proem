@@ -125,7 +125,7 @@ class Option
             if (isset($this->type_validators[$this->is_type])) {
                 $func = $this->type_validators[$this->is_type];
                 if (!$func($this->value)) {
-                    throw new \InvalidArgumentException(' is required to be of type ' . $this->is_type);
+                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
                 }
             } else {
                 throw new \RuntimeException('No validator found for type ' . $this->is_type);

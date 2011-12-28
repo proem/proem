@@ -121,8 +121,24 @@ class OptionTest extends \PHPUnit_Framework_TestCase
         $fixture = new OptionFixture2([
             'emptytest' => false
         ]);
-
-        $this->assertEquals($fixture->getBar(), 'bar!');
     }
 
+    public function testCustomValidatorPass()
+    {
+        $fixture = new OptionFixture2([
+            'foo' => 100,
+            'custom-arg' => "hello"
+        ]);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testCustomValidatorFail()
+    {
+        $fixture = new OptionFixture2([
+            'foo' => 100,
+            'custom-arg' => 100
+        ]);
+    }
 }

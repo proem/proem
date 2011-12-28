@@ -36,12 +36,29 @@ namespace Proem\Util\Opt;
 class Option
 {
     private $value;
-    private $is_required = false;
+    private $is_required        = false;
     private $is_type;
-    private $unless = [];
+    private $unless             = [];
+    private $type_validators    = [];
 
     public function __construct($value = null) {
         $this->value = $value;
+
+        $this
+            ->addValidator('array',     function($value) { return is_array($value); })
+            ->addValidator('bool',      function($value) { return is_bool($value); })
+            ->addValidator('float',     function($value) { return is_float($value); })
+            ->addValidator('int',       function($value) { return is_int($value); })
+            ->addValidator('callable',  function($value) { return is_callable($value); })
+            ->addValidator('object',    function($value) { return is_object($value); });
+    }
+
+    public function addValidator($type, $callback, $override = false)
+    {
+        if (!isset($this->type_validators[$type]) || $override) {
+            $this->type_validators[$type] = $callback;
+        }
+        return $this;
     }
 
     public function setValue($value) {
@@ -87,6 +104,14 @@ class Option
             }
         }
 
+        if ($this->is_type) {
+            if (isset($this->type_validators[$this->is_type])) {
+                $func = $this->type_validators[$this->is_type];
+                if (!$func($this->value)) {
+                    throw new \InvalidArgumentException(' is required to be of type ' . $this->is_type);
+                }
+            }
+        }
         return true;
     }
 }

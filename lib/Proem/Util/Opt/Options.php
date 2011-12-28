@@ -31,62 +31,28 @@
 namespace Proem\Util\Opt;
 
 /**
- * Proem\Util\Opt\Option
+ * Proem\Util\Opt\Options
  */
-class Option
+trait Options
 {
-    private $value;
-    private $is_required = false;
-    private $is_type;
-    private $unless = [];
-
-    public function __construct($value = null) {
-        $this->value = $value;
-    }
-
-    public function setValue($value) {
-        $this->value = $value;
-        return $this;
-    }
-
-    public function getValue() {
-        return $this->value;
-    }
-
-    public function required() {
-        $this->is_required = true;
-        return $this;
-    }
-
-    public function unless($options)
+    public function setOptions($defaults, $options)
     {
-        if (is_array($options)) {
-            $this->unless = $options;
-        } else {
-            $this->unless[] = $options;
-        }
-    }
-
-    public function type($type)
-    {
-        $this->is_type = $type;
-        return $this;
-    }
-
-    public function validate($options) {
-        if ($this->unless) {
-            $keys = array_keys($options);
-            if (!count(array_diff($this->unless, array_keys($options)))) {
-                $this->is_required = false;
+        foreach ($options as $key => $value) {
+            if (isset($defaults[$key])) {
+                $defaults[$key]->setValue($value);
+            } else {
+                $defaults[$key] = new Option($value);
             }
         }
 
-        if ($this->is_required) {
-            if (!isset($this->value)) {
-                throw new \InvalidArgumentException(' is required');
+        foreach ($defaults as $key => $value) {
+            try {
+                $value->validate($options);
+                $defaults[$key] = $value->getValue();
+            } catch (InvalidArgumentException $e) {
+                throw new \InvalidArgumentException($key . $e->getMessage());
             }
         }
-
-        return true;
+        return (object) $defaults;
     }
 }

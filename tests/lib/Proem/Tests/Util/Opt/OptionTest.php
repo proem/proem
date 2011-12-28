@@ -26,20 +26,20 @@
 
 namespace Proem\Tests;
 
-use Proem\Tests\Util\Opt\Fixtures\Option,
+use Proem\Tests\Util\Opt\Fixtures\OptionFixture,
     Proem\Proem;
 
 class OptionTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidOptions()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'something' => 'something',
             'bar'       => 'this is bar',
             'boo'       => ['key' => 'value'],
             'bob'       => new Proem
         ]);
-        $this->assertInstanceOf('Proem\Tests\Util\Opt\Fixtures\Option', $fixture);
+        $this->assertInstanceOf('Proem\Tests\Util\Opt\Fixtures\OptionFixture', $fixture);
         $this->assertEquals($fixture->getSomething(), 'something');
         $this->assertEquals($fixture->getFoo(), 'foo');
         $this->assertEquals($fixture->getBar(), 'this is bar');
@@ -52,7 +52,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBar()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'boo' => [],
             'bob' => new Proem
         ]);
@@ -63,7 +63,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBoo()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'bar' => 'this is bar',
             'bob' => new Proem
         ]);
@@ -74,7 +74,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBob()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'boo' => [],
             'bar' => 'this is bar'
         ]);
@@ -85,7 +85,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidBoo()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'boo' => false,
             'bob' => new Proem
         ]);
@@ -96,7 +96,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidBob()
     {
-        $fixture = new Option([
+        $fixture = new OptionFixture([
             'boo' => [],
             'bob' => new \StdClass
         ]);

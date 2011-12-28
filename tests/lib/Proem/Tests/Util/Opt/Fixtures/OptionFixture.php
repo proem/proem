@@ -26,19 +26,20 @@
 
 namespace Proem\Tests\Util\Opt\Fixtures;
 
-use Proem\Util\Opt\Option as Opt;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
-class Option
+class OptionFixture
 {
-    use Opt;
+    use Options;
 
     public function __construct(array $options = array())
     {
         $this->options = $this->setOptions([
-            'foo' => ['value' => 'foo'],
-            'bar' => ['required' => true],
-            'boo' => ['required' => true, 'type' => 'array'],
-            'bob' => ['required' => true, 'type' => 'Proem\Proem']
+            'foo' => (new Option('foo')),
+            'bar' => (new Option())->required(),
+            'boo' => (new Option())->required()->type('array'),
+            'bob' => (new Option())->required()->type('Proem\Proem')
         ], $options);
     }
 

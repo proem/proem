@@ -35,10 +35,17 @@ namespace Proem\Util\Opt;
  */
 trait Options
 {
+    /**
+     * Merge default Options with user supplied arguments applying validation in the process.
+     *
+     * @param array $default Default Options
+     * @param array $options User supplied Options
+     * @return array $defaults End result of merging default options with validated user options
+     */
     public function setOptions($defaults, $options)
     {
         foreach ($options as $key => $value) {
-            if (isset($defaults[$key])) {
+            if (isset($defaults[$key]) && ($defaults[$key] instanceof Option)) {
                 $defaults[$key]->setValue($value);
             } else {
                 $defaults[$key] = new Option($value);
@@ -46,13 +53,15 @@ trait Options
         }
 
         foreach ($defaults as $key => $value) {
-            try {
-                $value->validate($options);
-                $defaults[$key] = $value->getValue();
-            } catch (\InvalidArgumentException $e) {
-                throw new \InvalidArgumentException($key . $e->getMessage());
-            } catch (\RuntimeException $e) {
-                throw new \RuntimeException($e->getMessage());
+            if ($value instanceof Option) {
+                try {
+                    $value->validate($options);
+                    $defaults[$key] = $value->getValue();
+                } catch (\InvalidArgumentException $e) {
+                    throw new \InvalidArgumentException($key . $e->getMessage());
+                } catch (\RuntimeException $e) {
+                    throw new \RuntimeException($e->getMessage());
+                }
             }
         }
         return (object) $defaults;

@@ -43,21 +43,35 @@ class Option
     private $unless             = [];
     private $type_validators    = [];
 
-
-
+    /**
+     * Instantiate the Option object
+     *
+     * @param mixed $value
+     *
+     * We use the __FILE__ constant as a default here because
+     * it is unlikely to ever be used as an actual value
+     */
     public function __construct($value = __FILE__) {
         $this->value = $value;
 
         $this
-            ->addValidator('array',     function($value) { return is_array($value); })
-            ->addValidator('bool',      function($value) { return is_bool($value); })
-            ->addValidator('float',     function($value) { return is_float($value); })
-            ->addValidator('int',       function($value) { return is_int($value); })
-            ->addValidator('callable',  function($value) { return is_callable($value); })
-            ->addValidator('object',    function($value) { return is_object($value); });
+            ->addTypeValidator('array',     function($value) { return is_array($value); })
+            ->addTypeValidator('bool',      function($value) { return is_bool($value); })
+            ->addTypeValidator('float',     function($value) { return is_float($value); })
+            ->addTypeValidator('int',       function($value) { return is_int($value); })
+            ->addTypeValidator('callable',  function($value) { return is_callable($value); })
+            ->addTypeValidator('object',    function($value) { return is_object($value); });
     }
 
-    public function addValidator($type, $callback, $override = false)
+    /**
+     * Add a custom Type validator or override an existing validator
+     *
+     * @param string $type
+     * @param function $callback
+     * @param bool $override
+     * @return Option
+     */
+    public function addTypeValidator($type, $callback, $override = false)
     {
         if (!isset($this->type_validators[$type]) || $override) {
             $this->type_validators[$type] = $callback;
@@ -65,20 +79,42 @@ class Option
         return $this;
     }
 
+    /**
+     * Set the value of this Option object
+     *
+     * @param mixed $value
+     * @return Option
+     */
     public function setValue($value) {
         $this->value = $value;
         return $this;
     }
 
+    /**
+     * Get the value of this Option object
+     *
+     * @return mixed $this->value
+     */
     public function getValue() {
         return $this->value;
     }
 
+    /**
+     * Set this Option as required
+     *
+     * @return Option
+     */
     public function required() {
         $this->is_required = true;
         return $this;
     }
 
+    /**
+     * Disable this Option from being required if some other argument(s) has been provided
+     *
+     * @param string|array $options
+     * @return Option
+     */
     public function unless($options)
     {
         if (is_array($options)) {
@@ -89,25 +125,55 @@ class Option
         return $this;
     }
 
+    /**
+     * Force this Option value to be of a certain type
+     *
+     * Once specified, this Option's value will then be processed through
+     * an appropriate "type" validator.
+     *
+     * @param string $type
+     * @return Option
+     */
     public function type($type)
     {
         $this->is_type = $type;
         return $this;
     }
 
+    /**
+     * Force this Option's value to be an instance of a particular object
+     *
+     * @param string $object A string representation of a class name
+     * @return Option
+     */
     public function object($object)
     {
         $this->is_object = $object;
         return $this;
     }
 
+    /**
+     * Force this Option's value to be a string representation of a
+     * particular class or subclass
+     *
+     * @param string $class
+     * @return Option
+     */
     public function classof($class)
     {
         $this->is_classof = $class;
         return $this;
     }
 
-    public function validate($options) {
+    /**
+     * Validate this Option's value according to specified rules.
+     *
+     * @param array $options An array of all options that may have been processed alongside this Option
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     * @return true
+     */
+    public function validate($options = []) {
         if ($this->unless) {
             $keys = array_keys($options);
             if (!count(array_diff($this->unless, array_keys($options)))) {

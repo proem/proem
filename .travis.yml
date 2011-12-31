@@ -6,3 +6,7 @@ php:
 script: phpunit --configuration tests/phpunit.xml
 before_script: cp tests/bootstrap-dist.php tests/bootstrap.php
 after_script:  rm tests/bootstrap.php
+
+notifications:
+  irc:
+    - "irc.freenode.org#proem"

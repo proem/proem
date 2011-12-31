@@ -9,4 +9,6 @@ after_script:  rm tests/bootstrap.php
 
 notifications:
   irc:
+    on_success: always
+    on_failure: always
     - "irc.freenode.net#proem"

@@ -30,6 +30,8 @@
  */
 namespace Proem\Util\Opt;
 
+use Proem\Util\Callback;
+
 /**
  * Proem\Util\Opt\Option
  */
@@ -189,8 +191,8 @@ class Option
 
         if ($this->is_type && $this->value !== __FILE__) {
             if (isset($this->type_validators[$this->is_type])) {
-                $func = $this->type_validators[$this->is_type];
-                if (!$func($this->value)) {
+                //$func = $this->type_validators[$this->is_type];
+                if (!(new Callback($this->type_validators[$this->is_type], [$this->value]))->call()) {
                     throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
                 }
             } else {

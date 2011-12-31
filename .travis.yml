@@ -9,4 +9,4 @@ after_script:  rm tests/bootstrap.php
 
 notifications:
   irc:
-    - "irc.freenode.org#proem"
+    - "irc.freenode.net#proem"

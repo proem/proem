@@ -26,37 +26,49 @@
 
 
 /**
- * @namespace Proem\
+ * @namespace Proem\Tests\Util
  */
-namespace Proem\Util;
+namespace Proem\Tests\Util;
+
+use Proem\Util\Callback;
 
 /**
- * Proem\Util\Callback
- *
- * A wrapper around call_user_func_array
+ * Proem\Tests\Util\CallbackTest
  */
-class Callback
+class CallbackTest extends \PHPUnit_Framework_TestCase
 {
-    public $callback;
-    public $params = array();
-
-    /**
-     * Instantiate the Callback object
-     *
-     * @param callable $callback A valid callback
-     * @param Mixed $params Params passed to the callback
-     */
-    public function __construct(callable $callback, $params = array())
+    public function testSimpleAnonFunction()
     {
-        $this->callback = $callback;
-        $this->params   = is_array($params) ? $params : [$params];
+        $this->assertTrue((new Callback(function() { return true; }))->call());
     }
 
-    /**
-     * Execute the callback and return it's results.
-     */
-    public function call()
+    public function testCanPassSingleArg()
     {
-        return call_user_func_array($this->callback, $this->params);
+        $this->assertTrue((new Callback(function($var) { return $var; }, true))->call());
+    }
+
+    public function testCanPassMultipleArgs()
+    {
+        $this->assertEquals((new Callback(function($var1, $var2) { return count(func_get_args()); }, [1, 1]))->call(), 2);
+    }
+
+    public function someCallback()
+    {
+        return true;
+    }
+
+    public function testSomeCallbackWithinObject()
+    {
+        $this->assertTrue((new Callback([$this, 'someCallback']))->call());
+    }
+
+    public static function someStaticCallback()
+    {
+        return true;
+    }
+
+    public function testStaticCallback()
+    {
+        $this->assertTrue((new Callback(['Proem\Tests\Util\CallbackTest', 'someStaticCallback']))->call());
     }
 }

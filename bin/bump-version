@@ -32,5 +32,5 @@ fi
 
 echo "incremented to $major.$minor.$incr";
 
-sed "s/VERSION = '.*';/VERSION = '$major.$minor.$incr';/" lib/Proem/Proem.php > lib/Proem/Proem.php.new
+sed "s/VERSION = '.*';/VERSION = '$major.$minor.$incr';/" lib/Proem/Api/Proem.php > lib/Proem/Api/Proem.php.new
 mv lib/Proem/Api/Proem.php.new lib/Proem/Api/Proem.php

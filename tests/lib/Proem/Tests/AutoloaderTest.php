@@ -24,9 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests\Proem\Loader;
+namespace Proem\Tests;
 
-use Proem\Loader\Autoloader;
+use Proem\Autoloader;
 use Namespaced;
 
 class AutoloaderTest extends \PHPUnit_Framework_TestCase

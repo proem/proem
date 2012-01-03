@@ -27,7 +27,7 @@
 /**
  * @namespace Proem
  */
-namespace Proem;
+namespace Proem\Api;
 
 /**
  * Proem

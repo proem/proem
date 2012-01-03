@@ -34,4 +34,10 @@ class ProemTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Proem\Proem', new Proem);
     }
+
+    public function testCascadingFilesystem()
+    {
+        $proem = new Proem;
+        $this->assertTrue($proem->somethingNew());
+    }
 }

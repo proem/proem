@@ -27,7 +27,7 @@
 /**
  * @namespace Proem\Loader
  */
-namespace Proem\Loader;
+namespace Proem\Api;
 
 /**
  * Proem\Autoloader
@@ -107,8 +107,20 @@ class Autoloader
      */
     public function load($class)
     {
+        if ($class[0] == '\\') {
+            $class = substr($class, 1);
+        }
+
         if ($file = $this->locate($class)) {
-            include $file;
+            include_once $file;
+        } else {
+            if (substr($class, 0, 5) == 'Proem') {
+                $api_class = str_replace('Proem\\', 'Proem\\Api\\', $class);
+                if ($file = $this->locate($api_class)) {
+                    include_once $file;
+                    class_alias($api_class, $class);
+                }
+            }
         }
         return $this;
     }
@@ -122,10 +134,6 @@ class Autoloader
      */
     private function locate($class)
     {
-        if ($class[0] == '\\') {
-            $class = substr($class, 1);
-        }
-
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);

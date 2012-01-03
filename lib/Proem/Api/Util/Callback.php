@@ -28,7 +28,7 @@
 /**
  * @namespace Proem\
  */
-namespace Proem\Util;
+namespace Proem\Api\Util;
 
 /**
  * Proem\Util\Callback

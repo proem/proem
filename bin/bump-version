@@ -2,7 +2,7 @@
 
 option=$1;
 
-version=`grep 'VERSION' lib/Proem/Proem.php`
+version=`grep 'VERSION' lib/Proem/Api/Proem.php`
 set -- $version
 
 IFS="'"; declare -a Array=($*)
@@ -33,4 +33,4 @@ fi
 echo "incremented to $major.$minor.$incr";
 
 sed "s/VERSION = '.*';/VERSION = '$major.$minor.$incr';/" lib/Proem/Proem.php > lib/Proem/Proem.php.new
-mv lib/Proem/Proem.php.new lib/Proem/Proem.php
+mv lib/Proem/Api/Proem.php.new lib/Proem/Api/Proem.php

@@ -24,23 +24,28 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests\Util\Opt\Fixtures;
+namespace Proem\Tests\Util\Options\Fixtures;
 
-use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
+use Proem\Util\Options,
+    Proem\Util\Options\Option;
 
-class OptionFixture2
+class OptionsFixture
 {
     use Options;
 
     public function __construct(array $options = array())
     {
         $this->options = $this->setOptions([
-            'foo'           => (new Option())->required()->unless('bar'),
-            'obj'           => (new Option())->classof('Proem\Proem'),
-            'emptytest'     => (new Option())->object('Proem\Proem'),
-            'custom-arg'    => (new Option())->addTypeValidator('custom', function($value) { return preg_match('/[a-z]/', $value); })->type('custom')
+            'foo' => (new Option('foo')),
+            'bar' => (new Option())->required(),
+            'boo' => (new Option())->required()->type('array'),
+            'bob' => (new Option())->required()->object('Proem\Proem')
         ], $options);
+    }
+
+    public function getSomething()
+    {
+        return $this->options->something;
     }
 
     public function getFoo()
@@ -53,4 +58,13 @@ class OptionFixture2
         return $this->options->bar;
     }
 
+    public function getBoo()
+    {
+        return $this->options->boo;
+    }
+
+    public function getBob()
+    {
+        return $this->options->bob;
+    }
 }

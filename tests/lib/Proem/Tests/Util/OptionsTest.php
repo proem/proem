@@ -24,23 +24,23 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
+namespace Proem\Tests\Util;
 
-use Proem\Tests\Util\Opt\Fixtures\OptionFixture,
-    Proem\Tests\Util\Opt\Fixtures\OptionFixture2,
+use Proem\Tests\Util\Options\Fixtures\OptionsFixture,
+    Proem\Tests\Util\Options\Fixtures\OptionsFixture2,
     Proem\Proem;
 
-class OptionTest extends \PHPUnit_Framework_TestCase
+class OptionsTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidOptions()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'something' => 'something',
             'bar'       => 'this is bar',
             'boo'       => ['key' => 'value'],
             'bob'       => new Proem
         ]);
-        $this->assertInstanceOf('Proem\Tests\Util\Opt\Fixtures\OptionFixture', $fixture);
+        $this->assertInstanceOf('Proem\Tests\Util\Options\Fixtures\OptionsFixture', $fixture);
         $this->assertEquals($fixture->getSomething(), 'something');
         $this->assertEquals($fixture->getFoo(), 'foo');
         $this->assertEquals($fixture->getBar(), 'this is bar');
@@ -53,7 +53,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBar()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'boo' => [],
             'bob' => new Proem
         ]);
@@ -64,7 +64,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBoo()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'bar' => 'this is bar',
             'bob' => new Proem
         ]);
@@ -75,7 +75,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testMissingBob()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'boo' => [],
             'bar' => 'this is bar'
         ]);
@@ -86,7 +86,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidBoo()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'boo' => false,
             'bob' => new Proem
         ]);
@@ -97,7 +97,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidBob()
     {
-        $fixture = new OptionFixture([
+        $fixture = new OptionsFixture([
             'boo' => [],
             'bob' => new \StdClass
         ]);
@@ -105,7 +105,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
 
     public function testUnless()
     {
-        $fixture = new OptionFixture2([
+        $fixture = new OptionsFixture2([
             'bar' => 'bar!',
             'obj' => 'ProemFixture'
         ]);
@@ -118,14 +118,14 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidObject()
     {
-        $fixture = new OptionFixture2([
+        $fixture = new OptionsFixture2([
             'emptytest' => false
         ]);
     }
 
     public function testCustomValidatorPass()
     {
-        $fixture = new OptionFixture2([
+        $fixture = new OptionsFixture2([
             'foo' => 100,
             'custom-arg' => "hello"
         ]);
@@ -136,7 +136,7 @@ class OptionTest extends \PHPUnit_Framework_TestCase
      */
     public function testCustomValidatorFail()
     {
-        $fixture = new OptionFixture2([
+        $fixture = new OptionsFixture2([
             'foo' => 100,
             'custom-arg' => 100
         ]);

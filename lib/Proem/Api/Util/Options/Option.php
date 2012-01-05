@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Opt
+ * @namespace Proem\Api\Util\Options
  */
-namespace Proem\Api\Util\Opt;
+namespace Proem\Api\Util\Options;
 
 use Proem\Util\Callback;
 

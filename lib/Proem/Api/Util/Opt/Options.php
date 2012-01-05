@@ -26,7 +26,7 @@
 
 
 /**
- * @namespace Proem\Util\Opt
+ * @namespace Proem\Api\Util\Opt
  */
 namespace Proem\Api\Util\Opt;
 

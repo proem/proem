@@ -26,12 +26,12 @@
 
 
 /**
- * @namespace Proem\
+ * @namespace Proem\Api\Util
  */
 namespace Proem\Api\Util;
 
 /**
- * Proem\Util\Callback
+ * Proem\Api\Util\Callback
  *
  * A wrapper around call_user_func_array
  */

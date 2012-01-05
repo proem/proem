@@ -25,12 +25,12 @@
  */
 
 /**
- * @namespace Proem\Loader
+ * @namespace Proem\Api
  */
 namespace Proem\Api;
 
 /**
- * Proem\Autoloader
+ * Proem\Api\Autoloader
  */
 class Autoloader
 {
@@ -41,7 +41,7 @@ class Autoloader
      * Register an array of namespaces.
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Loader\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerNamespaces(array $namespaces)
     {
@@ -56,7 +56,7 @@ class Autoloader
      *
      * @param string       $namespace The namespace
      * @param array|string $paths     The path to the namespace
-     * @return Proem\Loader\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerNamespace($namespace, $paths)
     {
@@ -68,7 +68,7 @@ class Autoloader
      * Registers an array of classes using the Pear coding standard.
      *
      * @param array $classes
-     * @return Proem\Loader\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerPearPrefixes(array $classes)
     {
@@ -83,7 +83,7 @@ class Autoloader
      *
      * @param string       $prefix  The prefix
      * @param array|string $paths   The path
-     * @return Proem\Loader\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerPearPrefix($prefix, $paths)
     {

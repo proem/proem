@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem\Util\Opt
+ * @namespace Proem\Api\Util\Opt
  */
 namespace Proem\Api\Util\Opt;
 
 use Proem\Util\Callback;
 
 /**
- * Proem\Util\Opt\Option
+ * Proem\Api\Util\Opt\Option
  */
 class Option
 {

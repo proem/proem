@@ -25,14 +25,14 @@
  */
 
 /**
- * @namespace Proem
+ * @namespace Proem\Api
  */
 namespace Proem\Api;
 
 /**
- * Proem
+ * Proem\Api\Proem
  *
- * A simple class designed to store version information.
+ * The Proem boostrap wrapper (eventually)
  */
 class Proem
 {

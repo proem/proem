@@ -26,8 +26,6 @@ We have made available a PHP5.4 sandbox for users wishing to contibute to the pr
 
 If you are serious about helping out but don't have access to PHP5.4 please get in contact. I can set you up shell access to our sandbox and you can start contributing today.
 
-You can request access by making a ticket on the issue tracker and tagging it with the infrastrucure tag.
-
 #### Feeds & IRC
 Proem now has a dedicated twitter feed http://twitter.com/proem which will automatically post any commits as well as news. If you plan on helping out, you should follow this.
 

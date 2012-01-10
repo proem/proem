@@ -7,6 +7,11 @@ script: phpunit --configuration tests/phpunit.xml
 
 notifications:
   irc:
-    on_success: always
+    on_success: change
     on_failure: always
     - "irc.freenode.net#proem"
+
+branches:
+  only:
+    - master
+    - develop

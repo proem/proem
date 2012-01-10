@@ -3,7 +3,7 @@
 /**
  * The MIT License
  *
- * Copyright (c) 2010 - 2011 Tony R Quilkey <trq@proemframework.org>
+ * Copyright (c) 2010 - 2012 Tony R Quilkey <trq@proemframework.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,5 +36,5 @@ namespace Proem\Api;
  */
 class Proem
 {
-    const VERSION = '0.0.3';
+    const VERSION = '0.0.4';
 }

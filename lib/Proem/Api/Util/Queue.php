@@ -24,20 +24,16 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
 
-use Proem\Proem;
+/**
+ * @namespace Proem\Api\Util
+ */
+namespace Proem\Api\Util;
 
-class ProemTest extends \PHPUnit_Framework_TestCase
+/**
+ * Proem\Api\Util\Queue
+ */
+class Queue extends \SplPriorityQueue
 {
-    public function testCanInstantiate()
-    {
-        $this->assertInstanceOf('Proem\Proem', new Proem);
-    }
 
-    public function testCascadingFilesystem()
-    {
-        $proem = new Proem;
-        $this->assertTrue($proem->somethingNew());
-    }
 }

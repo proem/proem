@@ -24,20 +24,54 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
 
-use Proem\Proem;
+/**
+ * @namespace Proem\Api\Chain
+ */
+namespace Proem\Api\Chain;
 
-class ProemTest extends \PHPUnit_Framework_TestCase
+use Proem\Api\Chain;
+
+/**
+ * Proem\Api\Chain\Event
+ */
+abstract class Event
 {
-    public function testCanInstantiate()
-    {
-        $this->assertInstanceOf('Proem\Proem', new Proem);
-    }
+    /**
+     * inBound
+     *
+     * Define the method to be called on the way into the chain.
+     */
+    public abstract function inBound();
 
-    public function testCascadingFilesystem()
+    /**
+     * outBound
+     *
+     * Define the method to be called on the way out of the chain.
+     */
+    public abstract function outBound();
+
+    /**
+     * init
+     *
+     * Call inBound(), the next event in the chain, then outBound()
+     *
+     * @param Proem\Chain $chain
+     * @return Proem\Chain
+     */
+    public function init(Chain $chain)
     {
-        $proem = new Proem;
-        $this->assertTrue($proem->somethingNew());
+        $this->inBound();
+
+        if ($chain->hasEvents()) {
+            $event = $chain->getNextEvent();
+            if (is_object($event)) {
+                $event->init($chain);
+            }
+        }
+
+        $this->outBound();
+
+        return $this;
     }
 }

@@ -202,7 +202,7 @@ class Option
 
         if ($this->is_object && $this->value !== __FILE__) {
             if (!$this->value instanceof $this->is_object) {
-                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object);
+                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object . ', ' . get_class($this->value) . ' provided');
             }
         }
 

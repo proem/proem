@@ -24,17 +24,64 @@
  * THE SOFTWARE.
  */
 
+
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Event
  */
 namespace Proem\Api;
 
+use Proem\Util\Options,
+    Proem\Util\Options\Option;
+
 /**
- * Proem\Api\Proem
+ * Proem\Api\Event
  *
- * The Proem boostrap wrapper (eventually)
+ * A base Event implementation
  */
-class Proem
+class Event
 {
-    const VERSION = '0.1.0';
+    /**
+     * Make use of the Options trait
+     */
+    use Options;
+
+    /**
+     * Store options
+     *
+     * @var array
+     */
+    private $options;
+
+    /**
+     * Instantiate the Event and setup any options
+     *
+     * @param Array $options
+     * <code>
+     *   $this->options = $this->setOptions([
+     *       'name'      => (new Option())->required(),     // The name of this Event
+     *       'params'    => (new Option())->type('array')   // Additional parameters
+     *   ], $options);
+     * </code>
+     */
+    public function __construct(Array $options) {
+        $this->options = $this->setOptions([
+            'name'      => (new Option())->required(),
+            'params'    => (new Option())->type('array')
+        ], $options);
+    }
+
+    /**
+     * Retrieve the name of this event
+     */
+    public function getName() {
+        return $this->options->name;
+    }
+
+    /**
+     * Retrieve any parameters passed to this Event
+     */
+    public function getParams() {
+        return $this->options->params;
+    }
+
 }

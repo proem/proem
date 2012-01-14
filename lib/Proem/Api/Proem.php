@@ -36,5 +36,5 @@ namespace Proem\Api;
  */
 class Proem
 {
-    const VERSION = '0.0.5';
+    const VERSION = '0.1.0';
 }

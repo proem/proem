@@ -68,7 +68,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello trq', $asset->say());
     }
 
-    public function testSingleReturnsDifferentInstance()
+    public function testReturnsDifferentInstance()
     {
         $bar = new Asset;
         $bar->setAsset(function() {

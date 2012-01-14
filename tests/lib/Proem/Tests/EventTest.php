@@ -27,49 +27,78 @@
 namespace Proem\Tests;
 
 use Proem\Event,
-    Proem\Event\Base;
+    Proem\Event\Manager;
 
 class EventTest extends \PHPUnit_Framework_TestCase
 {
     private $event;
 
-    public function setUp()
-    {
-        $this->event = new Event;
-    }
-
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Event', $this->event);
+        $this->assertInstanceOf('Proem\Event', new Event(['name' => 'foo', 'params' => []]));
+        $this->assertInstanceOf('Proem\Event\Manager', new Manager);
     }
 
-    public function testCanExecute()
+    public function testCanPriority()
     {
-        $this->event->attach([
+        (new Manager)->attach([
             'name'      => 'do',
             'callback'  => function($e) {
-                echo "Registered first\n";
-                return "Hello";
+                echo "First";
             }
-        ]);
-
-        $this->event->attach([
+        ])->attach([
             'name'      => 'do',
             'priority'  => 100,
             'callback'  => function($e) {
-                var_dump($e);
-                echo "Registered second\n";
+                echo "Second";
+            }
+        ])->trigger(['name' => 'do']);
+
+        $this->expectOutputString('SecondFirst');
+    }
+
+    public function testUniquenessOfTriggers()
+    {
+        (new Manager)->attach([
+            'name'      => 'do',
+            'callback'  => function($e) {
+                echo "Yes";
+            }
+        ])
+        ->trigger(['name' => 'do'])
+        ->trigger(['name' => 'do']);
+
+        $this->expectOutputString('Yes');
+    }
+
+    public function testListenerReceivesParams()
+    {
+        (new Manager)->attach([
+            'name'      => 'do',
+            'callback'  => function($e) {
+                echo $e->getParams()['hello'];
+            }
+        ])
+        ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
+
+        $this->expectOutputString('trq');
+    }
+
+    public function testListenerCanTriggerCallback()
+    {
+        (new Manager)->attach([
+            'name'      => 'do',
+            'callback'  => function($e) {
+                return true;
+            }
+        ])
+        ->trigger([
+            'name' => 'do', 'callback' => function() {
+                echo "Callback";
             }
         ]);
 
-        $this->event->trigger([
-            'event' => new Base([
-                'name'      => 'do',
-                'params'    => ['a', 'b', 'c']
-            ]),
-            'callback'  => function($r) {
-                echo "$r\n";
-            }
-        ]);
+        $this->expectOutputString('Callback');
     }
+
 }

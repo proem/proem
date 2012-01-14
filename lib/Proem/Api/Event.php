@@ -26,68 +26,62 @@
 
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Event
  */
 namespace Proem\Api;
 
-use Proem\Util\Queue,
-    Proem\Util\Callback,
-    Proem\Util\Options,
+use Proem\Util\Options,
     Proem\Util\Options\Option;
 
 /**
  * Proem\Api\Event
  *
- * Manage the registration opf and triggering of custom events.
+ * A base Event implementation
  */
 class Event
 {
+    /**
+     * Make use of the Options trait
+     */
     use Options;
-    /**
-     * Store reigistered events in a priority queue
-     */
-    private $queue;
 
     /**
-     * Instantiate the Event manager
+     * Store options
+     *
+     * @var array
      */
-    public function __construct()
-    {
-        $this->queue = new Queue;
-    }
+    private $options;
 
-    public function attach(array $options)
-    {
-        $ops = $this->setOptions([
+    /**
+     * Instantiate the Event and setup any options
+     *
+     * @param Array $options
+     * <code>
+     *   $this->options = $this->setOptions([
+     *       'name'      => (new Option())->required(),     // The name of this Event
+     *       'params'    => (new Option())->type('array')   // Additional parameters
+     *   ], $options);
+     * </code>
+     */
+    public function __construct(Array $options) {
+        $this->options = $this->setOptions([
             'name'      => (new Option())->required(),
-            'callback'  => (new Option())->required()->type('callable'),
-            'priority'  => 0
+            'params'    => (new Option())->type('array')
         ], $options);
-
-        $this->queue->insert(array($ops->name, $ops->callback), $ops->priority);
     }
 
-    public function trigger(array $options)
-    {
-        $ops = $this->setOptions([
-            'name'      => (new Option())->required()->unless('event'),
-            'params'    => (new Option())->required()->unless('event')->type('array'),
-            'callback'  => (new Option())->type('callable'),
-            'context'   => (new Option())->type('object'),
-            'event'     => (new Option())->object('\Proem\Event\Base')
-        ], $options);
-
-        foreach ($this->queue as $event) {
-            if ($event[0] == $ops->name) {
-                $eventObj = $ops->event;
-                $eventObj = new $eventObj(['name' => $ops->name, 'params' => $ops->params]);
-                if ($return = $event[1]($eventObj)) {
-                    if (isset($ops->callback)) {
-                        $callback = new Callback($ops->callback, $return);
-                        $callback->call();
-                    }
-                }
-            }
-        }
+    /**
+     * Retrieve the name of this event
+     */
+    public function getName() {
+        return $this->options->name;
     }
+
+    /**
+     * Retrieve any parameters passed to this Event
+     */
+    public function getParams() {
+        return $this->options->params;
+    }
+
 }

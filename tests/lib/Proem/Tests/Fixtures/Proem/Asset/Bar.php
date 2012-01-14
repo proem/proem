@@ -24,17 +24,12 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Api
- */
-namespace Proem\Api;
+namespace Proem\Asset;
 
-/**
- * Proem\Api\Proem
- *
- * The Proem boostrap wrapper (eventually)
- */
-class Proem
+class Bar
 {
-    const VERSION = '0.0.5';
+    public function hello()
+    {
+        return "Hello from Bar";
+    }
 }

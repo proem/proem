@@ -24,17 +24,35 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Api
- */
-namespace Proem\Api;
+namespace Proem\Asset;
 
-/**
- * Proem\Api\Proem
- *
- * The Proem boostrap wrapper (eventually)
- */
-class Proem
+class Foo
 {
-    const VERSION = '0.0.5';
+    private $name;
+    private $bar;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setBar(Bar $bar)
+    {
+        $this->bar = $bar;
+    }
+
+    public function getBar()
+    {
+        return $this->bar;
+    }
+
+    public function say()
+    {
+        return "Hello " . $this->name;
+    }
 }

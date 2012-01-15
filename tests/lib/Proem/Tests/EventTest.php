@@ -101,4 +101,18 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('Callback');
     }
 
+    public function testTargetAndMethod()
+    {
+        (new Manager)->attach([
+            'name'      => 'do',
+            'callback'  => function($e) {
+                $this->assertInstanceOf('\Proem\Tests\EventTest', $e->getTarget());
+                $this->assertEquals('testTargetAndMethod', $e->getMethod());
+            }
+        ])
+        // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
+        // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
+        // This will need to be documented.
+        ->trigger(['name' => 'do', 'target' => $this, 'method' => __FUNCTION__]);
+    }
 }

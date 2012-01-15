@@ -111,6 +111,8 @@ class Manager
             'name'      => (new Option())->required(),
             'params'    => (new Option())->type('array'),
             'callback'  => (new Option())->type('callable'),
+            'target'    => (new Option())->type('object'),
+            'method'    => (new Option())->type('string'),
             'event'     => (new Option(new Event))->object('\Proem\Event')
         ], $options);
 
@@ -123,6 +125,8 @@ class Manager
                 } else {
                     $eventObj = new $eventObj;
                 }
+                $eventObj->setTarget($ops->target);
+                $eventObj->setMethod($ops->method);
                 if ($return = $event($eventObj)) {
                     if (isset($ops->callback)) {
                         (new Callback($ops->callback, $return))->call();

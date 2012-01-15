@@ -61,6 +61,7 @@ class Option
             ->addTypeValidator('bool',      function($value) { return is_bool($value); })
             ->addTypeValidator('float',     function($value) { return is_float($value); })
             ->addTypeValidator('int',       function($value) { return is_int($value); })
+            ->addTypeValidator('string',    function($value) { return is_string($value); })
             ->addTypeValidator('callable',  function($value) { return is_callable($value); })
             ->addTypeValidator('object',    function($value) { return is_object($value); });
     }

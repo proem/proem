@@ -76,12 +76,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
         (new Manager)->attach([
             'name'      => 'do',
             'callback'  => function($e) {
-                echo $e->getParams()['hello'];
+                $this->assertEquals('trq', $e->getParams()['hello']);
             }
         ])
         ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
-
-        $this->expectOutputString('trq');
     }
 
     public function testListenerCanTriggerCallback()
@@ -93,7 +91,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
             }
         ])
         ->trigger([
-            'name' => 'do', 'callback' => function() {
+            'name' => 'do', 'callback' => function($r) {
+                $this->assertTrue($r);
                 echo "Callback";
             }
         ]);

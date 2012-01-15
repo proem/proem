@@ -108,10 +108,10 @@ class Manager
     public function trigger(Array $options)
     {
         $ops = $this->setOptions([
-            'name'      => (new Option())->required()->unless('event'),
+            'name'      => (new Option())->required(),
             'params'    => (new Option())->type('array'),
             'callback'  => (new Option())->type('callable'),
-            'event'     => (new Option(new Event(['name' => $options['name']])))->object('\Proem\Event')
+            'event'     => (new Option(new Event))->object('\Proem\Event')
         ], $options);
 
         if (isset($this->queues[$ops->name])) {
@@ -119,9 +119,9 @@ class Manager
             foreach ($this->queues[$ops->name] as $event) {
                 $eventObj = $ops->event;
                 if (isset($ops->params)) {
-                    $eventObj = new $eventObj(['name' => $ops->name, 'params' => $ops->params]);
+                    $eventObj = new $eventObj(['params' => $ops->params]);
                 } else {
-                    $eventObj = new $eventObj(['name' => $ops->name]);
+                    $eventObj = new $eventObj;
                 }
                 if ($return = $event($eventObj)) {
                     if (isset($ops->callback)) {

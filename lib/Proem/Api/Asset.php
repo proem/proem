@@ -71,6 +71,16 @@ class Asset
     }
 
     /**
+     * A maigic method shortcut that proxies setParam()
+     *
+     * @param string $index
+     * @param mixed $value
+     */
+    public function __set($index, $value) {
+        return $this->setParam($index, $value);
+    }
+
+    /**
      * Set multiple parameters use a key => value array
      *
      * @param array $params
@@ -89,6 +99,15 @@ class Asset
     public function getParam($index)
     {
         return isset($this->params[$index]) ? $this->params[$index] : null;
+    }
+
+    /**
+     * A maigic method shortcut that proxies getParam()
+     *
+     * @param string $index
+     */
+    public function __get($index) {
+        return $this->getParam($index);
     }
 
     /**

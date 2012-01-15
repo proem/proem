@@ -60,7 +60,7 @@ class Manager
      * @param string $index The index the asset will be referenced by.
      * @param Proem\Api\Asset $asset
      */
-    public function setAsset($index, Asset $asset)
+    public function set($index, Asset $asset)
     {
         $this->assets[$index] = $asset;
         return $this;
@@ -81,9 +81,9 @@ class Manager
      *
      * @param string $index The index the asset is referenced by.
      */
-    public function getAsset($index)
+    public function get($index)
     {
-        return isset($this->assets[$index]) ? $this->assets[$index]->getAsset($this) : null;
+        return isset($this->assets[$index]) ? $this->assets[$index]->get($this) : null;
     }
 
 }

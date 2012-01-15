@@ -85,7 +85,7 @@ class Asset
      *
      * @param Closure $closure
      */
-    public function setAsset(\Closure $closure)
+    public function set(\Closure $closure)
     {
         $this->asset = $closure;
         return $this;
@@ -102,7 +102,7 @@ class Asset
      *
      * @param Proem\Api\Asset\Manager $assetManager
      */
-    public function getAsset(Manager $assetManager = null)
+    public function get(Manager $assetManager = null)
     {
         $asset = $this->asset;
         return $asset($this, $assetManager);

@@ -63,18 +63,10 @@ class Event
      *   ], $options);
      * </code>
      */
-    public function __construct(Array $options) {
+    public function __construct(Array $options = []) {
         $this->options = $this->setOptions([
-            'name'      => (new Option())->required(),
-            'params'    => (new Option())->type('array')
+            'params'    => (new Option([]))->type('array')
         ], $options);
-    }
-
-    /**
-     * Retrieve the name of this event
-     */
-    public function getName() {
-        return $this->options->name;
     }
 
     /**

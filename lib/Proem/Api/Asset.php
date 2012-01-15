@@ -71,6 +71,17 @@ class Asset
     }
 
     /**
+     * Set multiple parameters use a key => value array
+     *
+     * @param array $params
+     */
+    public function setParams(Array $params)
+    {
+        $this->params = array_merge($this->params, $params);
+        return $this;
+    }
+
+    /**
      * Retrieve a parameter by named index
      *
      * @param string $index
@@ -78,6 +89,14 @@ class Asset
     public function getParam($index)
     {
         return isset($this->params[$index]) ? $this->params[$index] : null;
+    }
+
+    /**
+     * Retrieve all parameters as an array.
+     */
+    public function getParams()
+    {
+        return $this->params;
     }
 
     /**

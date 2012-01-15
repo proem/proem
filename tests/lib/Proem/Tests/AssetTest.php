@@ -68,6 +68,19 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Hello trq', $asset->say());
     }
 
+    public function testAssetCanSetMultipleParams()
+    {
+        $foo = new Asset;
+        $foo->setParams([
+            'foo' => 'bar',
+            'boo' => 'bob'
+        ])->set(function($a) {
+            $this->assertEquals('bar', $a->getParam('foo'));
+            $this->assertEquals('bob', $a->getParam('boo'));
+        });
+
+    }
+
     public function testReturnsDifferentInstance()
     {
         $bar = new Asset;

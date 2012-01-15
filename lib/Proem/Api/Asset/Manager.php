@@ -86,4 +86,14 @@ class Manager
         return isset($this->assets[$index]) ? $this->assets[$index]->get($this) : null;
     }
 
+    /**
+     * Check to see if this manager has a specific asset
+     *
+     * @param string $index The index the asset is referenced by.
+     */
+    public function has($index)
+    {
+        return isset($this->assets[$index]);
+    }
+
 }

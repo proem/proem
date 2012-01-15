@@ -158,4 +158,17 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Asset\Foo', $am->get('foo'));
         $this->assertInstanceOf('Proem\Asset\Bar', $am->get('foo')->getBar());
     }
+
+    public function testManagerHas()
+    {
+        $bar = new Asset;
+        $bar->set(function() {
+            return new Bar;
+        });
+
+        $am = new Manager;
+        $am->set('bar', $bar);
+
+        $this->assertTrue($am->has('bar'));
+    }
 }

@@ -213,6 +213,8 @@ class Option
             }
         }
 
+        if ($this->value == __FILE__) { $this->value = null; }
+
         return true;
     }
 }

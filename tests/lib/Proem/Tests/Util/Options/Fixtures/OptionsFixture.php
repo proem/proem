@@ -33,7 +33,7 @@ class OptionsFixture
 {
     use Options;
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = $this->setOptions([
             'foo' => (new Option('foo')),

@@ -38,7 +38,7 @@ namespace Proem\Api\Util;
 class Callback
 {
     public $callback;
-    public $params = array();
+    public $params = [];
 
     /**
      * Instantiate the Callback object
@@ -46,7 +46,7 @@ class Callback
      * @param callable $callback A valid callback
      * @param Mixed $params Params passed to the callback
      */
-    public function __construct(callable $callback, $params = array())
+    public function __construct(callable $callback, $params = [])
     {
         $this->callback = $callback;
         $this->params   = is_array($params) ? $params : [$params];

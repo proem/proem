@@ -34,8 +34,8 @@ namespace Proem\Api;
  */
 class Autoloader
 {
-    private $namespaces = array();
-    private $pearPrefixes = array();
+    private $namespaces     = [];
+    private $pearPrefixes   = [];
 
     /**
      * Register an array of namespaces.

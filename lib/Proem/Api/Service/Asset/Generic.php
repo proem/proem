@@ -59,6 +59,27 @@ class Generic
     private $asset;
 
     /**
+     * Store a flag indicating what object this Asset provides.
+     *
+     * @var string $provides
+     */
+    private $provides;
+
+    /**
+     * Get or Set a flag indicating what object this Asset provides.
+     *
+     */
+    public function provides($provides = null)
+    {
+        if ($provides !== null) {
+            $this->provides = $provides;
+            return $this;
+        }
+
+        return $this->provides;
+    }
+
+    /**
      * Set a parameters by named index
      *
      * @param string $index

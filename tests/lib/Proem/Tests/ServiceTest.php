@@ -137,6 +137,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('bar'));
     }
 
+    public function testAssetProvides()
+    {
+        $bar = new Asset;
+        $bar->provides('foo');
+        $this->assertEquals('foo', $bar->provides());
+    }
+
     public function testCanGetDepsThroughManager()
     {
         $bar = new Asset;

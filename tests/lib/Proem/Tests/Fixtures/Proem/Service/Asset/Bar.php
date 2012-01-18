@@ -24,51 +24,12 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Service\Asset;
 
-/**
- * @namespace Proem\Tests\Util
- */
-namespace Proem\Tests\Util;
-
-use Proem\Util\Callback;
-
-/**
- * Proem\Tests\Util\CallbackTest
- */
-class CallbackTest extends \PHPUnit_Framework_TestCase
+class Bar
 {
-    public function testSimpleAnonFunction()
+    public function hello()
     {
-        $this->assertTrue((new Callback(function() { return true; }))->call());
-    }
-
-    public function testCanPassSingleArg()
-    {
-        $this->assertTrue((new Callback(function($var) { return $var; }, true))->call());
-    }
-
-    public function testCanPassMultipleArgs()
-    {
-        $this->assertEquals((new Callback(function($var1, $var2) { return count(func_get_args()); }, [1, 1]))->call(), 2);
-    }
-
-    public function someCallback()
-    {
-        return true;
-    }
-
-    public function testSomeCallbackWithinObject()
-    {
-        $this->assertTrue((new Callback([$this, 'someCallback']))->call());
-    }
-
-    public static function someStaticCallback()
-    {
-        return true;
-    }
-
-    public function testStaticCallback()
-    {
-        $this->assertTrue((new Callback(['Proem\Tests\Util\CallbackTest', 'someStaticCallback']))->call());
+        return "Hello from Bar";
     }
 }

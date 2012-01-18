@@ -26,18 +26,18 @@
 
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Signal
  */
-namespace Proem\Api\Event;
+namespace Proem\Api\Signal;
 
-use Proem\Util\Queue,
-    Proem\Util\Callback,
-    Proem\Util\Options,
-    Proem\Util\Options\Option,
-    Proem\Event;
+use Proem\Util\Storage\Queue,
+    Proem\Util\Process\Callback,
+    Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option,
+    Proem\Signal\Event\Generic as Event;
 
 /**
- * Proem\Api\Event\Manager
+ * Proem\Api\Signal\Manager
  *
  * Manage the registration of and triggering of Events.
  */
@@ -113,7 +113,7 @@ class Manager
             'callback'  => (new Option())->type('callable'),
             'target'    => (new Option())->type('object'),
             'method'    => (new Option())->type('string'),
-            'event'     => (new Option(new Event))->object('\Proem\Event')
+            'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Generic')
         ], $options);
 
         if (isset($this->queues[$ops->name])) {

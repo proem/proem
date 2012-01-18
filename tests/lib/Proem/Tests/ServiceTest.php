@@ -26,23 +26,23 @@
 
 namespace Proem\Tests;
 
-use Proem\Asset,
-    Proem\Asset\Manager,
-    Proem\Asset\Foo,
-    Proem\Asset\Bar;
+use Proem\Service\Asset\Generic as Asset,
+    Proem\Service\Manager,
+    Proem\Service\Asset\Foo,
+    Proem\Service\Asset\Bar;
 
-class AssetTest extends \PHPUnit_Framework_TestCase
+class ServiceTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAsset()
     {
         $a = new Asset;
-        $this->assertInstanceOf('Proem\Asset', $a);
+        $this->assertInstanceOf('Proem\Service\Asset\Generic', $a);
     }
 
     public function testCanInstantiateAssetManager()
     {
         $am = new Manager;
-        $this->assertInstanceOf('Proem\Asset\Manager', $am);
+        $this->assertInstanceOf('Proem\Service\Manager', $am);
     }
 
     public function testAssetCanInstantiate()
@@ -52,7 +52,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return new Bar;
         });
 
-        $this->assertInstanceOf('Proem\Asset\Bar', $bar->get());
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $bar->get());
     }
 
     public function testAssetCanSetParams()
@@ -98,10 +98,10 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         });
 
         $one = $bar->get();
-        $this->assertInstanceOf('Proem\Asset\Bar', $one);
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $one);
 
         $two = $bar->get();
-        $this->assertInstanceOf('Proem\Asset\Bar', $two);
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $two);
 
         $this->assertNotSame($one, $two);
 
@@ -115,10 +115,10 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         }));
 
         $one = $bar->get();
-        $this->assertInstanceOf('Proem\Asset\Bar', $one);
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $one);
 
         $two = $bar->get();
-        $this->assertInstanceOf('Proem\Asset\Bar', $two);
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $two);
 
         $this->assertSame($one, $two);
 
@@ -134,7 +134,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $am = new Manager;
         $am->set('bar', $bar);
 
-        $this->assertInstanceOf('Proem\Asset\Bar', $am->get('bar'));
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('bar'));
     }
 
     public function testCanGetDepsThroughManager()
@@ -154,9 +154,9 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $am = new Manager;
         $am->set('foo', $foo)->set('bar', $bar);
 
-        $this->assertInstanceOf('Proem\Asset\Bar', $am->get('bar'));
-        $this->assertInstanceOf('Proem\Asset\Foo', $am->get('foo'));
-        $this->assertInstanceOf('Proem\Asset\Bar', $am->get('foo')->getBar());
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('bar'));
+        $this->assertInstanceOf('Proem\Service\Asset\Foo', $am->get('foo'));
+        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('foo')->getBar());
     }
 
     public function testManagerHas()

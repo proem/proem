@@ -26,14 +26,12 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Api\Util\Opt
  */
-namespace Proem\Api\Util;
-
-use Proem\Util\Options\Option;
+namespace Proem\Api\Util\Opt;
 
 /**
- * Proem\Util\Options
+ * Proem\Api\Util\Opt\Options
  */
 trait Options
 {

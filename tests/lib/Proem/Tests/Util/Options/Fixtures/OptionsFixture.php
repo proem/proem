@@ -26,8 +26,8 @@
 
 namespace Proem\Tests\Util\Options\Fixtures;
 
-use Proem\Util\Options,
-    Proem\Util\Options\Option;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
 class OptionsFixture
 {

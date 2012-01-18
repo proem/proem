@@ -26,52 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Chain
+ * @namespace Proem\Api\Util\Storage
  */
-namespace Proem\Api\Chain;
-
-use Proem\Api\Chain;
+namespace Proem\Api\Util\Storage;
 
 /**
- * Proem\Api\Chain\Event
+ * Proem\Api\Util\Storage\Queue
  */
-abstract class Event
+class Queue extends \SplPriorityQueue
 {
-    /**
-     * inBound
-     *
-     * Define the method to be called on the way into the chain.
-     */
-    public abstract function inBound();
 
-    /**
-     * outBound
-     *
-     * Define the method to be called on the way out of the chain.
-     */
-    public abstract function outBound();
-
-    /**
-     * init
-     *
-     * Call inBound(), the next event in the chain, then outBound()
-     *
-     * @param Proem\Chain $chain
-     * @return Proem\Chain
-     */
-    public function init(Chain $chain)
-    {
-        $this->inBound();
-
-        if ($chain->hasEvents()) {
-            $event = $chain->getNextEvent();
-            if (is_object($event)) {
-                $event->init($chain);
-            }
-        }
-
-        $this->outBound();
-
-        return $this;
-    }
 }

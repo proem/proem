@@ -71,7 +71,7 @@ class Generic
     }
 
     /**
-     * A maigic method shortcut that proxies setParam()
+     * A magic method shortcut that proxies setParam()
      *
      * @param string $index
      * @param mixed $value
@@ -102,7 +102,7 @@ class Generic
     }
 
     /**
-     * A maigic method shortcut that proxies getParam()
+     * A magic method shortcut that proxies getParam()
      *
      * @param string $index
      */

@@ -26,19 +26,19 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Api\Util\Process
  */
-namespace Proem\Api\Util;
+namespace Proem\Api\Util\Process;
 
 /**
- * Proem\Api\Util\Callback
+ * Proem\Api\Util\Process\Callback
  *
  * A wrapper around call_user_func_array
  */
 class Callback
 {
     public $callback;
-    public $params = array();
+    public $params = [];
 
     /**
      * Instantiate the Callback object
@@ -46,7 +46,7 @@ class Callback
      * @param callable $callback A valid callback
      * @param Mixed $params Params passed to the callback
      */
-    public function __construct(callable $callback, $params = array())
+    public function __construct(callable $callback, $params = [])
     {
         $this->callback = $callback;
         $this->params   = is_array($params) ? $params : [$params];

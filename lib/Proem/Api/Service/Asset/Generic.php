@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem
+ * @namespace Proem\Api\Service\Asset
  */
-namespace Proem\Api;
+namespace Proem\Api\Service\Asset;
 
-use Proem\Asset\Manager;
+use Proem\Service\Manager;
 
 /**
- * Proem\Asset
+ * Proem\Api\Service\Asset\Generic
  *
  * An Asset container.
  *
@@ -42,7 +42,7 @@ use Proem\Asset\Manager;
  * as well as having the ability to ijnstantiate an object using these parameters via a
  * Closure.
  */
-class Asset
+class Generic
 {
     /**
      * Store any required parameters
@@ -71,6 +71,27 @@ class Asset
     }
 
     /**
+     * A maigic method shortcut that proxies setParam()
+     *
+     * @param string $index
+     * @param mixed $value
+     */
+    public function __set($index, $value) {
+        return $this->setParam($index, $value);
+    }
+
+    /**
+     * Set multiple parameters use a key => value array
+     *
+     * @param array $params
+     */
+    public function setParams(Array $params)
+    {
+        $this->params = array_merge($this->params, $params);
+        return $this;
+    }
+
+    /**
      * Retrieve a parameter by named index
      *
      * @param string $index
@@ -81,11 +102,28 @@ class Asset
     }
 
     /**
+     * A maigic method shortcut that proxies getParam()
+     *
+     * @param string $index
+     */
+    public function __get($index) {
+        return $this->getParam($index);
+    }
+
+    /**
+     * Retrieve all parameters as an array.
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
      * Store the Closure reponsible for instantiating an Asset
      *
      * @param Closure $closure
      */
-    public function setAsset(\Closure $closure)
+    public function set(\Closure $closure)
     {
         $this->asset = $closure;
         return $this;
@@ -102,7 +140,7 @@ class Asset
      *
      * @param Proem\Api\Asset\Manager $assetManager
      */
-    public function getAsset(Manager $assetManager = null)
+    public function get(Manager $assetManager = null)
     {
         $asset = $this->asset;
         return $asset($this, $assetManager);

@@ -26,14 +26,14 @@
 
 namespace Proem\Tests\Util\Options\Fixtures;
 
-use Proem\Util\Options,
-    Proem\Util\Options\Option;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
 class OptionsFixture
 {
     use Options;
 
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = $this->setOptions([
             'foo' => (new Option('foo')),

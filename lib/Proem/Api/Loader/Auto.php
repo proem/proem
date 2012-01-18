@@ -25,17 +25,17 @@
  */
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Loader
  */
-namespace Proem\Api;
+namespace Proem\Api\Loader;
 
 /**
- * Proem\Api\Autoloader
+ * Proem\Api\Loader\Auto
  */
-class Autoloader
+class Auto
 {
-    private $namespaces = array();
-    private $pearPrefixes = array();
+    private $namespaces     = [];
+    private $pearPrefixes   = [];
 
     /**
      * Register an array of namespaces.

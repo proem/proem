@@ -26,19 +26,19 @@
 
 
 /**
- * @namespace Proem\Api\Event
+ * @namespace Proem\Api\Signal\Event
  */
-namespace Proem\Api;
+namespace Proem\Api\Signal\Event;
 
-use Proem\Util\Options,
-    Proem\Util\Options\Option;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
 /**
- * Proem\Api\Event
+ * Proem\Api\Signal\Event\Generic
  *
  * A base Event implementation
  */
-class Event
+class Generic
 {
     /**
      * Make use of the Options trait
@@ -53,6 +53,20 @@ class Event
     private $options;
 
     /**
+     * Store target
+     *
+     * @var object $target
+     */
+    private $target = null;
+
+    /**
+     * Store the method
+     *
+     * @var string
+     */
+    private $method = null;
+
+    /**
      * Instantiate the Event and setup any options
      *
      * @param Array $options
@@ -63,18 +77,10 @@ class Event
      *   ], $options);
      * </code>
      */
-    public function __construct(Array $options) {
+    public function __construct(Array $options = []) {
         $this->options = $this->setOptions([
-            'name'      => (new Option())->required(),
-            'params'    => (new Option())->type('array')
+            'params'    => (new Option([]))->type('array'),
         ], $options);
-    }
-
-    /**
-     * Retrieve the name of this event
-     */
-    public function getName() {
-        return $this->options->name;
     }
 
     /**
@@ -82,6 +88,44 @@ class Event
      */
     public function getParams() {
         return $this->options->params;
+    }
+
+    /**
+     * Set the target.
+     *
+     * The target should be an instance of whatever object this event was triggered from
+     */
+    public function setTarget($target) {
+        $this->target = $target;
+        return $this;
+    }
+
+    /**
+     * Retrieve target.
+     *
+     * The target should be an instance of whatever object this event was triggered from
+     */
+    public function getTarget() {
+        return $this->target;
+    }
+
+    /**
+     * Set the method.
+     *
+     * The method should be a string representing the name of the method which has triggered this event
+     */
+    public function setMethod($method) {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
+     * Retrieve method
+     *
+     * The method should be a string containing the name of the function this event was triggered from
+     */
+    public function getMethod() {
+        return $this->method;
     }
 
 }

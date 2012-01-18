@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Asset
+ * @namespace Proem\Api\Service
  */
-namespace Proem\Api\Asset;
+namespace Proem\Api\Service;
 
-use Proem\Asset;
+use Proem\Service\Asset\Generic as Asset;
 
 /**
- * Proem\Api\Asset\Manager
+ * Proem\Api\Service\Manager
  *
  * A Registry of Assets.
  *
@@ -43,7 +43,7 @@ use Proem\Asset;
  * These containers contain the parameters required to instantiate an Asset as
  * well as a Closure capable of returning a configured and instantiated Asset.
  *
- * @see Proem\Api\Asset
+ * @see Proem\Api\Service\Asset\Generic
  */
 class Manager
 {
@@ -60,7 +60,7 @@ class Manager
      * @param string $index The index the asset will be referenced by.
      * @param Proem\Api\Asset $asset
      */
-    public function setAsset($index, Asset $asset)
+    public function set($index, Asset $asset)
     {
         $this->assets[$index] = $asset;
         return $this;
@@ -81,9 +81,19 @@ class Manager
      *
      * @param string $index The index the asset is referenced by.
      */
-    public function getAsset($index)
+    public function get($index)
     {
-        return isset($this->assets[$index]) ? $this->assets[$index]->getAsset($this) : null;
+        return isset($this->assets[$index]) ? $this->assets[$index]->get($this) : null;
+    }
+
+    /**
+     * Check to see if this manager has a specific asset
+     *
+     * @param string $index The index the asset is referenced by.
+     */
+    public function has($index)
+    {
+        return isset($this->assets[$index]);
     }
 
 }

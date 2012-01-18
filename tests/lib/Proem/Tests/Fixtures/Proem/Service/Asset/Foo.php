@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Asset;
+namespace Proem\Service\Asset;
 
 class Foo
 {

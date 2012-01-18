@@ -26,14 +26,52 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Api\Bootstrap\Event
  */
-namespace Proem\Api\Util;
+namespace Proem\Api\Bootstrap\Event;
+
+use Proem\Bootstrap\Chain;
 
 /**
- * Proem\Api\Util\Queue
+ * Proem\Api\Bootstrap\Event\Generic
  */
-class Queue extends \SplPriorityQueue
+abstract class Generic
 {
+    /**
+     * inBound
+     *
+     * Define the method to be called on the way into the chain.
+     */
+    public abstract function inBound();
 
+    /**
+     * outBound
+     *
+     * Define the method to be called on the way out of the chain.
+     */
+    public abstract function outBound();
+
+    /**
+     * init
+     *
+     * Call inBound(), the next event in the chain, then outBound()
+     *
+     * @param Proem\Chain $chain
+     * @return Proem\Chain
+     */
+    public function init(Chain $chain)
+    {
+        $this->inBound();
+
+        if ($chain->hasEvents()) {
+            $event = $chain->getNextEvent();
+            if (is_object($event)) {
+                $event->init($chain);
+            }
+        }
+
+        $this->outBound();
+
+        return $this;
+    }
 }

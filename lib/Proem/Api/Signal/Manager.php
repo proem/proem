@@ -26,18 +26,18 @@
 
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Signal
  */
-namespace Proem\Api\Event;
+namespace Proem\Api\Signal;
 
-use Proem\Util\Queue,
-    Proem\Util\Callback,
-    Proem\Util\Options,
-    Proem\Util\Options\Option,
-    Proem\Event;
+use Proem\Util\Storage\Queue,
+    Proem\Util\Process\Callback,
+    Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option,
+    Proem\Signal\Event\Generic as Event;
 
 /**
- * Proem\Api\Event\Manager
+ * Proem\Api\Signal\Manager
  *
  * Manage the registration of and triggering of Events.
  */
@@ -108,10 +108,12 @@ class Manager
     public function trigger(Array $options)
     {
         $ops = $this->setOptions([
-            'name'      => (new Option())->required()->unless('event'),
+            'name'      => (new Option())->required(),
             'params'    => (new Option())->type('array'),
             'callback'  => (new Option())->type('callable'),
-            'event'     => (new Option(new Event(['name' => $options['name']])))->object('\Proem\Event')
+            'target'    => (new Option())->type('object'),
+            'method'    => (new Option())->type('string'),
+            'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Generic')
         ], $options);
 
         if (isset($this->queues[$ops->name])) {
@@ -119,10 +121,12 @@ class Manager
             foreach ($this->queues[$ops->name] as $event) {
                 $eventObj = $ops->event;
                 if (isset($ops->params)) {
-                    $eventObj = new $eventObj(['name' => $ops->name, 'params' => $ops->params]);
+                    $eventObj = new $eventObj(['params' => $ops->params]);
                 } else {
-                    $eventObj = new $eventObj(['name' => $ops->name]);
+                    $eventObj = new $eventObj;
                 }
+                $eventObj->setTarget($ops->target);
+                $eventObj->setMethod($ops->method);
                 if ($return = $event($eventObj)) {
                     if (isset($ops->callback)) {
                         (new Callback($ops->callback, $return))->call();

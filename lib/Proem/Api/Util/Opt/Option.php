@@ -26,11 +26,11 @@
 
 
 /**
- * @namespace Proem\Api\Util\Options
+ * @namespace Proem\Api\Util\Opt
  */
-namespace Proem\Api\Util\Options;
+namespace Proem\Api\Util\Opt;
 
-use Proem\Util\Callback;
+use Proem\Util\Process\Callback;
 
 /**
  * Proem\Api\Util\Opt\Option
@@ -61,6 +61,7 @@ class Option
             ->addTypeValidator('bool',      function($value) { return is_bool($value); })
             ->addTypeValidator('float',     function($value) { return is_float($value); })
             ->addTypeValidator('int',       function($value) { return is_int($value); })
+            ->addTypeValidator('string',    function($value) { return is_string($value); })
             ->addTypeValidator('callable',  function($value) { return is_callable($value); })
             ->addTypeValidator('object',    function($value) { return is_object($value); });
     }
@@ -211,6 +212,8 @@ class Option
                 throw new \InvalidArgumentException(' is required to be a string representation of the class of type ' . $this->is_classof);
             }
         }
+
+        if ($this->value == __FILE__) { $this->value = null; }
 
         return true;
     }

@@ -26,7 +26,7 @@
 
 namespace Proem\Tests;
 
-use Proem\Autoloader;
+use Proem\Loader\Auto as Autoloader;
 use Namespaced;
 
 class AutoloaderTest extends \PHPUnit_Framework_TestCase

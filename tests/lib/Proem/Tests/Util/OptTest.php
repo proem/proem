@@ -30,7 +30,7 @@ use Proem\Tests\Util\Options\Fixtures\OptionsFixture,
     Proem\Tests\Util\Options\Fixtures\OptionsFixture2,
     Proem\Proem;
 
-class OptionsTest extends \PHPUnit_Framework_TestCase
+class OptTest extends \PHPUnit_Framework_TestCase
 {
     public function testValidOptions()
     {

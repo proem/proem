@@ -26,17 +26,17 @@
 
 namespace Proem\Tests;
 
-use Proem\Event,
-    Proem\Event\Manager;
+use Proem\Signal\Event\Generic as Event,
+    Proem\Signal\Manager;
 
-class EventTest extends \PHPUnit_Framework_TestCase
+class SignalTest extends \PHPUnit_Framework_TestCase
 {
     private $event;
 
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Event', new Event(['name' => 'foo', 'params' => []]));
-        $this->assertInstanceOf('Proem\Event\Manager', new Manager);
+        $this->assertInstanceOf('Proem\Signal\Event\Generic', new Event(['name' => 'foo', 'params' => []]));
+        $this->assertInstanceOf('Proem\Signal\Manager', new Manager);
     }
 
     public function testCanPriority()
@@ -76,12 +76,10 @@ class EventTest extends \PHPUnit_Framework_TestCase
         (new Manager)->attach([
             'name'      => 'do',
             'callback'  => function($e) {
-                echo $e->getParams()['hello'];
+                $this->assertEquals('trq', $e->getParams()['hello']);
             }
         ])
         ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
-
-        $this->expectOutputString('trq');
     }
 
     public function testListenerCanTriggerCallback()
@@ -93,7 +91,8 @@ class EventTest extends \PHPUnit_Framework_TestCase
             }
         ])
         ->trigger([
-            'name' => 'do', 'callback' => function() {
+            'name' => 'do', 'callback' => function($r) {
+                $this->assertTrue($r);
                 echo "Callback";
             }
         ]);
@@ -101,4 +100,18 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('Callback');
     }
 
+    public function testTargetAndMethod()
+    {
+        (new Manager)->attach([
+            'name'      => 'do',
+            'callback'  => function($e) {
+                $this->assertInstanceOf('\Proem\Tests\SignalTest', $e->getTarget());
+                $this->assertEquals('testTargetAndMethod', $e->getMethod());
+            }
+        ])
+        // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
+        // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
+        // This will need to be documented.
+        ->trigger(['name' => 'do', 'target' => $this, 'method' => __FUNCTION__]);
+    }
 }

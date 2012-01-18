@@ -24,12 +24,51 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Asset;
 
-class Bar
+/**
+ * @namespace Proem\Tests\Util
+ */
+namespace Proem\Tests\Util;
+
+use Proem\Util\Process\Callback;
+
+/**
+ * Proem\Tests\Util\ProcessTest
+ */
+class ProcessTest extends \PHPUnit_Framework_TestCase
 {
-    public function hello()
+    public function testSimpleAnonFunction()
     {
-        return "Hello from Bar";
+        $this->assertTrue((new Callback(function() { return true; }))->call());
+    }
+
+    public function testCanPassSingleArg()
+    {
+        $this->assertTrue((new Callback(function($var) { return $var; }, true))->call());
+    }
+
+    public function testCanPassMultipleArgs()
+    {
+        $this->assertEquals((new Callback(function($var1, $var2) { return count(func_get_args()); }, [1, 1]))->call(), 2);
+    }
+
+    public function someCallback()
+    {
+        return true;
+    }
+
+    public function testSomeCallbackWithinObject()
+    {
+        $this->assertTrue((new Callback([$this, 'someCallback']))->call());
+    }
+
+    public static function someStaticCallback()
+    {
+        return true;
+    }
+
+    public function testStaticCallback()
+    {
+        $this->assertTrue((new Callback(['Proem\Tests\Util\ProcessTest', 'someStaticCallback']))->call());
     }
 }

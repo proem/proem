@@ -26,14 +26,37 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Api\Util\Process
  */
-namespace Proem\Api\Util;
+namespace Proem\Api\Util\Process;
 
 /**
- * Proem\Api\Util\Queue
+ * Proem\Api\Util\Process\Callback
+ *
+ * A wrapper around call_user_func_array
  */
-class Queue extends \SplPriorityQueue
+class Callback
 {
+    public $callback;
+    public $params = [];
 
+    /**
+     * Instantiate the Callback object
+     *
+     * @param callable $callback A valid callback
+     * @param Mixed $params Params passed to the callback
+     */
+    public function __construct(callable $callback, $params = [])
+    {
+        $this->callback = $callback;
+        $this->params   = is_array($params) ? $params : [$params];
+    }
+
+    /**
+     * Execute the callback and return it's results.
+     */
+    public function call()
+    {
+        return call_user_func_array($this->callback, $this->params);
+    }
 }

@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Asset
+ * @namespace Proem\Api\Service
  */
-namespace Proem\Api\Asset;
+namespace Proem\Api\Service;
 
-use Proem\Asset;
+use Proem\Service\Asset\Generic as Asset;
 
 /**
- * Proem\Api\Asset\Manager
+ * Proem\Api\Service\Manager
  *
  * A Registry of Assets.
  *
@@ -43,7 +43,7 @@ use Proem\Asset;
  * These containers contain the parameters required to instantiate an Asset as
  * well as a Closure capable of returning a configured and instantiated Asset.
  *
- * @see Proem\Api\Asset
+ * @see Proem\Api\Service\Asset\Generic
  */
 class Manager
 {

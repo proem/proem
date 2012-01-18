@@ -26,19 +26,19 @@
 
 
 /**
- * @namespace Proem\Api\Event
+ * @namespace Proem\Api\Signal\Event
  */
-namespace Proem\Api;
+namespace Proem\Api\Signal\Event;
 
-use Proem\Util\Options,
-    Proem\Util\Options\Option;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
 /**
- * Proem\Api\Event
+ * Proem\Api\Signal\Event\Generic
  *
  * A base Event implementation
  */
-class Event
+class Generic
 {
     /**
      * Make use of the Options trait

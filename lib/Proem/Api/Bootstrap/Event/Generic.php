@@ -26,37 +26,52 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Api\Bootstrap\Event
  */
-namespace Proem\Api\Util;
+namespace Proem\Api\Bootstrap\Event;
+
+use Proem\Bootstrap\Chain;
 
 /**
- * Proem\Api\Util\Callback
- *
- * A wrapper around call_user_func_array
+ * Proem\Api\Bootstrap\Event\Generic
  */
-class Callback
+abstract class Generic
 {
-    public $callback;
-    public $params = [];
-
     /**
-     * Instantiate the Callback object
+     * inBound
      *
-     * @param callable $callback A valid callback
-     * @param Mixed $params Params passed to the callback
+     * Define the method to be called on the way into the chain.
      */
-    public function __construct(callable $callback, $params = [])
-    {
-        $this->callback = $callback;
-        $this->params   = is_array($params) ? $params : [$params];
-    }
+    public abstract function inBound();
 
     /**
-     * Execute the callback and return it's results.
+     * outBound
+     *
+     * Define the method to be called on the way out of the chain.
      */
-    public function call()
+    public abstract function outBound();
+
+    /**
+     * init
+     *
+     * Call inBound(), the next event in the chain, then outBound()
+     *
+     * @param Proem\Chain $chain
+     * @return Proem\Chain
+     */
+    public function init(Chain $chain)
     {
-        return call_user_func_array($this->callback, $this->params);
+        $this->inBound();
+
+        if ($chain->hasEvents()) {
+            $event = $chain->getNextEvent();
+            if (is_object($event)) {
+                $event->init($chain);
+            }
+        }
+
+        $this->outBound();
+
+        return $this;
     }
 }

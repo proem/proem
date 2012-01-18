@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem
+ * @namespace Proem\Api\Service\Asset
  */
-namespace Proem\Api;
+namespace Proem\Api\Service\Asset;
 
-use Proem\Asset\Manager;
+use Proem\Service\Manager;
 
 /**
- * Proem\Asset
+ * Proem\Api\Service\Asset\Generic
  *
  * An Asset container.
  *
@@ -42,7 +42,7 @@ use Proem\Asset\Manager;
  * as well as having the ability to ijnstantiate an object using these parameters via a
  * Closure.
  */
-class Asset
+class Generic
 {
     /**
      * Store any required parameters

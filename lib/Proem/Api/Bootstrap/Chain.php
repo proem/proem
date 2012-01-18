@@ -26,15 +26,15 @@
 
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem\Api\Bootstrap
  */
-namespace Proem\Api;
+namespace Proem\Api\Bootstrap;
 
-use Proem\Chain\Event,
-    Proem\Util\Queue;
+use Proem\Bootstrap\Event\Generic as Event,
+    Proem\Util\Storage\Queue;
 
 /**
- * Proem\Api\Chain
+ * Proem\Api\Bootstrap\Chain
  */
 class Chain
 {

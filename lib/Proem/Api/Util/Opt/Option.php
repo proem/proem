@@ -26,11 +26,11 @@
 
 
 /**
- * @namespace Proem\Api\Util\Options
+ * @namespace Proem\Api\Util\Opt
  */
-namespace Proem\Api\Util\Options;
+namespace Proem\Api\Util\Opt;
 
-use Proem\Util\Callback;
+use Proem\Util\Process\Callback;
 
 /**
  * Proem\Api\Util\Opt\Option

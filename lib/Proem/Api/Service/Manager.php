@@ -55,6 +55,12 @@ class Manager
     private $assets = [];
 
     /**
+     * Store an array containing information about what
+     * Assets this manager provides
+     */
+    private $provides = [];
+
+    /**
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
@@ -63,6 +69,9 @@ class Manager
     public function set($index, Asset $asset)
     {
         $this->assets[$index] = $asset;
+        if ($provides = $asset->provides()) {
+            $this->provides[] = $provides;
+        }
         return $this;
     }
 
@@ -94,6 +103,30 @@ class Manager
     public function has($index)
     {
         return isset($this->assets[$index]);
+    }
+
+    /**
+     * Retrieve a "provides" flag
+     *
+     * @param string $provides
+     */
+    public function provides($provides)
+    {
+        return in_array($provides, $this->provides);
+    }
+
+    /**
+     * Retrieve an Asset by what it provides
+     *
+     * @param string $provides
+     */
+    public function getProvided($provides)
+    {
+        foreach ($this->assets as $asset) {
+            if ($asset->provides() == $provides) {
+                return $asset->get($this);
+            }
+        }
     }
 
 }

@@ -26,15 +26,15 @@
 
 
 /**
- * @namespace Proem\Api\Bootstrap
+ * @namespace Proem\Api\Filter
  */
-namespace Proem\Api\Bootstrap;
+namespace Proem\Api\Filter;
 
-use Proem\Bootstrap\Event\Generic as Event,
+use Proem\Filter\Event\Generic as Event,
     Proem\Util\Storage\Queue;
 
 /**
- * Proem\Api\Bootstrap\Chain
+ * Proem\Api\Filter\Chain
  */
 class Chain
 {
@@ -47,7 +47,7 @@ class Chain
     const DISPATCH_EVENT_PRIORITY    = 0;
 
     /**
-     * @var Proem\Util\Queue $queue
+     * @var Proem\Util\Storage\Queue $queue
      *
      * Store the Queue object
      */
@@ -64,7 +64,7 @@ class Chain
     /**
      * Retrieve the priority queue
      *
-     * @return Proem\Api\Util\Queue
+     * @return Proem\Api\Util\Storage\Queue
      */
     public function getQueue()
     {
@@ -74,7 +74,7 @@ class Chain
     /**
      * Insert an event into the queue
      *
-     * @return Proem\Api\Chain
+     * @return Proem\Api\Filter\Chain
      */
     public function insertEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
     {
@@ -85,7 +85,7 @@ class Chain
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Api\Chain\Event
+     * @return Proem\Api\Filter\Event\Generic
      */
     public function getInitialEvent()
     {
@@ -96,7 +96,7 @@ class Chain
     /**
      * Retrieve the next event in the chain
      *
-     * @return Proem\Api\Chain\Event
+     * @return Proem\Api\Filter\Event\Generic
      */
     public function getNextEvent()
     {

@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Bootstrap\Event
+ * @namespace Proem\Api\Filter\Event
  */
-namespace Proem\Api\Bootstrap\Event;
+namespace Proem\Api\Filter\Event;
 
-use Proem\Bootstrap\Chain;
+use Proem\Filter\Chain;
 
 /**
- * Proem\Api\Bootstrap\Event\Generic
+ * Proem\Api\Filter\Event\Generic
  */
 abstract class Generic
 {
@@ -56,8 +56,8 @@ abstract class Generic
      *
      * Call inBound(), the next event in the chain, then outBound()
      *
-     * @param Proem\Chain $chain
-     * @return Proem\Chain
+     * @param Proem\Api\Filter\Chain $chain
+     * @return Proem\Api\Filter\Chain
      */
     public function init(Chain $chain)
     {

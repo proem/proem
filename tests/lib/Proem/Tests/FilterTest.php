@@ -26,9 +26,9 @@
 
 namespace Proem\Tests;
 
-use Proem\Bootstrap\Chain;
+use Proem\Filter\Chain;
 
-class BootstrapTest extends \PHPUnit_Framework_TestCase
+class FilterTest extends \PHPUnit_Framework_TestCase
 {
     private $request;
     private $response;
@@ -36,14 +36,14 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     private $dispatch;
 
     public function setUp() {
-        $this->response = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->request  = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->route    = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->dispatch = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
+        $this->response = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->request  = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->route    = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->dispatch = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
     }
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Bootstrap\Chain', new Chain);
+        $this->assertInstanceOf('Proem\Filter\Chain', new Chain);
     }
 
     public function testChainRun() {

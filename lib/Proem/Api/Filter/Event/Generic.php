@@ -30,7 +30,8 @@
  */
 namespace Proem\Api\Filter\Event;
 
-use Proem\Filter\Chain;
+use Proem\Filter\Chain,
+    Proem\Service\Manager;
 
 /**
  * Proem\Api\Filter\Event\Generic
@@ -42,14 +43,14 @@ abstract class Generic
      *
      * Define the method to be called on the way into the chain.
      */
-    public abstract function inBound();
+    public abstract function inBound(Manager $assets);
 
     /**
      * outBound
      *
      * Define the method to be called on the way out of the chain.
      */
-    public abstract function outBound();
+    public abstract function outBound(Manager $assets);
 
     /**
      * init
@@ -61,7 +62,7 @@ abstract class Generic
      */
     public function init(Chain $chain)
     {
-        $this->inBound();
+        $this->inBound($chain->getServiceManager());
 
         if ($chain->hasEvents()) {
             $event = $chain->getNextEvent();
@@ -70,7 +71,7 @@ abstract class Generic
             }
         }
 
-        $this->outBound();
+        $this->outBound($chain->getServiceManager());
 
         return $this;
     }

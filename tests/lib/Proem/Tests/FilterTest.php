@@ -26,7 +26,8 @@
 
 namespace Proem\Tests;
 
-use Proem\Filter\Chain;
+use Proem\Filter\Chain,
+    Proem\Service\Manager;
 
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,7 +44,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Filter\Chain', new Chain);
+        $this->assertInstanceOf('Proem\Filter\Chain', new Chain(new Manager));
     }
 
     public function testChainRun() {
@@ -61,8 +62,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
 
         $this->expectOutputString('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out');
 
-        $chain = new Chain;
-        $chain
+        (new Chain(new Manager))
             ->insertEvent($this->response, Chain::RESPONSE_EVENT_PRIORITY)
             ->insertEvent($this->request, Chain::REQUEST_EVENT_PRIORITY)
             ->insertEvent($this->route, Chain::ROUTE_EVENT_PRIORITY)

@@ -72,7 +72,6 @@ class Generic
      * @param Array $options
      * <code>
      *   $this->options = $this->setOptions([
-     *       'name'      => (new Option())->required(),     // The name of this Event
      *       'params'    => (new Option())->type('array')   // Additional parameters
      *   ], $options);
      * </code>

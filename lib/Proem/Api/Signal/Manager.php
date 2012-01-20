@@ -98,10 +98,12 @@ class Manager
      * @param array $options
      * <code>
      *   $ops = $this->setOptions([
-     *       'name'      => (new Option())->required()->unless('event'),                                    // The name of the Event to trigger
-     *       'params'    => (new Option())->required()->unless('event')->type('array'),                     // Any parameters the Event might require
-     *       'callback'  => (new Option())->type('callable'),                                               // A Callback that will be triggered if the Event returns a value
-     *       'event'     => (new Option(new Event(['name' => $options['name']])))->object('\Proem\Event')   // The event that will be triggered
+     *       'name'      => (new Option())->required(),
+     *       'params'    => (new Option())->type('array'),
+     *       'callback'  => (new Option())->type('callable'),
+     *       'target'    => (new Option())->type('object'),
+     *       'method'    => (new Option())->type('string'),
+     *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Generic')
      *   ], $options);
      * </code>
      */

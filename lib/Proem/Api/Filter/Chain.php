@@ -31,7 +31,8 @@
 namespace Proem\Api\Filter;
 
 use Proem\Filter\Event\Generic as Event,
-    Proem\Util\Storage\Queue;
+    Proem\Util\Storage\Queue,
+    Proem\Service\Manager;
 
 /**
  * Proem\Api\Filter\Chain
@@ -54,11 +55,21 @@ class Chain
     private $queue;
 
     /**
-     * Instantiate the Chain
+     * Store an asset manager
+     *
+     * @var Proem\Api\Service\Manager
      */
-    public function __construct()
+    private $serviceManager;
+
+    /**
+     * Instantiate the Chain
+     *
+     * @param Proem\Api\Service\Manager
+     */
+    public function __construct(Manager $serviceManager)
     {
-        $this->queue = new Queue;
+        $this->queue            = new Queue;
+        $this->serviceManager   = $serviceManager;
     }
 
     /**
@@ -102,6 +113,16 @@ class Chain
     {
         $this->queue->next();
         return $this->queue->current();
+    }
+
+    /**
+     * Retrieve the Service Manager
+     *
+     * @return Proem\Api\Service\Manager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
     }
 
     /**

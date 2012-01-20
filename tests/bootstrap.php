@@ -1,8 +1,8 @@
 <?php
 
-require_once 'lib/Proem/Api/Loader/Auto.php';
+require_once 'lib/Proem/Autoloader.php';
 
-use Proem\Api\Loader\Auto as Autoloader;
+use Proem\Autoloader;
 
 $loader = new AutoLoader();
 $loader->registerNamespaces([

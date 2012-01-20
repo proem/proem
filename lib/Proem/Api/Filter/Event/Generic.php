@@ -39,6 +39,13 @@ use Proem\Filter\Chain,
 abstract class Generic
 {
     /**
+     * preIn
+     *
+     * Called prior to inBound
+     */
+    public function preIn(Manager $assets) {}
+
+    /**
      * inBound
      *
      * Define the method to be called on the way into the chain.
@@ -46,11 +53,32 @@ abstract class Generic
     public abstract function inBound(Manager $assets);
 
     /**
+     * postIn
+     *
+     * Called after inBound
+     */
+    public function postIn(Manager $assets) {}
+
+    /**
+     * preOut
+     *
+     * Called prior outBound
+     */
+    public function preOut(Manager $assets) {}
+
+    /**
      * outBound
      *
      * Define the method to be called on the way out of the chain.
      */
     public abstract function outBound(Manager $assets);
+
+    /**
+     * postOut
+     *
+     * Called after outBound
+     */
+    public function postOut(Manager $assets) {}
 
     /**
      * init
@@ -62,7 +90,9 @@ abstract class Generic
      */
     public function init(Chain $chain)
     {
+        $this->preIn($chain->getServiceManager());
         $this->inBound($chain->getServiceManager());
+        $this->postIn($chain->getServiceManager());
 
         if ($chain->hasEvents()) {
             $event = $chain->getNextEvent();
@@ -71,7 +101,9 @@ abstract class Generic
             }
         }
 
+        $this->preOut($chain->getServiceManager());
         $this->outBound($chain->getServiceManager());
+        $this->postOut($chain->getServiceManager());
 
         return $this;
     }

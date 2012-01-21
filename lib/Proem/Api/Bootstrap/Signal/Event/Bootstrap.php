@@ -26,52 +26,41 @@
 
 
 /**
- * @namespace Proem\Api\Bootstrap\Event
+ * @namespace Proem\Api\Bootstrap\Signal\Event\Bootstrap
  */
-namespace Proem\Api\Bootstrap\Event;
+namespace Proem\Api\Bootstrap\Signal\Event;
 
-use Proem\Bootstrap\Chain;
+use Proem\Service\Manager;
 
 /**
- * Proem\Api\Bootstrap\Event\Generic
+ * Proem\Api\Bootstrap\Signal\Event\Bootstrap
+ *
+ * A custom event used by the bootstrap triggered events.
  */
-abstract class Generic
+class Bootstrap extends \Proem\Signal\Event\Generic
 {
     /**
-     * inBound
-     *
-     * Define the method to be called on the way into the chain.
+     * Store the service manager
      */
-    public abstract function inBound();
+    private $serviceManager;
 
     /**
-     * outBound
+     * Set the service manager
      *
-     * Define the method to be called on the way out of the chain.
+     * @param Proem\Api\Service\Manager $serviceManager
      */
-    public abstract function outBound();
-
-    /**
-     * init
-     *
-     * Call inBound(), the next event in the chain, then outBound()
-     *
-     * @param Proem\Chain $chain
-     * @return Proem\Chain
-     */
-    public function init(Chain $chain)
+    public function setServiceManager(Manager $serviceManager)
     {
-        $this->inBound();
-
-        if ($chain->hasEvents()) {
-            $event = $chain->getNextEvent();
-            if (is_object($event)) {
-                $event->init($chain);
-            }
-        }
-
-        $this->outBound();
-
+        $this->serviceManager = $serviceManager;
         return $this;
     }
+
+    /**
+     * Retrieve the service manager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
+    }
+
 }

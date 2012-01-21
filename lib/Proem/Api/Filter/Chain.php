@@ -26,15 +26,16 @@
 
 
 /**
- * @namespace Proem\Api\Bootstrap
+ * @namespace Proem\Api\Filter
  */
-namespace Proem\Api\Bootstrap;
+namespace Proem\Api\Filter;
 
-use Proem\Bootstrap\Event\Generic as Event,
-    Proem\Util\Storage\Queue;
+use Proem\Filter\Event\Generic as Event,
+    Proem\Util\Storage\Queue,
+    Proem\Service\Manager;
 
 /**
- * Proem\Api\Bootstrap\Chain
+ * Proem\Api\Filter\Chain
  */
 class Chain
 {
@@ -47,24 +48,34 @@ class Chain
     const DISPATCH_EVENT_PRIORITY    = 0;
 
     /**
-     * @var Proem\Util\Queue $queue
+     * @var Proem\Util\Storage\Queue $queue
      *
      * Store the Queue object
      */
     private $queue;
 
     /**
-     * Instantiate the Chain
+     * Store an asset manager
+     *
+     * @var Proem\Api\Service\Manager
      */
-    public function __construct()
+    private $serviceManager;
+
+    /**
+     * Instantiate the Chain
+     *
+     * @param Proem\Api\Service\Manager
+     */
+    public function __construct(Manager $serviceManager)
     {
-        $this->queue = new Queue;
+        $this->queue            = new Queue;
+        $this->serviceManager   = $serviceManager;
     }
 
     /**
      * Retrieve the priority queue
      *
-     * @return Proem\Api\Util\Queue
+     * @return Proem\Api\Util\Storage\Queue
      */
     public function getQueue()
     {
@@ -74,7 +85,7 @@ class Chain
     /**
      * Insert an event into the queue
      *
-     * @return Proem\Api\Chain
+     * @return Proem\Api\Filter\Chain
      */
     public function insertEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
     {
@@ -85,7 +96,7 @@ class Chain
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Api\Chain\Event
+     * @return Proem\Api\Filter\Event\Generic
      */
     public function getInitialEvent()
     {
@@ -96,12 +107,22 @@ class Chain
     /**
      * Retrieve the next event in the chain
      *
-     * @return Proem\Api\Chain\Event
+     * @return Proem\Api\Filter\Event\Generic
      */
     public function getNextEvent()
     {
         $this->queue->next();
         return $this->queue->current();
+    }
+
+    /**
+     * Retrieve the Service Manager
+     *
+     * @return Proem\Api\Service\Manager
+     */
+    public function getServiceManager()
+    {
+        return $this->serviceManager;
     }
 
     /**

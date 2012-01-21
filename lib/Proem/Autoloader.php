@@ -25,14 +25,14 @@
  */
 
 /**
- * @namespace Proem\Api\Loader
+ * @namespace Proem
  */
-namespace Proem\Api\Loader;
+namespace Proem;
 
 /**
- * Proem\Api\Loader\Auto
+ * Proem\Autoloader
  */
-class Auto
+class Autoloader
 {
     private $namespaces     = [];
     private $pearPrefixes   = [];

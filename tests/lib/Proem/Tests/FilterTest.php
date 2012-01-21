@@ -26,9 +26,10 @@
 
 namespace Proem\Tests;
 
-use Proem\Bootstrap\Chain;
+use Proem\Filter\Chain,
+    Proem\Service\Manager;
 
-class BootstrapTest extends \PHPUnit_Framework_TestCase
+class FilterTest extends \PHPUnit_Framework_TestCase
 {
     private $request;
     private $response;
@@ -36,14 +37,14 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
     private $dispatch;
 
     public function setUp() {
-        $this->response = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->request  = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->route    = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
-        $this->dispatch = $this->getMockForAbstractClass('Proem\Bootstrap\Event\Generic');
+        $this->response = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->request  = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->route    = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
+        $this->dispatch = $this->getMockForAbstractClass('Proem\Filter\Event\Generic');
     }
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Bootstrap\Chain', new Chain);
+        $this->assertInstanceOf('Proem\Filter\Chain', new Chain(new Manager));
     }
 
     public function testChainRun() {
@@ -61,8 +62,7 @@ class BootstrapTest extends \PHPUnit_Framework_TestCase
 
         $this->expectOutputString('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out');
 
-        $chain = new Chain;
-        $chain
+        (new Chain(new Manager))
             ->insertEvent($this->response, Chain::RESPONSE_EVENT_PRIORITY)
             ->insertEvent($this->request, Chain::REQUEST_EVENT_PRIORITY)
             ->insertEvent($this->route, Chain::ROUTE_EVENT_PRIORITY)

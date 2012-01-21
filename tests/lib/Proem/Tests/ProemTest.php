@@ -40,4 +40,87 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $proem = new Proem;
         $this->assertTrue($proem->somethingNew());
     }
+
+    public function testBootstrap()
+    {
+        $results            = new \StdClass;
+        $results->triggered = 0;
+        $results->event     = false;
+        $results->target    = false;
+        $results->method    = false;
+        $results->init      = false;
+        $results->shutdown  = false;
+
+        (new Proem)
+            ->attachEventListener([
+                'name'      => 'pre.in.response',
+                'callback'  => function($e) use ($results) {
+                    $results->event = $e;
+                    $results->target = $e->getTarget();
+                    $results->method = $e->getMethod();
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'post.in.response',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'pre.in.request',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'post.in.request',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'pre.in.route',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'post.in.route',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'pre.in.dispatch',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])
+            ->attachEventListener([
+                'name'      => 'post.in.dispatch',
+                'callback'  => function($e) use ($results) {
+                    $results->triggered++;
+                }
+            ])->attachEventListeners([
+                [
+                    'name'      => 'init',
+                    'callback'  => function($e) use ($results) {
+                        $results->init = true;
+                    }
+                ],
+                [
+                    'name'      => 'shutdown',
+                    'callback'  => function($e) use ($results) {
+                        $results->shutdown = true;
+                    }
+                ]
+            ])
+        ->init();
+
+        $this->assertEquals(8, $results->triggered);
+        $this->assertInstanceOf('Proem\Bootstrap\Signal\Event\Bootstrap', $results->event);
+        $this->assertInstanceOf('Proem\Api\Bootstrap\Filter\Event\Response', $results->target);
+        $this->assertEquals('preIn', $results->method);
+    }
 }

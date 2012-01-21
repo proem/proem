@@ -41,20 +41,22 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testCanPriority()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                echo "First";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'First';
             }
         ])->attach([
             'name'      => 'do',
             'priority'  => 100,
-            'callback'  => function($e) {
-                echo "Second";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'Second';
             }
         ])->trigger(['name' => 'do']);
 
-        $this->expectOutputString('SecondFirst');
+        $this->assertEquals('SecondFirst', $r->out);
     }
 
     public function testCanTriggerEventMultipleTimes()
@@ -86,6 +88,8 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testListenerCanTriggerCallback()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
             'callback'  => function($e) {
@@ -93,13 +97,13 @@ class SignalTest extends \PHPUnit_Framework_TestCase
             }
         ])
         ->trigger([
-            'name' => 'do', 'callback' => function($r) {
-                $this->assertTrue($r);
-                echo "Callback";
+            'name' => 'do', 'callback' => function($response) use ($r) {
+                $this->assertTrue($response);
+                $r->out = 'Callback';
             }
         ]);
 
-        $this->expectOutputString('Callback');
+        $this->assertEquals('Callback', $r->out);
     }
 
     public function testTargetAndMethod()

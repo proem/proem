@@ -57,18 +57,20 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('SecondFirst');
     }
 
-    public function testUniquenessOfTriggers()
+    public function testCanTriggerEventMultipleTimes()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                echo "Yes";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'Yes';
             }
         ])
         ->trigger(['name' => 'do'])
         ->trigger(['name' => 'do']);
 
-        $this->expectOutputString('Yes');
+        $this->assertEquals('YesYes', $r->out);
     }
 
     public function testListenerReceivesParams()

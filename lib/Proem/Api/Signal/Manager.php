@@ -119,8 +119,8 @@ class Manager
         ], $options);
 
         if (isset($this->queues[$ops->name])) {
-            $this->queues[$ops->name]->rewind();
-            foreach ($this->queues[$ops->name] as $event) {
+            $queues = clone $this->queues[$ops->name];
+            foreach ($queues as $event) {
                 $eventObj = $ops->event;
                 if (isset($ops->params)) {
                     $eventObj = new $eventObj(['params' => $ops->params]);

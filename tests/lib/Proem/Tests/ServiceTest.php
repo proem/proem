@@ -127,7 +127,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testAssetManagerCanStoreAndRetrieve()
     {
         $bar = new Asset;
-        $bar->set(function() {
+        $bar->provides('Bar')->set(function() {
             return new Bar;
         });
 
@@ -175,12 +175,12 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testCanGetDepsThroughManager()
     {
         $bar = new Asset;
-        $bar->set(function() {
+        $bar->provides('Bar')->set(function() {
             return new Bar;
         });
 
         $foo = new Asset;
-        $foo->set(function($a, $am) {
+        $foo->provides('Foo')->set(function($a, $am) {
             $f = new Foo('something');
             $f->setBar($am->get('bar'));
             return $f;
@@ -197,7 +197,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testManagerHas()
     {
         $bar = new Asset;
-        $bar->set(function() {
+        $bar->provides('Bar')->set(function() {
             return new Bar;
         });
 

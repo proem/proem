@@ -26,8 +26,6 @@
 
 namespace Proem\Tests\Util\Opt\Fixtures;
 
-use Proem\Proem;
-
-class ProemFixture extends Proem
+class ProemFixture extends \Proem\Proem
 {
 }

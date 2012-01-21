@@ -71,6 +71,8 @@ class Manager
         $this->assets[$index] = $asset;
         if ($provides = $asset->provides()) {
             $this->provides[] = $provides;
+        } else {
+            throw new \RuntimeException('The asset attempting to be stored within the "' . $index . '" index must advertise what it provides.');
         }
         return $this;
     }

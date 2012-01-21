@@ -31,14 +31,14 @@
 namespace Proem\Api\Bootstrap\Filter\Event;
 
 use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event;
+    Proem\Bootstrap\Signal\Event\Bootstrap;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Response
  *
  * The default "Response" filter event.
  */
-class Response extends Proem\Filter\Event\Generic
+class Response extends \Proem\Filter\Event\Generic
 {
     /**
      * preIn
@@ -55,7 +55,7 @@ class Response extends Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) {},
-            ])
+            ]);
         }
     }
 
@@ -84,7 +84,7 @@ class Response extends Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) {},
-            ])
+            ]);
         }
     }
 
@@ -103,7 +103,7 @@ class Response extends Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) {},
-            ])
+            ]);
         }
     }
 
@@ -132,7 +132,7 @@ class Response extends Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) {},
-            ])
+            ]);
         }
     }
 }

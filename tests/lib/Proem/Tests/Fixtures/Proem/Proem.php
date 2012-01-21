@@ -2,7 +2,7 @@
 
 namespace Proem;
 
-class Proem extends Api\Proem
+class Proem extends \Proem\Api\Proem
 {
     public function somethingNew()
     {

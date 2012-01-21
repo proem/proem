@@ -48,19 +48,19 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testChainRun() {
-        $this->response->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "response in, ";}));
-        $this->response->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "response out";}));
+        $r = new \StdClass;
+        $r->out = '';
+        $this->response->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "response in, ";}));
+        $this->response->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "response out";}));
 
-        $this->request->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "request in, ";}));
-        $this->request->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "request out, ";}));
+        $this->request->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)   {$r->out .= "request in, ";}));
+        $this->request->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "request out, ";}));
 
-        $this->route->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "route in, ";}));
-        $this->route->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "route out, ";}));
+        $this->route->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)     {$r->out .= "route in, ";}));
+        $this->route->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r)    {$r->out .= "route out, ";}));
 
-        $this->dispatch->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "dispatch in, ";}));
-        $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "dispatch out, ";}));
-
-        $this->expectOutputString('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out');
+        $this->dispatch->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "dispatch in, ";}));
+        $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "dispatch out, ";}));
 
         (new Chain(new Manager))
             ->insertEvent($this->response, Chain::RESPONSE_EVENT_PRIORITY)
@@ -69,6 +69,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
             ->insertEvent($this->dispatch, Chain::DISPATCH_EVENT_PRIORITY)
             ->init();
 
+        $this->assertEquals('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out', $r->out);
     }
 
 }

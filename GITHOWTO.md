@@ -4,15 +4,17 @@ in his blog post at http://nvie.com/posts/a-successful-git-branching-model.
 This document contains excerpts taken from that blog post.
 
 Interested parties should also take a look at his awesome git-flow tool located
-at https://github.com/nvie/gitflow. *Creating a feature branch*
+at https://github.com/nvie/gitflow.
 
-##Feature branches
+#Feature branches
 
 ```shell
 > May branch off from: develop
 > Must merge back into: develop
 > Branch naming convention: anything except master, develop, release-*, or hotfix-*
 ```
+
+##Creating a feature branch
 
 When starting work on a new feature, branch off from the develop branch.
 
@@ -31,7 +33,7 @@ $ git branch -d myfeature
 $ git push origin develop
 ```
 
-##Release branches
+#Release branches
 
 > May branch off from: develop
 > Must merge back into: develop and master
@@ -62,7 +64,7 @@ $ git merge --no-ff release-1.2
 $ git branch -d release-1.2
 ```
 
-##Hotfix branches
+#Hotfix branches
 
 > May branch off from: master
 > Must merge back into: develop and master

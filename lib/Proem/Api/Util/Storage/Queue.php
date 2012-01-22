@@ -46,6 +46,11 @@ class Queue implements \IteratorAggregate, \Countable
     private $data;
 
     /**
+     * Store a very high number.
+     */
+    protected $max = PHP_INT_MAX;
+
+    /**
      * Retrieve the internal queue
      */
     private function getSplQueue()
@@ -69,6 +74,7 @@ class Queue implements \IteratorAggregate, \Countable
             'priority' => $priority,
         ];
 
+        $priority = array($priority, $this->max--);
         $this->getSplQueue()->insert($data, $priority);
         return $this;
     }

@@ -77,13 +77,16 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testListenerReceivesParams()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                $this->assertEquals('trq', $e->getParams()['hello']);
+            'callback'  => function($e) use ($r) {
+                $r->out = $e->getParams()['hello'];
             }
         ])
         ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
+        $this->assertEquals('trq', $r->out);
     }
 
     public function testListenerCanTriggerCallback()
@@ -108,16 +111,22 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testTargetAndMethod()
     {
+        $r = new \StdClass;
+        $r->target = '';
+        $r->method = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                $this->assertInstanceOf('\Proem\Tests\SignalTest', $e->getTarget());
-                $this->assertEquals('testTargetAndMethod', $e->getMethod());
+            'callback'  => function($e) use ($r) {
+                $r->target = $e->getTarget();
+                $r->method = $e->getMethod();
             }
         ])
         // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
         // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
         // This will need to be documented.
         ->trigger(['name' => 'do', 'target' => $this, 'method' => __FUNCTION__]);
+
+        $this->assertInstanceOf('\Proem\Tests\SignalTest', $r->target);
+        $this->assertEquals('testTargetAndMethod', $r->method);
     }
 }

@@ -73,16 +73,6 @@ class Chain
     }
 
     /**
-     * Retrieve the priority queue
-     *
-     * @return Proem\Api\Util\Storage\Queue
-     */
-    public function getQueue()
-    {
-        return $this->queue;
-    }
-
-    /**
      * Insert an event into the queue
      *
      * @return Proem\Api\Filter\Chain
@@ -100,7 +90,6 @@ class Chain
      */
     public function getInitialEvent()
     {
-        $this->queue->rewind();
         return $this->queue->current();
     }
 

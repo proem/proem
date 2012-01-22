@@ -33,7 +33,49 @@ namespace Proem\Api\Util\Storage;
 /**
  * Proem\Api\Util\Storage\Queue
  */
-class Queue extends \SplPriorityQueue
+class Queue implements \IteratorAggregate
 {
+    private $queue;
 
+    private $data;
+
+    public function insert($data, $priority = 0)
+    {
+        $this->data[] = [
+            'data'     => $data,
+            'priority' => $priority,
+        ];
+
+        $this->getSplQueue()->insert($data, $priority);
+        return $this;
+    }
+
+    public function current()
+    {
+        return $this->getSplQueue()->current();
+    }
+
+    public function next()
+    {
+        return $this->getSplQueue()->next();
+    }
+
+    public function valid()
+    {
+        return $this->getSplQueue()->valid();
+    }
+
+    public function getIterator()
+    {
+        $queue = $this->getSplQueue();
+        return clone $queue;
+    }
+
+    protected function getSplQueue()
+    {
+        if (null === $this->queue) {
+            $this->queue = new \SplPriorityQueue;
+        }
+        return $this->queue;
+    }
 }

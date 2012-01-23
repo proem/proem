@@ -64,11 +64,9 @@ class Proem
     public function __construct()
     {
         $this->events = new GenericAsset;
-        $this->events
-            ->provides('events')
-            ->set($this->events->single(function($asset) {
-                return new SignalManager;
-            }));
+        $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
+            return new SignalManager;
+        }));
 
         $this->events->get()->trigger(['name' => 'init']);
     }

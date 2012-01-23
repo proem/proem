@@ -47,7 +47,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.dispatch',
                 'params'    => [],
@@ -76,7 +76,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.dispatch',
                 'params'    => [],
@@ -95,7 +95,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.dispatch',
                 'params'    => [],
@@ -124,7 +124,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.dispatch',
                 'params'    => [],

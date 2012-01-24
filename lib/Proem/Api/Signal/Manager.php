@@ -121,10 +121,16 @@ class Manager
         if (isset($this->queues[$ops->name])) {
             foreach ($this->queues[$ops->name] as $event) {
                 $eventObj = $ops->event;
-                if (isset($ops->params)) {
-                    $eventObj = new $eventObj(['params' => $ops->params]);
+                if ($eventObj instanceof \Proem\Signal\Event\Generic) {
+                    if (isset($ops->params)) {
+                        $eventObj->setParams($ops->params);
+                    }
                 } else {
-                    $eventObj = new $eventObj;
+                    if (isset($ops->params)) {
+                        $eventObj = new $eventObj(['params' => $ops->params]);
+                    } else {
+                        $eventObj = new $eventObj;
+                    }
                 }
                 $eventObj->setTarget($ops->target);
                 $eventObj->setMethod($ops->method);

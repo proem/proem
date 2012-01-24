@@ -46,11 +46,11 @@ class Generic
     use Options;
 
     /**
-     * Store options
+     * Store params
      *
      * @var array
      */
-    private $options;
+    private $params;
 
     /**
      * Store target
@@ -67,26 +67,19 @@ class Generic
     private $method = null;
 
     /**
-     * Instantiate the Event and setup any options
-     *
-     * @param Array $options
-     * <code>
-     *   $this->options = $this->setOptions([
-     *       'params'    => (new Option())->type('array')   // Additional parameters
-     *   ], $options);
-     * </code>
+     * Set params
      */
-    public function __construct(Array $options = []) {
-        $this->options = $this->setOptions([
-            'params'    => (new Option([]))->type('array'),
-        ], $options);
+    public function setParams(Array $params)
+    {
+        $this->params = $params;
+        return $this;
     }
 
     /**
      * Retrieve any parameters passed to this Event
      */
     public function getParams() {
-        return $this->options->params;
+        return $this->params;
     }
 
     /**

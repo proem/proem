@@ -37,7 +37,8 @@ use Proem\Service\Manager as ServiceManager,
     Proem\Bootstrap\Filter\Event\Route,
     Proem\Bootstrap\Filter\Event\Dispatch,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Chain;
+    Proem\Filter\Chain,
+    Proem\Ext\Generic as Extension;
 
 /**
  * Proem\Api\Proem
@@ -57,6 +58,21 @@ class Proem
      * @var Proem\Api\Signal\Manager
      */
     private $events;
+
+    /**
+     * Store Modules / Plugins
+     */
+    private $extensions = [];
+
+    /**
+     * Bootstrap Extensions
+     */
+    private function bootstrapExtensions(ServiceManager $serviceManager, $env = null)
+    {
+        foreach ($this->extensions as $extension) {
+            $extension->init($serviceManager, $env);
+        }
+    }
 
     /**
      * Setup bootstraping
@@ -81,7 +97,7 @@ class Proem
     }
 
     /**
-     * Attache a series of event to the Signal Event Manager
+     * Attach a series of event to the Signal Event Manager
      */
     public function attachEventListeners(Array $listeners)
     {
@@ -92,16 +108,40 @@ class Proem
     }
 
     /**
+     * Register Modules / Plugins
+     */
+    public function registerExtension(Extension $extension)
+    {
+        $this->extensions[] = $extension;
+        return $this;
+    }
+
+    /**
+     * Retrieve Extensions
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
      * Setup and execute the Filter Chain
      */
-    public function init()
+    public function init($env = null)
     {
-        (new Chain((new ServiceManager)->set('events', $this->events)))
+        $serviceManager = new ServiceManager;
+        $serviceManager->set('events', $this->events);
+
+        $this->bootstrapExtensions($serviceManager, $env);
+
+        $chain = new Chain($serviceManager);
+        $chain
             ->insertEvent(new Response, Chain::RESPONSE_EVENT_PRIORITY)
             ->insertEvent(new Request, Chain::REQUEST_EVENT_PRIORITY)
             ->insertEvent(new Route, Chain::ROUTE_EVENT_PRIORITY)
-            ->insertEvent(new Dispatch, Chain::DISPATCH_EVENT_PRIORITY)
-        ->init();
+            ->insertEvent(new Dispatch, Chain::DISPATCH_EVENT_PRIORITY);
+
+        $chain->init();
 
         $this->events->get()->trigger(['name' => 'shutdown']);
     }

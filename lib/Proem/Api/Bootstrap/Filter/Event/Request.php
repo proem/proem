@@ -62,7 +62,7 @@ class Request extends \Proem\Filter\Event\Generic
     /**
      * inBound
      *
-     * Method to be called on the way into the chain.
+     * Method to be called on the way into the filter.
      */
     public function inBound(Manager $assets)
     {
@@ -110,7 +110,7 @@ class Request extends \Proem\Filter\Event\Generic
     /**
      * outBound
      *
-     * Method to be called on the way out of the chain.
+     * Method to be called on the way out of the filter.
      */
     public function outBound(Manager $assets)
     {

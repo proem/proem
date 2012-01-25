@@ -62,7 +62,7 @@ class Manager
     private $serviceManager;
 
     /**
-     * Instantiate the Chain
+     * Instantiate the Filter Manager
      *
      * @param Proem\Api\Service\Manager
      */
@@ -77,7 +77,7 @@ class Manager
      *
      * @return Proem\Api\Filter\Chain
      */
-    public function insertEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
+    public function attachEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
     {
         $this->queue->insert($event, $priority);
         return $this;

@@ -31,11 +31,8 @@ namespace Proem\Api;
 
 use Proem\Service\Manager as ServiceManager,
     Proem\Signal\Manager as SignalManager,
-    Proem\Service\Asset\Generic as GenericAsset,
-    Proem\Bootstrap\Filter\Event\Response,
-    Proem\Bootstrap\Filter\Event\Request,
-    Proem\Bootstrap\Filter\Event\Route,
-    Proem\Bootstrap\Filter\Event\Dispatch,
+    Proem\Service\Asset\Generic as Asset,
+    Proem\Bootstrap\Filter\Event,
     Proem\Bootstrap\Signal\Event\Bootstrap,
     Proem\Filter\Manager as FilterManager,
     Proem\Ext\Generic as Extension;
@@ -79,7 +76,7 @@ class Proem
      */
     public function __construct()
     {
-        $this->events = new GenericAsset;
+        $this->events = new Asset;
         $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
             return new SignalManager;
         }));
@@ -100,7 +97,7 @@ class Proem
     public function attachEventListeners(Array $listeners)
     {
         foreach ($listeners as $listener) {
-            $this->events->get()->attach($listener);
+            $this->attachEventListener($listener);
         }
         return $this;
     }
@@ -108,7 +105,7 @@ class Proem
     /**
      * Register Modules / Plugins
      */
-    public function registerExtension(Extension $extension)
+    public function attachExtension(Extension $extension)
     {
         $this->extensions[] = $extension;
         return $this;
@@ -119,16 +116,14 @@ class Proem
      */
     public function init($env = null)
     {
-        $serviceManager = new ServiceManager;
-        $serviceManager->set('events', $this->events);
-
+        $serviceManager = (new ServiceManager)->set('events', $this->events);
         $this->bootstrapExtensions($serviceManager, $env);
 
         (new FilterManager($serviceManager))
-            ->insertEvent(new Response, FilterManager::RESPONSE_EVENT_PRIORITY)
-            ->insertEvent(new Request, FilterManager::REQUEST_EVENT_PRIORITY)
-            ->insertEvent(new Route, FilterManager::ROUTE_EVENT_PRIORITY)
-            ->insertEvent(new Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
+            ->attachEvent(new Event\Response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->attachEvent(new Event\Request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->attachEvent(new Event\Route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->attachEvent(new Event\Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
             ->init();
     }
 }

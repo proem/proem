@@ -68,12 +68,8 @@ class Manager
      */
     public function set($index, Asset $asset)
     {
-        $this->assets[$index] = $asset;
-        if ($provides = $asset->provides()) {
-            $this->provides[] = $provides;
-        } else {
-            throw new \RuntimeException('The asset attempting to be stored within the "' . $index . '" index must advertise what it provides.');
-        }
+        $this->assets[$index]   = $asset;
+        $this->provides[]       = $asset->provides();
         return $this;
     }
 

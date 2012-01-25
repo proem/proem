@@ -63,10 +63,10 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "dispatch out, ";}));
 
         (new FilterManager(new ServiceManager))
-            ->insertEvent($this->response, FilterManager::RESPONSE_EVENT_PRIORITY)
-            ->insertEvent($this->request, FilterManager::REQUEST_EVENT_PRIORITY)
-            ->insertEvent($this->route, FilterManager::ROUTE_EVENT_PRIORITY)
-            ->insertEvent($this->dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
+            ->attachEvent($this->response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->attachEvent($this->request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->attachEvent($this->route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->attachEvent($this->dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
             ->init();
 
         $this->assertEquals('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out', $r->out);

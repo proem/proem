@@ -37,7 +37,7 @@ use Proem\Service\Manager as ServiceManager,
     Proem\Bootstrap\Filter\Event\Route,
     Proem\Bootstrap\Filter\Event\Dispatch,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Chain,
+    Proem\Filter\Manager as FilterManager,
     Proem\Ext\Generic as Extension;
 
 /**
@@ -115,7 +115,7 @@ class Proem
     }
 
     /**
-     * Setup and execute the Filter Chain
+     * Setup and execute the Filter Manager
      */
     public function init($env = null)
     {
@@ -124,12 +124,11 @@ class Proem
 
         $this->bootstrapExtensions($serviceManager, $env);
 
-        $chain = new Chain($serviceManager);
-        $chain
-            ->insertEvent(new Response, Chain::RESPONSE_EVENT_PRIORITY)
-            ->insertEvent(new Request, Chain::REQUEST_EVENT_PRIORITY)
-            ->insertEvent(new Route, Chain::ROUTE_EVENT_PRIORITY)
-            ->insertEvent(new Dispatch, Chain::DISPATCH_EVENT_PRIORITY);
-        $chain->init();
+        (new FilterManager($serviceManager))
+            ->insertEvent(new Response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->insertEvent(new Request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->insertEvent(new Route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->insertEvent(new Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
+            ->init();
     }
 }

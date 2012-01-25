@@ -30,8 +30,8 @@
  */
 namespace Proem\Api\Filter\Event;
 
-use Proem\Filter\Chain,
-    Proem\Service\Manager;
+use Proem\Filter\Manager as FilterManager,
+    Proem\Service\Manager as ServiceManager;
 
 /**
  * Proem\Api\Filter\Event\Generic
@@ -43,67 +43,67 @@ abstract class Generic
      *
      * Called prior to inBound
      */
-    public function preIn(Manager $assets) {}
+    public function preIn(ServiceManager $assets) {}
 
     /**
      * inBound
      *
-     * Define the method to be called on the way into the chain.
+     * Define the method to be called on the way into the filter.
      */
-    public abstract function inBound(Manager $assets);
+    public abstract function inBound(ServiceManager $assets);
 
     /**
      * postIn
      *
      * Called after inBound
      */
-    public function postIn(Manager $assets) {}
+    public function postIn(ServiceManager $assets) {}
 
     /**
      * preOut
      *
      * Called prior outBound
      */
-    public function preOut(Manager $assets) {}
+    public function preOut(ServiceManager $assets) {}
 
     /**
      * outBound
      *
-     * Define the method to be called on the way out of the chain.
+     * Define the method to be called on the way out of the filter.
      */
-    public abstract function outBound(Manager $assets);
+    public abstract function outBound(ServiceManager $assets);
 
     /**
      * postOut
      *
      * Called after outBound
      */
-    public function postOut(Manager $assets) {}
+    public function postOut(ServiceManager $assets) {}
 
     /**
      * init
      *
-     * Call inBound(), the next event in the chain, then outBound()
+     * Call inBound(), the next event in the filter, then outBound()
      *
-     * @param Proem\Api\Filter\Chain $chain
-     * @return Proem\Api\Filter\Chain
+     * @param Proem\Api\Filter\Manager $filterManager
+     * @return Proem\Api\Filter\Manager
      */
-    public function init(Chain $chain)
+    public function init(FilterManager $filterManager)
     {
-        $this->preIn($chain->getServiceManager());
-        $this->inBound($chain->getServiceManager());
-        $this->postIn($chain->getServiceManager());
+        $this->preIn($filterManager->getServiceManager());
+        $this->inBound($filterManager->getServiceManager());
+        $this->postIn($filterManager->getServiceManager());
 
-        if ($chain->hasEvents()) {
-            $event = $chain->getNextEvent();
+        if ($filterManager->hasEvents()) {
+            $event = $filterManager->getNextEvent();
             if (is_object($event)) {
-                $event->init($chain);
+                $event->init($filterManager);
             }
         }
 
-        $this->preOut($chain->getServiceManager());
-        $this->outBound($chain->getServiceManager());
-        $this->postOut($chain->getServiceManager());
+        $this->preOut($filterManager->getServiceManager());
+        $this->outBound($filterManager->getServiceManager());
+        $this->postOut($filterManager->getServiceManager());
 
         return $this;
     }

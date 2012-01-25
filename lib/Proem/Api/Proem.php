@@ -83,8 +83,6 @@ class Proem
         $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
             return new SignalManager;
         }));
-
-        $this->events->get()->trigger(['name' => 'init']);
     }
 
     /**
@@ -117,14 +115,6 @@ class Proem
     }
 
     /**
-     * Retrieve Extensions
-     */
-    public function getExtensions()
-    {
-        return $this->extensions;
-    }
-
-    /**
      * Setup and execute the Filter Chain
      */
     public function init($env = null)
@@ -140,9 +130,6 @@ class Proem
             ->insertEvent(new Request, Chain::REQUEST_EVENT_PRIORITY)
             ->insertEvent(new Route, Chain::ROUTE_EVENT_PRIORITY)
             ->insertEvent(new Dispatch, Chain::DISPATCH_EVENT_PRIORITY);
-
         $chain->init();
-
-        $this->events->get()->trigger(['name' => 'shutdown']);
     }
 }

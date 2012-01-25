@@ -125,12 +125,6 @@ class Manager
                     if (isset($ops->params)) {
                         $eventObj->setParams($ops->params);
                     }
-                } else {
-                    if (isset($ops->params)) {
-                        $eventObj = new $eventObj(['params' => $ops->params]);
-                    } else {
-                        $eventObj = new $eventObj;
-                    }
                 }
                 $eventObj->setTarget($ops->target);
                 $eventObj->setMethod($ops->method);

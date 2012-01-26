@@ -61,7 +61,7 @@ class ProemTest extends \PHPUnit_Framework_TestCase
                     }
                 }
             ])
-            ->attachExtension(new \Proem\Ext\Plugin\Foo)
+            ->attachPlugin(new \Proem\Ext\Plugin\Foo)
             ->init();
 
         $this->assertTrue($r->result);

@@ -36,7 +36,7 @@ use Proem\Service\Manager,
 /**
  * Proem\Ext\Plugin\Foo
  */
-class Foo extends \Proem\Ext\Generic
+class Foo extends \Proem\Ext\Plugin\Generic
 {
     public function init(Manager $serviceManager, $env = null)
     {

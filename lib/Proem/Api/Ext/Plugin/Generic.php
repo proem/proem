@@ -26,16 +26,18 @@
 
 
 /**
- * @namespace Proem\Ext
+ * @namespace Proem\Ext\Plugin
  */
-namespace Proem\Api\Ext;
+namespace Proem\Api\Ext\Plugin;
 
 use Proem\Service\Manager;
 
 /**
- * Proem\Api\Ext\Generic
+ * Proem\Api\Ext\Plugin\Generic
  *
- * A base Module / Plugin.
+ * A base Plugin sbstract
  */
-class Generic
-{}
+abstract class Generic extends \Proem\Ext\Generic
+{
+    public abstract function init(Manager $assets, $env = null);
+}

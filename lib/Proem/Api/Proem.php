@@ -35,7 +35,9 @@ use Proem\Service\Manager as ServiceManager,
     Proem\Bootstrap\Filter\Event,
     Proem\Bootstrap\Signal\Event\Bootstrap,
     Proem\Filter\Manager as FilterManager,
-    Proem\Ext\Generic as Extension;
+    Proem\Ext\Generic as Extension,
+    Proem\Ext\Module\Generic as Module,
+    Proem\Ext\Plugin\Generic as Plugin;
 
 /**
  * Proem\Api\Proem
@@ -72,6 +74,15 @@ class Proem
     }
 
     /**
+     * Register Modules / Plugins
+     */
+    private function attachExtension(Extension $extension)
+    {
+        $this->extensions[] = $extension;
+        return $this;
+    }
+
+    /**
      * Setup bootstraping
      */
     public function __construct()
@@ -103,12 +114,19 @@ class Proem
     }
 
     /**
-     * Register Modules / Plugins
+     * Register a Plugin
      */
-    public function attachExtension(Extension $extension)
+    public function attachPlugin(Plugin $plugin)
     {
-        $this->extensions[] = $extension;
-        return $this;
+        return $this->attachExtension($plugin);
+    }
+
+    /**
+     * Register a Module
+     */
+    public function attachModule(Extension $module)
+    {
+        return $this->attachExtension($module);
     }
 
     /**

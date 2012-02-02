@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+require 'lib/Proem/Api/Proem.php';
+$phar = new Phar('build/proem-' . Proem\Api\Proem::VERSION . '.phar');
+$phar->buildFromDirectory('lib');
+$phar->setStub("<?php
+Phar::mapPhar('proem.phar');
+require_once 'phar://proem.phar/Proem/Autoloader.php';
+(new Proem\Autoloader())->registerNamespaces(['Proem' => 'lib'])->register();
+__HALT_COMPILER();
+?>");
+$phar->convertToExecutable(Phar::TAR, Phar::GZ);

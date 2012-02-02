@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 require 'lib/Proem/Api/Proem.php';
-$phar = new Phar('build/proem.phar');
+$phar = new Phar('proem.phar');
 $phar->buildFromDirectory('lib');
 $phar->setStub("<?php
 Phar::mapPhar('proem.phar');

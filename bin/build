@@ -10,3 +10,5 @@ require_once 'phar://proem.phar/Proem/Autoloader.php';
 __HALT_COMPILER();
 ?>");
 $phar->convertToExecutable(Phar::TAR, Phar::GZ);
+rename('proem.phar', 'build/proem.phar');
+rename('proem.phar.tar.gz', 'build/proem.phar.tar.gz');

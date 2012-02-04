@@ -45,7 +45,7 @@ class FakeRequest extends Request
     /**
      * Instantiate a post from faked data.
      */
-    public function __construct($uri, $method = 'GET', $param = [], $cookie = [], $file = [], $meta = [], $body = null)
+    public function __construct($uri, $method = 'GET', $body = '', $param = [], $cookie = [], $file = [], $meta = [])
     {
         $defaults = [
             'SERVER_NAME'          => 'localhost',
@@ -128,6 +128,8 @@ class FakeRequest extends Request
             'QUERY_STRING'         => $getString,
         ]);
 
+        $this->body = $body;
+
         $this->data = [
             'param'     => new KeyValStore($param),
             'get'       => new KeyValStore($get),
@@ -138,4 +140,5 @@ class FakeRequest extends Request
             'header'    => new KeyValStore($this->formHeaders($meta))
         ];
     }
+
 }

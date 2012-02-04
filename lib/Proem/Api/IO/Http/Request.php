@@ -48,11 +48,32 @@ class Request
     protected $body;
 
     /**
+     * Store valid content types by index.
+     */
+    protected $contentTypes = [
+        'form' => ['application/x-www-form-urlencoded'],
+        'html' => ['text/html', 'application/xhtml+xml'],
+        'txt'  => ['text/plain'],
+        'js'   => ['application/javascript', 'application/x-javascript', 'text/javascript'],
+        'css'  => ['text/css'],
+        'json' => ['application/json', 'application/x-json'],
+        'xml'  => ['text/xml', 'application/xml', 'application/x-xml'],
+        'rdf'  => ['application/rdf+xml'],
+        'atom' => ['application/atom+xml'],
+        'rss'  => ['application/rss+xml'],
+    ];
+
+    /**
+     * Valid request methods
+     */
+    protected $methods = ['GET', 'POST', 'PUT', 'DELETE'];
+
+    /**
      * Instantiate the a from the super globals.
      */
-    public function __construct(array $params = []) {
+    public function __construct(array $param = []) {
         $this->data = [
-            'param'     => new KeyValStore($params),
+            'param'     => new KeyValStore($param),
             'get'       => new KeyValStore($_GET),
             'post'      => new KeyValStore($_POST),
             'cookie'    => new KeyValStore($_COOKIES),
@@ -97,26 +118,49 @@ class Request
      */
     public function getBody($raw = true)
     {
-        if ($this->body) {
+        if (!$this->body) {
             $this->body = file_get_contents('php://input');
         }
 
         if (!$raw) {
-            switch ($this->getContentType()) {
-                case 'application/x-www-form-urlencode':
-                    return mb_parse_str($this->body);
-                    break;
-                case 'application/json':
-                    return json_decode($this->body);
-                    break;
-                case 'text/xml':
-                    return simplexml_load_string($this->body);
-                    break;
-                default:
-                    return $this->body;
+            $type = $this->getContentType();
+            if (in_array($type, $this->contentTypes['form'])) {
+                return mb_parse_str($this->body);
+            } elseif (in_array($type, $this->contentTypes['json'])) {
+                return json_decode($this->body);
+            } elseif (in_array($type, $this->contentTypes['xml'])) {
+                return simplexml_load_string($this->body);
             }
         }
         return $this->body;
+    }
+
+    /**
+     * Set the content type.
+     *
+     * @param string $type
+     */
+    public function setContentType($type)
+    {
+        $valid = false;
+
+        if (isset($this->contentTypes[$type])) {
+            $valid = true;
+            $type = $this->contentTypes[$type][0];
+        } else {
+            foreach ($this->contentTypes as $valid_type) {
+                if (in_array($type, $valid_type)) {
+                    $valid = true;
+                    continue;
+                }
+            }
+        }
+
+        if ($valid) {
+            $this->data['header']->set('CONTENT_TYPE', $type);
+        }
+
+        return $this;
     }
 
     /**
@@ -125,6 +169,25 @@ class Request
     public function getContentType()
     {
         return $this->data['header']->get('CONTENT_TYPE');
+    }
+
+    /**
+     * Set the request method.
+     *
+     * @param string $method
+     */
+    public function setMethod($method)
+    {
+        $method = strtoupper($method);
+        if (in_array($method, $this->methods)) {
+            $this->data['meta']->set('REQUEST_METHOD', $method);
+            if ($this->getContentType() === null) {
+                if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
+                    $this->setContentType('form');
+                }
+            }
+        }
+        return $this;
     }
 
     /**

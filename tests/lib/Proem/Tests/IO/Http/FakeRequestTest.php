@@ -54,4 +54,20 @@ class FakeRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $request->param->foo);
         $this->assertEquals('boo', $request->param->get('doesnotexist', 'boo'));
     }
+
+    public function testCanManipulateMethodAndType()
+    {
+        $request = new FakeRequest(null);
+        $this->assertEquals('GET', $request->getMethod());
+        $request->setMethod('post');
+        $this->assertEquals('POST', $request->getMethod());
+        $this->assertEquals('application/x-www-form-urlencoded', $request->getContentType());
+    }
+
+    public function testCanRetrieveJson()
+    {
+        $request = new FakeRequest(null , 'PUT', '{"foo": "bar"}');
+        $request->setContentType('json');
+        $this->assertEquals('bar', $request->getBody(false)->foo);
+    }
 }

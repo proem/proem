@@ -55,6 +55,16 @@ class KeyValStore
     }
 
     /**
+     * Retrieve all data
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->data;
+    }
+
+    /**
      * Retrieve a value by index
      *
      * Optionaly returns a default value.
@@ -98,6 +108,18 @@ class KeyValStore
     public function __set($index, $value)
     {
         return $this->set($index, $value);
+    }
+
+    /**
+     * Remove an item by index
+     *
+     * @param string $index
+     */
+    public function remove($index)
+    {
+        if (isset($this->data[$index])) {
+            unset($this->data[$index]);
+        }
     }
 
     /**

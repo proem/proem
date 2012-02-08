@@ -32,12 +32,12 @@ namespace Proem\Api\Filter;
 
 use Proem\Filter\Event\Generic as Event,
     Proem\Util\Storage\Queue,
-    Proem\Service\Manager;
+    Proem\Service\Manager as ServiceManager;
 
 /**
- * Proem\Api\Filter\Chain
+ * Proem\Api\Filter\Manager
  */
-class Chain
+class Manager
 {
     /**
      * Constants used to priorities default events
@@ -62,24 +62,14 @@ class Chain
     private $serviceManager;
 
     /**
-     * Instantiate the Chain
+     * Instantiate the Filter Manager
      *
      * @param Proem\Api\Service\Manager
      */
-    public function __construct(Manager $serviceManager)
+    public function __construct(ServiceManager $serviceManager)
     {
         $this->queue            = new Queue;
         $this->serviceManager   = $serviceManager;
-    }
-
-    /**
-     * Retrieve the priority queue
-     *
-     * @return Proem\Api\Util\Storage\Queue
-     */
-    public function getQueue()
-    {
-        return $this->queue;
     }
 
     /**
@@ -87,7 +77,7 @@ class Chain
      *
      * @return Proem\Api\Filter\Chain
      */
-    public function insertEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
+    public function attachEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
     {
         $this->queue->insert($event, $priority);
         return $this;
@@ -100,12 +90,11 @@ class Chain
      */
     public function getInitialEvent()
     {
-        $this->queue->rewind();
         return $this->queue->current();
     }
 
     /**
-     * Retrieve the next event in the chain
+     * Retrieve the next event in the filter
      *
      * @return Proem\Api\Filter\Event\Generic
      */
@@ -126,7 +115,7 @@ class Chain
     }
 
     /**
-     * Check to see if there are more events left in the chain.
+     * Check to see if there are more events left in the filter.
      *
      * @return bool
      */
@@ -136,7 +125,7 @@ class Chain
     }
 
     /**
-     * Get the first event in the chain and execute it's init() method
+     * Get the first event in the filter and execute it's init() method
      */
     public function init()
     {

@@ -41,49 +41,58 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testCanPriority()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                echo "First";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'First';
             }
         ])->attach([
             'name'      => 'do',
             'priority'  => 100,
-            'callback'  => function($e) {
-                echo "Second";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'Second';
             }
         ])->trigger(['name' => 'do']);
 
-        $this->expectOutputString('SecondFirst');
+        $this->assertEquals('SecondFirst', $r->out);
     }
 
-    public function testUniquenessOfTriggers()
+    public function testCanTriggerEventMultipleTimes()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                echo "Yes";
+            'callback'  => function($e) use ($r) {
+                $r->out .= 'Yes';
             }
         ])
         ->trigger(['name' => 'do'])
         ->trigger(['name' => 'do']);
 
-        $this->expectOutputString('Yes');
+        $this->assertEquals('YesYes', $r->out);
     }
 
     public function testListenerReceivesParams()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                $this->assertEquals('trq', $e->getParams()['hello']);
+            'callback'  => function($e) use ($r) {
+                $r->out = $e->getParams()['hello'];
             }
         ])
         ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
+        $this->assertEquals('trq', $r->out);
     }
 
     public function testListenerCanTriggerCallback()
     {
+        $r = new \StdClass;
+        $r->out = '';
         (new Manager)->attach([
             'name'      => 'do',
             'callback'  => function($e) {
@@ -91,27 +100,33 @@ class SignalTest extends \PHPUnit_Framework_TestCase
             }
         ])
         ->trigger([
-            'name' => 'do', 'callback' => function($r) {
-                $this->assertTrue($r);
-                echo "Callback";
+            'name' => 'do', 'callback' => function($response) use ($r) {
+                $this->assertTrue($response);
+                $r->out = 'Callback';
             }
         ]);
 
-        $this->expectOutputString('Callback');
+        $this->assertEquals('Callback', $r->out);
     }
 
     public function testTargetAndMethod()
     {
+        $r = new \StdClass;
+        $r->target = '';
+        $r->method = '';
         (new Manager)->attach([
             'name'      => 'do',
-            'callback'  => function($e) {
-                $this->assertInstanceOf('\Proem\Tests\SignalTest', $e->getTarget());
-                $this->assertEquals('testTargetAndMethod', $e->getMethod());
+            'callback'  => function($e) use ($r) {
+                $r->target = $e->getTarget();
+                $r->method = $e->getMethod();
             }
         ])
         // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
         // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
         // This will need to be documented.
         ->trigger(['name' => 'do', 'target' => $this, 'method' => __FUNCTION__]);
+
+        $this->assertInstanceOf('\Proem\Tests\SignalTest', $r->target);
+        $this->assertEquals('testTargetAndMethod', $r->method);
     }
 }

@@ -31,13 +31,13 @@ namespace Proem\Api;
 
 use Proem\Service\Manager as ServiceManager,
     Proem\Signal\Manager as SignalManager,
-    Proem\Service\Asset\Generic as GenericAsset,
-    Proem\Bootstrap\Filter\Event\Response,
-    Proem\Bootstrap\Filter\Event\Request,
-    Proem\Bootstrap\Filter\Event\Route,
-    Proem\Bootstrap\Filter\Event\Dispatch,
+    Proem\Service\Asset\Generic as Asset,
+    Proem\Bootstrap\Filter\Event,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Chain;
+    Proem\Filter\Manager as FilterManager,
+    Proem\Ext\Generic as Extension,
+    Proem\Ext\Module\Generic as Module,
+    Proem\Ext\Plugin\Generic as Plugin;
 
 /**
  * Proem\Api\Proem
@@ -49,7 +49,7 @@ class Proem
     /**
      * Store the framework version
      */
-    const VERSION = '0.1.2';
+    const VERSION = '0.1.3';
 
     /**
      * Store events
@@ -59,18 +59,38 @@ class Proem
     private $events;
 
     /**
+     * Store Modules / Plugins
+     */
+    private $extensions = [];
+
+    /**
+     * Bootstrap Extensions
+     */
+    private function bootstrapExtensions(ServiceManager $serviceManager, $env = null)
+    {
+        foreach ($this->extensions as $extension) {
+            $extension->init($serviceManager, $env);
+        }
+    }
+
+    /**
+     * Register Modules / Plugins
+     */
+    private function attachExtension(Extension $extension)
+    {
+        $this->extensions[] = $extension;
+        return $this;
+    }
+
+    /**
      * Setup bootstraping
      */
     public function __construct()
     {
-        $this->events = new GenericAsset;
-        $this->events
-            ->provides('events')
-            ->set($this->events->single(function($asset) {
-                return new SignalManager;
-            }));
-
-        $this->events->get()->trigger(['name' => 'init']);
+        $this->events = new Asset;
+        $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
+            return new SignalManager;
+        }));
     }
 
     /**
@@ -83,28 +103,45 @@ class Proem
     }
 
     /**
-     * Attache a series of event to the Signal Event Manager
+     * Attach a series of event to the Signal Event Manager
      */
     public function attachEventListeners(Array $listeners)
     {
         foreach ($listeners as $listener) {
-            $this->events->get()->attach($listener);
+            $this->attachEventListener($listener);
         }
         return $this;
     }
 
     /**
-     * Setup and execute the Filter Chain
+     * Register a Plugin
      */
-    public function init()
+    public function attachPlugin(Plugin $plugin)
     {
-        (new Chain((new ServiceManager)->set('events', $this->events)))
-            ->insertEvent(new Response, Chain::RESPONSE_EVENT_PRIORITY)
-            ->insertEvent(new Request, Chain::REQUEST_EVENT_PRIORITY)
-            ->insertEvent(new Route, Chain::ROUTE_EVENT_PRIORITY)
-            ->insertEvent(new Dispatch, Chain::DISPATCH_EVENT_PRIORITY)
-        ->init();
+        return $this->attachExtension($plugin);
+    }
 
-        $this->events->get()->trigger(['name' => 'shutdown']);
+    /**
+     * Register a Module
+     */
+    public function attachModule(Extension $module)
+    {
+        return $this->attachExtension($module);
+    }
+
+    /**
+     * Setup and execute the Filter Manager
+     */
+    public function init($env = null)
+    {
+        $serviceManager = (new ServiceManager)->set('events', $this->events);
+        $this->bootstrapExtensions($serviceManager, $env);
+
+        (new FilterManager($serviceManager))
+            ->attachEvent(new Event\Response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->attachEvent(new Event\Request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->attachEvent(new Event\Route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->attachEvent(new Event\Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
+            ->init();
     }
 }

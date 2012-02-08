@@ -26,8 +26,8 @@
 
 namespace Proem\Tests;
 
-use Proem\Filter\Chain,
-    Proem\Service\Manager;
+use Proem\Filter\Manager as FilterManager,
+    Proem\Service\Manager as ServiceManager;
 
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,31 +44,32 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Filter\Chain', new Chain(new Manager));
+        $this->assertInstanceOf('Proem\Filter\Manager', new FilterManager(new ServiceManager));
     }
 
-    public function testChainRun() {
-        $this->response->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "response in, ";}));
-        $this->response->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "response out";}));
+    public function testFilterManagerRun() {
+        $r = new \StdClass;
+        $r->out = '';
+        $this->response->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "response in, ";}));
+        $this->response->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "response out";}));
 
-        $this->request->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "request in, ";}));
-        $this->request->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "request out, ";}));
+        $this->request->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)   {$r->out .= "request in, ";}));
+        $this->request->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "request out, ";}));
 
-        $this->route->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "route in, ";}));
-        $this->route->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "route out, ";}));
+        $this->route->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)     {$r->out .= "route in, ";}));
+        $this->route->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r)    {$r->out .= "route out, ";}));
 
-        $this->dispatch->expects($this->once())->method('inBound')->will($this->returnCallback(function() {echo "dispatch in, ";}));
-        $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() {echo "dispatch out, ";}));
+        $this->dispatch->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "dispatch in, ";}));
+        $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "dispatch out, ";}));
 
-        $this->expectOutputString('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out');
-
-        (new Chain(new Manager))
-            ->insertEvent($this->response, Chain::RESPONSE_EVENT_PRIORITY)
-            ->insertEvent($this->request, Chain::REQUEST_EVENT_PRIORITY)
-            ->insertEvent($this->route, Chain::ROUTE_EVENT_PRIORITY)
-            ->insertEvent($this->dispatch, Chain::DISPATCH_EVENT_PRIORITY)
+        (new FilterManager(new ServiceManager))
+            ->attachEvent($this->response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->attachEvent($this->request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->attachEvent($this->route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->attachEvent($this->dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
             ->init();
 
+        $this->assertEquals('response in, request in, route in, dispatch in, dispatch out, route out, request out, response out', $r->out);
     }
 
 }

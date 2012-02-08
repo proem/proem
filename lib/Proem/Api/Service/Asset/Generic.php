@@ -63,19 +63,27 @@ class Generic
      *
      * @var string $provides
      */
-    private $provides;
+    private $provides = null;
 
-    /**
-     * Get or Set a flag indicating what object this Asset provides.
-     *
-     */
-    public function provides($provides = null)
+    private function validate($object)
     {
-        if ($provides !== null) {
-            $this->provides = $provides;
-            return $this;
+        $object = (object) $object;
+        if ($this->provides === null) {
+            throw new \DomainException("Asset must advertise what it provides");
         }
 
+        if ($object instanceof $this->provides) {
+            return $object;
+        }
+
+        throw new \DomainException(sprintf("The Asset providing %s actually provides a %s object", $this->provides, get_class($object)));
+    }
+
+    /**
+     * Retrieve the object this Asset provides.
+     */
+    public function provides()
+    {
         return $this->provides;
     }
 
@@ -142,10 +150,12 @@ class Generic
     /**
      * Store the Closure reponsible for instantiating an Asset
      *
+     * @param string The object this asset provides
      * @param Closure $closure
      */
-    public function set(\Closure $closure)
+    public function set($provides, \Closure $closure)
     {
+        $this->provides = $provides;
         $this->asset = $closure;
         return $this;
     }
@@ -164,7 +174,7 @@ class Generic
     public function get(Manager $assetManager = null)
     {
         $asset = $this->asset;
-        return $asset($this, $assetManager);
+        return $this->validate($asset($this, $assetManager));
     }
 
     /**
@@ -191,10 +201,9 @@ class Generic
         return function ($assetContainer = null, $assetManager = null) use ($closure) {
             static $obj;
             if (is_null($obj)) {
-                $obj = $closure($assetContainer, $assetManager);
+                $obj = $this->validate($closure($assetContainer, $assetManager));
             }
             return $obj;
         };
     }
-
 }

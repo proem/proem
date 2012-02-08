@@ -47,7 +47,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.route',
                 'params'    => [],
@@ -62,7 +62,7 @@ class Route extends \Proem\Filter\Event\Generic
     /**
      * inBound
      *
-     * Method to be called on the way into the chain.
+     * Method to be called on the way into the filter.
      */
     public function inBound(Manager $assets)
     {
@@ -76,7 +76,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.route',
                 'params'    => [],
@@ -95,7 +95,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.route',
                 'params'    => [],
@@ -110,7 +110,7 @@ class Route extends \Proem\Filter\Event\Generic
     /**
      * outBound
      *
-     * Method to be called on the way out of the chain.
+     * Method to be called on the way out of the filter.
      */
     public function outBound(Manager $assets)
     {
@@ -124,7 +124,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.route',
                 'params'    => [],

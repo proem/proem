@@ -68,10 +68,8 @@ class Manager
      */
     public function set($index, Asset $asset)
     {
-        $this->assets[$index] = $asset;
-        if ($provides = $asset->provides()) {
-            $this->provides[] = $provides;
-        }
+        $this->assets[$index]   = $asset;
+        $this->provides[]       = $asset->provides();
         return $this;
     }
 
@@ -110,9 +108,18 @@ class Manager
      *
      * @param string $provides
      */
-    public function provides($provides)
+    public function provides($index, $provides = null)
     {
-        return in_array($provides, $this->provides);
+        if ($provides === null) {
+            return in_array($index, $this->provides);
+        } else {
+            if ($this->has($index)) {
+                if ($this->assets[$index]->provides() == $provides) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

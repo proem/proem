@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+chdir('lib');
+$phar = new Phar('proem.phar');
+$phar->buildFromDirectory('.');
+$phar->setStub("<?php
+Phar::mapPhar('proem.phar');
+require_once 'phar://proem.phar/Proem/Autoloader.php';
+(new Proem\Autoloader())->registerNamespaces(['Proem' => 'phar://proem.phar'])->register();
+__HALT_COMPILER();
+?>");
+rename('proem.phar', '../build/proem.phar');
+chdir('../');
+system('phpunit --colors tests/phar-test.php');

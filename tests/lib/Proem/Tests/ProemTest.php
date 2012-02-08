@@ -41,6 +41,32 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($proem->somethingNew());
     }
 
+    /**
+     * This test injects a Foo object into the main service manager
+     * via a plugin (\Proem\Ext\Plugin\Foo - Found in Fixtures) which
+     * registers on the pre.in.dispatch event. It then uses an event
+     * to test to see of that object has indeed been injected properly.
+     */
+    public function testCanLoadExtensions()
+    {
+        $r          = new \StdClass;
+        $r->result  = false;
+        $proem      = new Proem;
+        $proem
+            ->attachEventListener([
+                'name'      => 'post.in.dispatch',
+                'callback'  => function($e) use ($r) {
+                    if ($e->getServiceManager()->has('foo')) {
+                        $r->result = true;
+                    }
+                }
+            ])
+            ->attachPlugin(new \Proem\Ext\Plugin\Foo)
+            ->init();
+
+        $this->assertTrue($r->result);
+    }
+
     public function testBootstrap()
     {
         $results            = new \StdClass;

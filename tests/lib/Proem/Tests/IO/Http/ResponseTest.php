@@ -57,16 +57,14 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testHeaders()
     {
-        $r = new Request;
+        $r = new Response;
         $r->setHeader('foo', 'bar');
         $this->assertEquals('bar', $r->getHeader('foo'));
-        $r->setHeaders['a' => 'b']);
-        $this->assertEquals('b', $r->getHeader('a'));
     }
 
     public function testContentLength()
     {
-        $r = new Request;
+        $r = new Response;
         $r->appendToBody('foo');
         $this->assertEquals(3, $r->getHeader('Content-Length'));
         $r->appendToBody('foo');

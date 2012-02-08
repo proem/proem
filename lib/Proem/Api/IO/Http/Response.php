@@ -127,7 +127,7 @@ class Response
      */
     public function setHttpVersion($version)
     {
-        if (in_array($version, [1.0,1.1]) {
+        if (in_array($version, [1.0,1.1])) {
             $this->httpVersion = $version;
         }
         return $this;
@@ -149,7 +149,12 @@ class Response
     public function setHttpStatus($status)
     {
         if (isset($this->httpStatusCodes[$status])) {
-            $this->httpVersion = $status;
+            $this->httpStatus = $status;
+        } else {
+            $codes = array_flip($this->httpStatusCodes);
+            if (isset($status, $codes)) {
+                $this->httpStatus = $codes[$status];
+            }
         }
         return $this;
     }

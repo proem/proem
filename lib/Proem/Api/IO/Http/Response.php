@@ -115,7 +115,7 @@ class Response
     /**
      * Instantiate the Response.
      */
-    public function __construct($silent = false)
+    public function __construct()
     {
         $this->headers = new KeyValStore;
         $this->headers->set('X-Powered-By','Proem Framework ' . \Proem\Proem::VERSION);

@@ -6,6 +6,7 @@
         <whitelist>
             <directory suffix=".php">../lib/</directory>
             <exclude>
+                <file suffix=".php">./PharTest.php</file>
             </exclude>
         </whitelist>
     </filter>

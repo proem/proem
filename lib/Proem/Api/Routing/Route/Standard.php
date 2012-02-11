@@ -90,7 +90,7 @@ class Standard extends Generic
      * This causes the pattern to match entire sections of uri's. Allowing a
      * simple pattern like the default /:controller/:action/:params to match
      * uri's like /foo/bar/a/b/c/d/e/f/g/h and cause everything after /foo/bar
-     * to be added to the _Command_ object as params (which are in turn transformed
+     * to be added to the Payload object as params (which are in turn transformed
      * into key => value pairs).
      *
      * @param string $uri
@@ -101,12 +101,9 @@ class Standard extends Generic
             return false;
         }
 
-        $rule            = $this->options->rule;
-        $target          = $this->options->targets;
-        $custom_filters  = $this->options->filters;
-
-        // Need to be saved locally so we can easily
-        // pass them to the callback below.
+        $rule               = $this->options->rule;
+        $target             = $this->options->targets;
+        $custom_filters     = $this->options->filters;
         $default_tokens     = $this->_default_tokens;
         $default_filters    = $this->_default_filters;
 
@@ -154,7 +151,7 @@ class Standard extends Generic
                 // parse it into an array and send it to setParams() instead
                 // of the singular setParam.
                 if ($key == 'params' && strpos($value, '/') !== false) {
-                    $this->getPayload()->setParams($this->createAssocArray($value));
+                    $this->getPayload()->setParams($this->createAssocArray(explode('/', trim($value, '/'))));
                 } else {
                     $this->getPayload()->setParam($key, $value);
                 }

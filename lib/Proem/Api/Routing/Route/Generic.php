@@ -32,7 +32,8 @@ namespace Proem\Api\Routing\Route;
 
 use Proem\Dispatch\Payload,
     Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
+    Proem\Util\Opt\Option,
+    Proem\Util\ArrayHelper;
 
 /**
  * Proem\Api\Routing\Route
@@ -40,23 +41,7 @@ use Proem\Dispatch\Payload,
 abstract class Generic
 {
     use Options;
-
-    // TODO: Move into a Util Trait.
-    public function createAssocArray($params)
-    {
-        $tmp = array();
-        if (!is_array($params)) {
-            $params = explode('/', trim($params, '/'));
-        }
-        for ($i = 0; $i <= count($params); $i = $i+2) {
-            if (isset($params[$i+1])) {
-                $tmp[(string) $params[$i]] = (string) $params[$i+1];
-            } else {
-                break;
-            }
-        }
-        return $tmp;
-    }
+    use ArrayHelper;
 
     /**
      * Store the options for this route

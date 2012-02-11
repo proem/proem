@@ -113,14 +113,11 @@ class Payload
         return $this->populated;
     }
 
+    /**
+     * Set the populated flag
+     */
     public function setPopulated()
     {
         $this->populated = true;
-    }
-
-    // TODO implement dispatchable check.
-    public function isDispatchAble()
-    {
-        return true;
     }
 }

@@ -26,59 +26,33 @@
 
 
 /**
- * @namespace Proem\Api\Routing
+ * @namespace Proem\Api\Util
  */
-namespace Proem\Api\Routing;
-
-use Proem\Routing\Route\Generic as Route;
+namespace Proem\Api\Util;
 
 /**
- * Proem\Api\Routing\Router
+ * Proem\Api\Util\ArrayHelper
  */
-class Router
+trait ArrayHelper
 {
     /**
-     * Store the request url
-     */
-    private $requestUrl;
-
-    /**
-     * Store our routes
+     * Turn a numerically indexed array into an associative array.
      *
-     * @var array
+     * eg;
+     *   ['foo', 'bar', 'bob', 'boo']
+     * becomes:
+     *   ['foo' => 'bar', 'bob' => 'boo']
      */
-    private $routes = [];
-
-    /**
-     * Setup
-     *
-     * @param string $requestUri
-     */
-    public function __construct($requestUri)
+    public function createAssocArray($params)
     {
-        $this->requestUri = $requestUri;
-    }
-
-    /**
-     * Store route objects
-     */
-    public function map($name, Route $route)
-    {
-        $this->_routes[$name] = $route;
-        return $this;
-    }
-
-    /**
-     * Test routes for matching route and found return a DispatchPayload
-     */
-    public function route()
-    {
-        foreach ($this->_routes as $name => $route) {
-            $route->process($this->requestUri);
-            if ($route->isMatch() && $route->getPayload()->isPopulated()) {
+        $tmp = array();
+        for ($i = 0; $i <= count($params); $i = $i+2) {
+            if (isset($params[$i+1])) {
+                $tmp[(string) $params[$i]] = (string) $params[$i+1];
+            } else {
                 break;
             }
         }
-        return $route->getPayload();
+        return $tmp;
     }
 }

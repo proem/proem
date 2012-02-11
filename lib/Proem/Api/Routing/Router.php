@@ -30,7 +30,7 @@
  */
 namespace Proem\Api\Routing;
 
-use Proem\Routing\Route;
+use Proem\Routing\Route\Generic as Route;
 
 /**
  * Proem\Api\Routing\Router

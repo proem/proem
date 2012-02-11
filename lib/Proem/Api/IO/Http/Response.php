@@ -118,6 +118,22 @@ class Response
     public function __construct()
     {
         $this->headers = new KeyValStore;
+        $this->headers->set('X-Powered-By','Proem Framework ' . \Proem\Proem::VERSION);
+    }
+
+    /**
+     * Silence the X-Powered-By header produced by Proem.
+     *
+     * This header produces X-Powered-By: Proem Framework X.X.X
+     * and may pose a security concern. It's just here as an easter
+     * egg more than anything. Removing it from this Request may
+     * not remove it all together as PHP itself can produce this
+     * same heeader.
+     */
+    public function silence()
+    {
+        $this->headers->remove('X-Powered-By');
+        return $this;
     }
 
     /**

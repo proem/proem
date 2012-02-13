@@ -44,9 +44,9 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $route->process('/foo/bar/a/b');
 
         $this->assertTrue($route->getPayload()->isPopulated());
-        $this->assertEquals('foo', $route->getPayload()->getParam('controller'));
-        $this->assertEquals('bar', $route->getPayload()->getParam('action'));
-        $this->assertEquals('b', $route->getPayload()->getParam('a'));
+        $this->assertEquals('foo', $route->getPayload()->controller);
+        $this->assertEquals('bar', $route->getPayload()->action);
+        $this->assertEquals('b', $route->getPayload()->a);
     }
 
     public function testModule()
@@ -57,10 +57,30 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $route->process('/bob/foo/bar/a/b');
 
         $this->assertTrue($route->getPayload()->isPopulated());
-        $this->assertEquals('bob', $route->getPayload()->getParam('module'));
-        $this->assertEquals('foo', $route->getPayload()->getParam('controller'));
-        $this->assertEquals('bar', $route->getPayload()->getParam('action'));
-        $this->assertEquals('b', $route->getPayload()->getParam('a'));
+        $this->assertEquals('bob', $route->getPayload()->module);
+        $this->assertEquals('foo', $route->getPayload()->controller);
+        $this->assertEquals('bar', $route->getPayload()->action);
+        $this->assertEquals('b', $route->getPayload()->a);
+    }
+
+    public function testAnotherRoute()
+    {
+        $route = new Standard([
+            'rule'      => '/foo/bar/:id',
+            'targets'   => [
+                'module'        => 'default',
+                'controller'    => 'foo',
+                'action'        => 'bar'
+            ],
+            'filters' => ['id' => ':int']
+        ]);
+        $route->process('/foo/bar/12');
+
+        $this->assertTrue($route->getPayload()->isPopulated());
+        $this->assertEquals('default', $route->getPayload()->module);
+        $this->assertEquals('foo', $route->getPayload()->controller);
+        $this->assertEquals('bar', $route->getPayload()->action);
+        $this->assertEquals(12, $route->getPayload()->id);
     }
 
     public function testAlphaFilter()
@@ -72,7 +92,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $route->process('/foo');
 
         $this->assertTrue($route->getPayload()->isPopulated());
-        $this->assertEquals('foo', $route->getPayload()->getParam('data'));
+        $this->assertEquals('foo', $route->getPayload()->data);
 
         $route = new Standard([
             'rule'      => '/:data',

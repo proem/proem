@@ -50,9 +50,9 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Proem\Dispatch\Payload', $payload);
         $this->assertTrue($payload->isPopulated());
-        $this->assertEquals('auth', $payload->getParam('controller'));
-        $this->assertEquals('login', $payload->getParam('action'));
-        $this->assertNull($payload->getParam('doesntexist'));
+        $this->assertEquals('auth', $payload->controller);
+        $this->assertEquals('login', $payload->action);
+        $this->assertNull($payload->doesntexist);
     }
 
     public function dataProvider()
@@ -93,7 +93,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Proem\Dispatch\Payload', $payload);
         $this->assertTrue($payload->isPopulated());
-        $this->assertEquals($controller, $payload->getParam('controller'));
-        $this->assertEquals($action, $payload->getParam('action', 'index'));
+        $this->assertEquals($controller, $payload->controller);
+        $this->assertEquals($action, $payload->get('action', 'index'));
     }
 }

@@ -35,7 +35,7 @@ use Proem\Util\Storage\KeyValStore;
 /**
  * Proem\Api\Dispatch\Payload
  */
-class Payload
+class Payload extends KeyValStore
 {
     /**
      * A flag to keep note as to wether or not this Payload is populated
@@ -43,67 +43,6 @@ class Payload
      * @var bool
      */
     private $populated = false;
-
-    /**
-     * Store the actual data.
-     *
-     * @var array
-     */
-    private $data = array();
-
-    public function __construct()
-    {
-        $this->data = new KeyValStore;
-    }
-
-    /**
-     * Store a parameter.
-     *
-     * @param string $name
-     * @param string|array $value
-     * @return Command
-     */
-    public function setParam($name, $value)
-    {
-        $this->data->set($name, $value);
-        return $this;
-    }
-
-    /**
-     * Store multiple params.
-     *
-     * @param array $params
-     */
-    public function setParams(array $params)
-    {
-        foreach ($params as $index => $value) {
-            $this->setParam($index, $value);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Retrieve a parameter or an optional default.
-     *
-     * @param string $name
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getParam($name, $default = null)
-    {
-        return $this->data->get($name, $default);
-    }
-
-    /**
-     * Retrieve all parameters as KeyValStore.
-     *
-     * @return array
-     */
-    public function getParams()
-    {
-        return $this->data;
-    }
 
     /**
      * Is the Payload Populated?

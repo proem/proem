@@ -88,14 +88,18 @@ class KeyValStore
     }
 
     /**
-     * Set a value by index
+     * Set multiple values or a single value by index.
      *
-     * @param string $index
+     * @param string|array $index
      * @param mixed $value
      */
-    public function set($index, $value)
+    public function set($index, $value = null)
     {
-        $this->data[$index] = $value;
+        if (is_array($index)) {
+            $this->data = array_merge($index, $this->data);
+        } else {
+            $this->data[$index] = $value;
+        }
         return $this;
     }
 

@@ -30,7 +30,9 @@
  */
 namespace Proem\Api\Util\Opt;
 
-use Proem\Util\Process\Callback;
+use Proem\Util\Process\Callback,
+    Proem\Service\Asset\Generic as GenericAsset,
+    Proem\Service\Manager as ServiceManager;
 
 /**
  * Proem\Api\Util\Opt\Option
@@ -40,6 +42,7 @@ class Option
     private $value;
     private $is_required        = false;
     private $is_type;
+    private $is_asset;
     private $is_object;
     private $is_classof;
     private $unless             = [];
@@ -156,6 +159,18 @@ class Option
     }
 
     /**
+     * Force this Option's value to be an Asset or an ServiceMananger
+     * providing a specific object.
+     *
+     * @param $provides The Asset this Option provides
+     */
+    public function asset($provides)
+    {
+        $this->is_asset = $provides;
+        return $this;
+    }
+
+    /**
      * Force this Option's value to be a string representation of a
      * particular class or subclass
      *
@@ -192,7 +207,6 @@ class Option
 
         if ($this->is_type && $this->value !== __FILE__) {
             if (isset($this->type_validators[$this->is_type])) {
-                //$func = $this->type_validators[$this->is_type];
                 if (!(new Callback($this->type_validators[$this->is_type], [$this->value]))->call()) {
                     throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
                 }
@@ -201,9 +215,23 @@ class Option
             }
         }
 
+        if ($this->is_asset && $this->value !== __FILE__) {
+            if ($this->value instanceof GenericAsset) {
+                if ($this->value->provides() !== $this->is_asset) {
+                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
+                }
+            } elseif ($this->value instanceof ServiceManager) {
+                if (!$this->value->has($this->is_asset)) {
+                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
+                }
+            } else {
+                throw new \InvalidArgumentException(' is not a valid "Asset" or "Service\Manager"');
+            }
+        }
+
         if ($this->is_object && $this->value !== __FILE__) {
             if (!$this->value instanceof $this->is_object) {
-                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object . ', ' . get_class($this->value) . ' provided');
+                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object . ', ' . (is_object($this->value) ? get_class($this->value) : $this->value) . ' provided');
             }
         }
 

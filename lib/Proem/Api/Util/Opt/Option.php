@@ -221,8 +221,8 @@ class Option
                     throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
                 }
             } elseif ($this->value instanceof ServiceManager) {
-                if (!$this->value->has($this->is_asset)) {
-                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
+                if (!$this->value->provides($this->is_asset)) {
+                    throw new \InvalidArgumentException(' did not pass the "' . (is_array($this->is_asset) ? '[' . implode(', ', $this->is_asset) . ']' : $this->is_asset) . '" Asset validator');
                 }
             } else {
                 throw new \InvalidArgumentException(' is not a valid "Asset" or "Service\Manager"');

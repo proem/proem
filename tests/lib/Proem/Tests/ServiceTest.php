@@ -207,4 +207,22 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($am->has('bar'));
     }
+
+    public function testManagerHasMultiple()
+    {
+        $bar = new Asset;
+        $bar->set('Proem\Service\Asset\Bar', function() {
+            return new Bar;
+        });
+
+        $foo = new Asset;
+        $foo->set('Proem\Service\Asset\Foo', function() {
+            return new Foo();
+        });
+
+        $am = new Manager;
+        $am->set('Foo', $foo)->set('Bar', $bar);
+
+        $this->assertTrue($am->provides(['Proem\Service\Asset\Foo', 'Proem\Service\Asset\Bar']));
+    }
 }

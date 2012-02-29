@@ -110,7 +110,14 @@ class Manager
      */
     public function provides($index, $provides = null)
     {
-        if ($provides === null) {
+        if (is_array($index)) {
+            foreach ($index as $key) {
+                if (!in_array($key, $this->provides)) {
+                    return false;
+                }
+            }
+            return true;
+        } elseif ($provides === null) {
             return in_array($index, $this->provides);
         } else {
             if ($this->has($index)) {

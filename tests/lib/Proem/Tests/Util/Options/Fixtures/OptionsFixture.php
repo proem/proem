@@ -38,6 +38,7 @@ class OptionsFixture
         $this->options = $this->setOptions([
             'foo'   => (new Option('foo')),
             'asset' => (new Option())->asset('StdClass'),
+            'am'    => (new Option())->asset(['StdClass', 'Proem']),
             'bar'   => (new Option())->required(),
             'boo'   => (new Option())->required()->type('array'),
             'bob'   => (new Option())->required()->object('Proem\Proem'),

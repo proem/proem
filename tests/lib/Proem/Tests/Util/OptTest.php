@@ -136,14 +136,21 @@ class OptTest extends \PHPUnit_Framework_TestCase
             return new \StdClass;
         });
 
+        $proem = new GenericAsset;
+        $proem->set('Proem', function() {
+            return new Proem;
+        });
+
         $man = new ServiceManager;
-        $man->set('StdClass', $asset);
+        $man->set('StdClass', $asset)
+            ->set('Proem', $proem);
 
         $fixture = new OptionsFixture([
             'boo'   => [],
             'bar'   => 'this is bar',
             'bob'   => new Proem,
-            'asset' => $man
+            'asset' => $man,
+            'am'    => $man
         ]);
     }
 

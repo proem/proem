@@ -35,7 +35,7 @@ namespace Proem\Api\Util\Storage;
  *
  * A generic key => value storage mechanism.
  */
-class KeyValStore
+class KeyValStore implements \Iterator
 {
     /**
      * Store the data
@@ -134,5 +134,40 @@ class KeyValStore
     public function has($index)
     {
         return array_key_exists($index, $this->data);
+    }
+
+    /**
+     * Reset internal pointer
+     */
+    public function rewind() {
+        return reset($this->data);
+    }
+
+    /**
+     * Return the current element
+     */
+    public function current() {
+        return current($this->data);
+    }
+
+    /**
+     * Fetch current key
+     */
+    public function key() {
+        return key($this->data);
+    }
+
+    /**
+     * Advance the internal pointer and return its data
+     */
+    public function next() {
+        return next($this->data);
+    }
+
+    /**
+     * Does the current internal pointer position point to an existing element?
+     */
+    public function valid() {
+        return $this->current();
     }
 }

@@ -39,6 +39,9 @@ class OptionsFixture2
             'foo'           => (new Option())->required()->unless('bar'),
             'obj'           => (new Option())->classof('Proem\Proem'),
             'emptytest'     => (new Option())->object('Proem\Proem'),
+            'except'        => (new Option())->object('Proem\Proem')->throws(function() {
+                return new \DomainException('This is a custom exception');
+            }),
             'custom-arg'    => (new Option())->addTypeValidator('custom', function($value) { return preg_match('/[a-z]/', $value); })->type('custom')
         ], $options);
     }

@@ -73,6 +73,17 @@ class OptTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException DomainException
+     */
+    public function testCustomExcpetion()
+    {
+        $fixture = new OptionsFixture2([
+            'foo' => '',
+            'except' => 'something'
+        ]);
+    }
+
+    /**
      * @expectedException InvalidArgumentException
      */
     public function testMissingBob()

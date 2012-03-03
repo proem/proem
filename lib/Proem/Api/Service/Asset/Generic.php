@@ -164,12 +164,12 @@ class Generic
      * Retrieve an instantiated Asset.
      *
      * Here the closure is passed this asset container and optionally the
-     * Proem\Api\Asset\Manager.
+     * Proem\Api\Service\Manager.
      *
      * This provides the closure with the ability to use any required parameters
      * and also be able to call upon any other assets stored in the asset manager.
      *
-     * @param Proem\Api\Asset\Manager $assetManager
+     * @param Proem\Api\Service\Manager $assetManager
      */
     public function get(Manager $assetManager = null)
     {

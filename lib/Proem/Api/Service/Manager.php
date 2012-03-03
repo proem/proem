@@ -64,7 +64,7 @@ class Manager
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Asset $asset
+     * @param Proem\Api\Service\Asset\Generic $asset
      */
     public function set($index, Asset $asset)
     {

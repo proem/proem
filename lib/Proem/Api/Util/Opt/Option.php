@@ -115,6 +115,10 @@ class Option
         return $this;
     }
 
+    public function isRequired() {
+        return $this->is_required;
+    }
+
     /**
      * Disable this Option from being required if some other argument(s) has been provided
      *
@@ -241,7 +245,9 @@ class Option
             }
         }
 
-        if ($this->value == __FILE__) { $this->value = null; }
+        if ($this->value == __FILE__) {
+            return false;
+        }
 
         return true;
     }

@@ -122,14 +122,14 @@ class Manager
             foreach ($this->queues[$ops->name] as $event) {
                 $eventObj = $ops->event;
                 if ($eventObj instanceof \Proem\Signal\Event\Generic) {
-                    if (isset($ops->params)) {
+                    if ($ops->has('params')) {
                         $eventObj->setParams($ops->params);
                     }
                 }
                 $eventObj->setTarget($ops->target);
                 $eventObj->setMethod($ops->method);
                 if ($return = $event($eventObj)) {
-                    if (isset($ops->callback)) {
+                    if ($ops->has('callback')) {
                         (new Callback($ops->callback, $return))->call();
                     }
                 }

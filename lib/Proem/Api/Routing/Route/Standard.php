@@ -151,9 +151,9 @@ class Standard extends Generic
                 // parse it into an array and send it to setParams() instead
                 // of the singular setParam.
                 if ($key == 'params' && strpos($value, '/') !== false) {
-                    $this->getPayload()->setParams($this->createAssocArray(explode('/', trim($value, '/'))));
+                    $this->getPayload()->set($this->createAssocArray(explode('/', trim($value, '/'))));
                 } else {
-                    $this->getPayload()->setParam($key, $value);
+                    $this->getPayload()->set($key, $value);
                 }
             }
 

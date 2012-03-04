@@ -26,37 +26,16 @@
 
 
 /**
- * @namespace Proem\Api\Dispatch
+ * @namespace Proem\Api\Util\Opt
  */
-namespace Proem\Api\Dispatch;
+namespace Proem\Api\Util\Opt;
 
 use Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\Dispatch\Payload
+ * Proem\Api\Util\Opt\Payload
  */
 class Payload extends KeyValStore
 {
-    /**
-     * A flag to keep note as to wether or not this Payload is populated
-     *
-     * @var bool
-     */
-    private $populated = false;
 
-    /**
-     * Is the Payload Populated?
-     */
-    public function isPopulated()
-    {
-        return $this->populated;
-    }
-
-    /**
-     * Set the populated flag
-     */
-    public function setPopulated()
-    {
-        $this->populated = true;
-    }
 }

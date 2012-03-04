@@ -28,7 +28,9 @@ namespace Proem\Tests\Util;
 
 use Proem\Tests\Util\Options\Fixtures\OptionsFixture,
     Proem\Tests\Util\Options\Fixtures\OptionsFixture2,
-    Proem\Proem;
+    Proem\Proem,
+    Proem\Service\Asset\Generic as GenericAsset,
+    Proem\Service\Manager as ServiceManager;
 
 class OptTest extends \PHPUnit_Framework_TestCase
 {
@@ -71,6 +73,17 @@ class OptTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException DomainException
+     */
+    public function testCustomExcpetion()
+    {
+        $fixture = new OptionsFixture2([
+            'foo' => '',
+            'except' => 'something'
+        ]);
+    }
+
+    /**
      * @expectedException InvalidArgumentException
      */
     public function testMissingBob()
@@ -100,6 +113,66 @@ class OptTest extends \PHPUnit_Framework_TestCase
         $fixture = new OptionsFixture([
             'boo' => [],
             'bob' => new \StdClass
+        ]);
+    }
+
+    public function testValidAsset()
+    {
+        $fixture = new OptionsFixture([
+            'boo'   => [],
+            'bar'   => 'this is bar',
+            'bob'   => new Proem,
+            'asset' => (new GenericAsset())
+                ->set('StdClass', function() {
+                    return new \StdClass;
+                })
+        ]);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidAsset()
+    {
+        $fixture = new OptionsFixture([
+            'boo'   => [],
+            'asset' => new \StdClass
+        ]);
+    }
+
+    public function testValidServiceManager()
+    {
+        $asset = new GenericAsset;
+        $asset->set('StdClass', function() {
+            return new \StdClass;
+        });
+
+        $proem = new GenericAsset;
+        $proem->set('Proem', function() {
+            return new Proem;
+        });
+
+        $man = new ServiceManager;
+        $man->set('StdClass', $asset)
+            ->set('Proem', $proem);
+
+        $fixture = new OptionsFixture([
+            'boo'   => [],
+            'bar'   => 'this is bar',
+            'bob'   => new Proem,
+            'asset' => $man,
+            'am'    => $man
+        ]);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidServiceManager()
+    {
+        $fixture = new OptionsFixture([
+            'boo'   => [],
+            'asset' => new \StdClass
         ]);
     }
 

@@ -44,6 +44,8 @@ trait Options
      */
     public function setOptions($defaults, $options)
     {
+        $payload = new Payload;
+
         foreach ($options as $key => $value) {
             if (isset($defaults[$key]) && ($defaults[$key] instanceof Option)) {
                 $defaults[$key]->setValue($value);
@@ -55,8 +57,11 @@ trait Options
         foreach ($defaults as $key => $value) {
             if ($value instanceof Option) {
                 try {
-                    $value->validate($options);
-                    $defaults[$key] = $value->getValue();
+                    if ($value->isRequired() || $value->getValue() !== null) {
+                        if ($value->validate($options)) {
+                            $payload->set($key, $value->getValue());
+                        }
+                    }
                 } catch (\InvalidArgumentException $e) {
                     throw new \InvalidArgumentException($key . $e->getMessage());
                 } catch (\RuntimeException $e) {
@@ -64,6 +69,6 @@ trait Options
                 }
             }
         }
-        return (object) $defaults;
+        return $payload;
     }
 }

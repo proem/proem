@@ -109,3 +109,5 @@ EOD;
     });
 
 });
+
+task('default', 'dev:tests');

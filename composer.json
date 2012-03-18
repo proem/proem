@@ -2,14 +2,14 @@
   "name": "proem/proem",
   "description": "A lightweight, simple, fast MVC implementation for PHP5.4",
   "keywords": ["MVC","Framework"],
-  "homepage": "http://github.com/proem/proem",
+  "homepage": "http://proemframework.org",
   "type": "library",
   "license": "MIT",
   "authors": [
     {
       "name": "Tony R Quilkey",
       "email": "trq@proemframework.org",
-      "homepage": "http://proemframework.org"
+      "homepage": "http://thorpesystems.com"
     }
   ],
   "require": {

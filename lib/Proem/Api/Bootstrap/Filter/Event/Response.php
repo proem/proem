@@ -79,11 +79,12 @@ class Response extends \Proem\Filter\Event\Generic
     public function inBound(Manager $assets)
     {
         if (!$assets->provides('Proem\IO\Http\Response')) {
+            $asset = new Asset;
             $assets->set(
                 'response',
-                (new Asset)->set('Proem\IO\Http\Response', function() {
+                $asset->set('Proem\IO\Http\Response', $asset->single(function() {
                     return new HTTPResponse;
-                })
+                }))
             );
         }
     }
@@ -133,7 +134,9 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function outBound(Manager $assets)
     {
-
+        if ($assets->provides('Proem\IO\Http\Response')) {
+            $assets->get('response')->send();
+        }
     }
 
     /**

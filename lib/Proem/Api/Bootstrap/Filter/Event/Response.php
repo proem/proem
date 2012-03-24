@@ -133,7 +133,9 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function outBound(Manager $assets)
     {
-
+        if ($assets->provides('Proem\IO\Http\Response')) {
+            $assets->get('response')->send();
+        }
     }
 
     /**

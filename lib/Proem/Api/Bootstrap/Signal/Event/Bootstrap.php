@@ -45,6 +45,11 @@ class Bootstrap extends \Proem\Signal\Event\Generic
     private $serviceManager;
 
     /**
+     * Store the environment variable.
+     */
+    private $environment;
+
+    /**
      * Set the service manager
      *
      * @param Proem\Api\Service\Manager $serviceManager
@@ -61,6 +66,25 @@ class Bootstrap extends \Proem\Signal\Event\Generic
     public function getServiceManager()
     {
         return $this->serviceManager;
+    }
+
+    /**
+     * Set the environment
+     *
+     * @param string $env
+     */
+    public function setEnvironment($environment)
+    {
+        $this->environment = $environment;
+        return $this;
+    }
+
+    /**
+     * Retrieve the environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
     }
 
 }

@@ -31,7 +31,9 @@
 namespace Proem\Api\Bootstrap\Filter\Event;
 
 use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap;
+    Proem\Bootstrap\Signal\Event\Bootstrap,
+    Proem\Service\Asset\Generic as Asset,
+    Proem\IO\Http\Response as HTTPResponse;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Response
@@ -44,6 +46,10 @@ class Response extends \Proem\Filter\Event\Generic
      * preIn
      *
      * Called prior to inBound
+     *
+     * The preIn Filter event will trigger a pre.in.response Signal.
+     *
+     * If this Signal returns a Proem\IO\Http\Response object load it into the Asset Manager.
      */
     public function preIn(Manager $assets)
     {
@@ -54,7 +60,11 @@ class Response extends \Proem\Filter\Event\Generic
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($e) use ($assets) {
+                    if ($e->provides('Proem\IO\Http\Response')) {
+                        $assets->set('response', $e);
+                    }
+                },
             ]);
         }
     }
@@ -63,10 +73,19 @@ class Response extends \Proem\Filter\Event\Generic
      * inBound
      *
      * Method to be called on the way into the filter.
+     *
+     * Checks to see if we already have an Asset providing Proem\IO\Http\Response, if not, we provide one.
      */
     public function inBound(Manager $assets)
     {
-
+        if (!$assets->provides('Proem\IO\Http\Response')) {
+            $assets->set(
+                'response',
+                (new Asset)->set('Proem\IO\Http\Response', function() {
+                    return new HTTPResponse;
+                })
+            );
+        }
     }
 
     /**

@@ -58,27 +58,20 @@ class Proem
      */
     private $events;
 
-    /**
-     * Store Modules / Plugins
-     */
-    private $extensions = [];
-
-    /**
-     * Bootstrap Extensions
-     */
-    private function bootstrapExtensions(ServiceManager $serviceManager, $env = null)
-    {
-        foreach ($this->extensions as $extension) {
-            $extension->init($serviceManager, $env);
-        }
-    }
+    private $serviceManager;
 
     /**
      * Register Modules / Plugins
      */
-    private function attachExtension(Extension $extension)
+    private function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
-        $this->extensions[] = $extension;
+        $this->attachEventListener([
+            'name'      => $event,
+            'priority'  => $priority,
+            'callback'  => function($e) use ($extension) {
+                $extension->init($e->getServiceManager(), $e->getEnvironment());
+            }
+        ]);
         return $this;
     }
 
@@ -91,6 +84,8 @@ class Proem
         $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
             return new SignalManager;
         }));
+
+        $this->serviceManager = new ServiceManager;
     }
 
     /**
@@ -116,7 +111,7 @@ class Proem
     /**
      * Register a Plugin
      */
-    public function attachPlugin(Plugin $plugin)
+    public function attachPlugin(Extension $plugin, $event = 'proem.init', $priority = 0)
     {
         return $this->attachExtension($plugin);
     }
@@ -124,20 +119,26 @@ class Proem
     /**
      * Register a Module
      */
-    public function attachModule(Extension $module)
+    public function attachModule(Extension $module, $event = 'proem.init', $priority = 0)
     {
-        return $this->attachExtension($module);
+        return $this->attachExtension($module, $event, $priority);
     }
 
     /**
      * Setup and execute the Filter Manager
      */
-    public function init($env = null)
+    public function init($environment = null)
     {
-        $serviceManager = (new ServiceManager)->set('events', $this->events);
-        $this->bootstrapExtensions($serviceManager, $env);
+        $this->serviceManager->set('events', $this->events);
 
-        (new FilterManager($serviceManager))
+        $this->events->get()->trigger([
+            'name'  => 'proem.init',
+            'event' => (new Bootstrap)
+                ->setServiceManager($this->serviceManager)
+                ->setEnvironment($environment)
+        ]);
+
+        (new FilterManager($this->serviceManager))
             ->attachEvent(new Event\Response, FilterManager::RESPONSE_EVENT_PRIORITY)
             ->attachEvent(new Event\Request, FilterManager::REQUEST_EVENT_PRIORITY)
             ->attachEvent(new Event\Route, FilterManager::ROUTE_EVENT_PRIORITY)

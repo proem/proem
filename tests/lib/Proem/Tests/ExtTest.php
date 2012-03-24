@@ -24,67 +24,41 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Tests;
 
-/**
- * @namespace Proem\Api\Bootstrap\Signal\Event\Bootstrap
- */
-namespace Proem\Api\Bootstrap\Signal\Event;
+use Proem\Autoloader,
+    MyApp\Module\Foo;
 
-use Proem\Service\Manager;
-
-/**
- * Proem\Api\Bootstrap\Signal\Event\Bootstrap
- *
- * A custom event used by the bootstrap triggered events.
- */
-class Bootstrap extends \Proem\Signal\Event\Generic
+class ExtTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Store the service manager
-     */
-    private $serviceManager;
-
-    /**
-     * Store the environment variable.
-     */
-    private $environment;
-
-    /**
-     * Set the service manager
-     *
-     * @param Proem\Api\Service\Manager $serviceManager
-     */
-    public function setServiceManager(Manager $serviceManager)
+    public function setUp()
     {
-        $this->serviceManager = $serviceManager;
-        return $this;
+        (new Autoloader)
+            ->registerNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
+            ->register();
+    }
+
+    public function testFooModuleLoads()
+    {
+        $this->expectOutputString('Foo Module Loaded');
+
+        (new \Proem\Proem)
+            ->attachModule(new Foo)
+            ->init();
     }
 
     /**
-     * Retrieve the service manager
+     * The Foo module listens for the pre.in.route signal event,
+     * Loading it now (at post.in.route) will never give it a chance
+     * to set itself up.
      */
-    public function getServiceManager()
+    public function testFooModuleWontLoadWhenAttachedTooLate()
     {
-        return $this->serviceManager;
-    }
+        $this->expectOutputString('');
 
-    /**
-     * Set the environment
-     *
-     * @param string $env
-     */
-    public function setEnvironment($environment)
-    {
-        $this->environment = $environment;
-        return $this;
-    }
-
-    /**
-     * Retrieve the environment
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        (new \Proem\Proem)
+            ->attachModule(new Foo, 'post.in.route')
+            ->init();
     }
 
 }

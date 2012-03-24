@@ -79,11 +79,12 @@ class Request extends \Proem\Filter\Event\Generic
     public function inBound(Manager $assets)
     {
         if (!$assets->provides('Proem\IO\Http\Request')) {
+            $asset = new Asset;
             $assets->set(
                 'request',
-                (new Asset)->set('Proem\IO\Http\Request', function() {
+                $asset->set('Proem\IO\Http\Request', $asset->single(function() {
                     return new HTTPRequest;
-                })
+                }))
             );
         }
     }

@@ -31,7 +31,9 @@
 namespace Proem\Api\Bootstrap\Filter\Event;
 
 use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap;
+    Proem\Bootstrap\Signal\Event\Bootstrap,
+    Proem\IO\Http\Request as HTTPRequest,
+    Proem\Service\Asset\Generic as Asset;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Request
@@ -44,6 +46,10 @@ class Request extends \Proem\Filter\Event\Generic
      * preIn
      *
      * Called prior to inBound
+     *
+     * The preIn Filter event will trigger a pre.in.request Signal.
+     *
+     * If this Signal returns a Proem\IO\Http\Request object load it into the Asset Manager.
      */
     public function preIn(Manager $assets)
     {
@@ -54,7 +60,11 @@ class Request extends \Proem\Filter\Event\Generic
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($e) use ($assets) {
+                    if ($e->provides('Proem\IO\Http\Request')) {
+                        $assets->set('request', $e);
+                    }
+                },
             ]);
         }
     }
@@ -63,10 +73,19 @@ class Request extends \Proem\Filter\Event\Generic
      * inBound
      *
      * Method to be called on the way into the filter.
+     *
+     * Checks to see if we already have an Asset providing Proem\IO\Http\Request, if not, we provide one.
      */
     public function inBound(Manager $assets)
     {
-
+        if (!$assets->provides('Proem\IO\Http\Request')) {
+            $assets->set(
+                'request',
+                (new Asset)->set('Proem\IO\Http\Request', function() {
+                    return new HTTPRequest;
+                })
+            );
+        }
     }
 
     /**

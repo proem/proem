@@ -76,7 +76,7 @@ class Request
             'param'     => new KeyValStore($param),
             'get'       => new KeyValStore($_GET),
             'post'      => new KeyValStore($_POST),
-            'cookie'    => new KeyValStore($_COOKIES),
+            'cookie'    => new KeyValStore($_COOKIE),
             'file'      => new KeyValStore($_FILES),
             'meta'      => new KeyValStore($_SERVER),
             'header'    => new KeyValStore($this->formHeaders($_SERVER))

@@ -31,7 +31,9 @@
 namespace Proem\Api\Bootstrap\Filter\Event;
 
 use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap;
+    Proem\Bootstrap\Signal\Event\Bootstrap,
+    Proem\Service\Asset\Generic as Asset,
+    Proem\Routing\Router;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Route
@@ -54,7 +56,11 @@ class Route extends \Proem\Filter\Event\Generic
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($e) use ($assets) {
+                    if ($e->provides('Proem\Routing\Router')) {
+                        $assets->set('router', $e);
+                    }
+                },
             ]);
         }
     }
@@ -66,7 +72,15 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function inBound(Manager $assets)
     {
-
+        if (!$assets->provides('Proem\Routing\Router')) {
+            $asset = new Asset;
+            $assets->set(
+                'router',
+                $asset->set('Proem\Routing\Router', $asset->single(function() use ($assets) {
+                    return new Router($assets->get('request')->getRequestUri());
+                }))
+            );
+        }
     }
 
     /**

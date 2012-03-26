@@ -31,14 +31,15 @@
 namespace Proem\Api\Signal\Event;
 
 use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
+    Proem\Util\Opt\Option,
+    Proem\Signal\Event\Template;
 
 /**
- * Proem\Api\Signal\Event\Generic
+ * Proem\Api\Signal\Event\Standard
  *
  * A base Event implementation
  */
-class Generic
+class Standard implements Template
 {
     /**
      * Make use of the Options trait
@@ -69,7 +70,7 @@ class Generic
     /**
      * Set params
      */
-    public function setParams(Array $params)
+    public function setParams(array $params)
     {
         $this->params = $params;
         return $this;
@@ -78,7 +79,8 @@ class Generic
     /**
      * Retrieve any parameters passed to this Event
      */
-    public function getParams() {
+    public function getParams()
+    {
         return $this->params;
     }
 
@@ -87,7 +89,8 @@ class Generic
      *
      * The target should be an instance of whatever object this event was triggered from
      */
-    public function setTarget($target) {
+    public function setTarget($target)
+    {
         $this->target = $target;
         return $this;
     }
@@ -97,7 +100,8 @@ class Generic
      *
      * The target should be an instance of whatever object this event was triggered from
      */
-    public function getTarget() {
+    public function getTarget()
+    {
         return $this->target;
     }
 
@@ -106,7 +110,8 @@ class Generic
      *
      * The method should be a string representing the name of the method which has triggered this event
      */
-    public function setMethod($method) {
+    public function setMethod($method)
+    {
         $this->method = $method;
         return $this;
     }
@@ -116,7 +121,8 @@ class Generic
      *
      * The method should be a string containing the name of the function this event was triggered from
      */
-    public function getMethod() {
+    public function getMethod()
+    {
         return $this->method;
     }
 

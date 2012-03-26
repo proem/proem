@@ -30,17 +30,18 @@
  */
 namespace Proem\Api\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager,
+use Proem\Service\Manager\Template as Manager,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\IO\Http\Request as HTTPRequest,
-    Proem\Service\Asset\Generic as Asset;
+    Proem\IO\Request\Http\Standard as HTTPRequest,
+    Proem\Service\Asset\Standard as Asset,
+    Proem\Filter\Event\Generic as Event;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Request
  *
  * The default "Request" filter event.
  */
-class Request extends \Proem\Filter\Event\Generic
+class Request extends Event
 {
     /**
      * preIn
@@ -53,7 +54,7 @@ class Request extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.request',
                 'params'    => [],
@@ -61,7 +62,7 @@ class Request extends \Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\IO\Http\Request')) {
+                    if ($e->provides('Proem\IO\Request\Template')) {
                         $assets->set('request', $e);
                     }
                 },
@@ -78,11 +79,11 @@ class Request extends \Proem\Filter\Event\Generic
      */
     public function inBound(Manager $assets)
     {
-        if (!$assets->provides('Proem\IO\Http\Request')) {
+        if (!$assets->provides('Proem\IO\Request\Template')) {
             $asset = new Asset;
             $assets->set(
                 'request',
-                $asset->set('Proem\IO\Http\Request', $asset->single(function() {
+                $asset->set('Proem\IO\Request\Template', $asset->single(function() {
                     return new HTTPRequest;
                 }))
             );
@@ -96,7 +97,7 @@ class Request extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.request',
                 'params'    => [],
@@ -115,7 +116,7 @@ class Request extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.request',
                 'params'    => [],
@@ -144,7 +145,7 @@ class Request extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.request',
                 'params'    => [],

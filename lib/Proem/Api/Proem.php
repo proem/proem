@@ -29,13 +29,16 @@
  */
 namespace Proem\Api;
 
-use Proem\Service\Manager as ServiceManager,
-    Proem\Signal\Manager as SignalManager,
-    Proem\Service\Asset\Generic as Asset,
-    Proem\Bootstrap\Filter\Event,
+use Proem\Service\Manager\Standard as ServiceManager,
+    Proem\Signal\Manager\Standard as SignalManager,
+    Proem\Filter\Manager\Standard as FilterManager,
+    Proem\Service\Asset\Standard as Asset,
+    Proem\Bootstrap\Filter\Event\Dispatch,
+    Proem\Bootstrap\Filter\Event\Response,
+    Proem\Bootstrap\Filter\Event\Request,
+    Proem\Bootstrap\Filter\Event\Route,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Manager as FilterManager,
-    Proem\Ext\Generic as Extension,
+    Proem\Ext\Template as Extension,
     Proem\Ext\Module\Generic as Module,
     Proem\Ext\Plugin\Generic as Plugin;
 
@@ -81,7 +84,7 @@ class Proem
     public function __construct()
     {
         $this->events = new Asset;
-        $this->events->set('\Proem\Signal\Manager', $this->events->single(function($asset) {
+        $this->events->set('\Proem\Signal\Manager\Template', $this->events->single(function($asset) {
             return new SignalManager;
         }));
 
@@ -111,7 +114,7 @@ class Proem
     /**
      * Register a Plugin
      */
-    public function attachPlugin(Extension $plugin, $event = 'proem.init', $priority = 0)
+    public function attachPlugin(Plugin $plugin, $event = 'proem.init', $priority = 0)
     {
         return $this->attachExtension($plugin);
     }
@@ -119,7 +122,7 @@ class Proem
     /**
      * Register a Module
      */
-    public function attachModule(Extension $module, $event = 'proem.init', $priority = 0)
+    public function attachModule(Module $module, $event = 'proem.init', $priority = 0)
     {
         return $this->attachExtension($module, $event, $priority);
     }
@@ -139,10 +142,10 @@ class Proem
         ]);
 
         (new FilterManager($this->serviceManager))
-            ->attachEvent(new Event\Response, FilterManager::RESPONSE_EVENT_PRIORITY)
-            ->attachEvent(new Event\Request, FilterManager::REQUEST_EVENT_PRIORITY)
-            ->attachEvent(new Event\Route, FilterManager::ROUTE_EVENT_PRIORITY)
-            ->attachEvent(new Event\Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
+            ->attachEvent(new Response, FilterManager::RESPONSE_EVENT_PRIORITY)
+            ->attachEvent(new Request, FilterManager::REQUEST_EVENT_PRIORITY)
+            ->attachEvent(new Route, FilterManager::ROUTE_EVENT_PRIORITY)
+            ->attachEvent(new Dispatch, FilterManager::DISPATCH_EVENT_PRIORITY)
             ->init();
     }
 }

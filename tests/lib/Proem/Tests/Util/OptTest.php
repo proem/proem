@@ -29,8 +29,8 @@ namespace Proem\Tests\Util;
 use Proem\Tests\Util\Options\Fixtures\OptionsFixture,
     Proem\Tests\Util\Options\Fixtures\OptionsFixture2,
     Proem\Proem,
-    Proem\Service\Asset\Generic as GenericAsset,
-    Proem\Service\Manager as ServiceManager;
+    Proem\Service\Asset\Standard as GenericAsset,
+    Proem\Service\Manager\Standard as ServiceManager;
 
 class OptTest extends \PHPUnit_Framework_TestCase
 {

@@ -30,15 +30,16 @@
  */
 namespace Proem\Api\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Service\Manager\Template as Manager,
+    Proem\Bootstrap\Signal\Event\Bootstrap,
+    Proem\Filter\Event\Generic as Event;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Dispatch
  *
  * The default "Dispatch" filter event.
  */
-class Dispatch extends \Proem\Filter\Event\Generic
+class Dispatch extends Event
 {
     /**
      * preIn
@@ -47,7 +48,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.dispatch',
                 'params'    => [],
@@ -76,7 +77,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.dispatch',
                 'params'    => [],
@@ -95,7 +96,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.dispatch',
                 'params'    => [],
@@ -124,7 +125,7 @@ class Dispatch extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.dispatch',
                 'params'    => [],

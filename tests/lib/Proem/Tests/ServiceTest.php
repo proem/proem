@@ -26,8 +26,8 @@
 
 namespace Proem\Tests;
 
-use Proem\Service\Asset\Generic as Asset,
-    Proem\Service\Manager,
+use Proem\Service\Asset\Standard as Asset,
+    Proem\Service\Manager\Standard as Manager,
     Proem\Service\Asset\Foo,
     Proem\Service\Asset\Bar;
 
@@ -36,13 +36,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
     public function testCanInstantiateAsset()
     {
         $a = new Asset;
-        $this->assertInstanceOf('Proem\Service\Asset\Generic', $a);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $a);
     }
 
     public function testCanInstantiateAssetManager()
     {
         $am = new Manager;
-        $this->assertInstanceOf('Proem\Service\Manager', $am);
+        $this->assertInstanceOf('Proem\Service\Manager\Template', $am);
     }
 
     public function testAssetCanInstantiate()
@@ -52,7 +52,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return new Bar;
         });
 
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $bar->get());
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $bar->get());
     }
 
     public function testAssetCanSetParams()
@@ -94,10 +94,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         });
 
         $one = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $one);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $one);
 
         $two = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $two);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $two);
 
         $this->assertNotSame($one, $two);
 
@@ -111,10 +111,10 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         }));
 
         $one = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $one);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $one);
 
         $two = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $two);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $two);
 
         $this->assertSame($one, $two);
 
@@ -130,7 +130,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $am = new Manager;
         $am->set('bar', $bar);
 
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('bar'));
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('bar'));
     }
 
     public function testAssetProvides()
@@ -170,7 +170,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $am = new Manager;
         $am->set('bar', $bar)->set('foo', $foo);
 
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->getProvided('Proem\Service\Asset\Bar'));
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->getProvided('Proem\Service\Asset\Bar'));
     }
 
     public function testCanGetDepsThroughManager()
@@ -190,9 +190,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $am = new Manager;
         $am->set('foo', $foo)->set('bar', $bar);
 
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('bar'));
-        $this->assertInstanceOf('Proem\Service\Asset\Foo', $am->get('foo'));
-        $this->assertInstanceOf('Proem\Service\Asset\Bar', $am->get('foo')->getBar());
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('bar'));
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('foo'));
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('foo')->getBar());
     }
 
     public function testManagerHas()

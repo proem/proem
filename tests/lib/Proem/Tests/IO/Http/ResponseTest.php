@@ -26,13 +26,13 @@
 
 namespace Proem\Tests\IO\Http;
 
-use Proem\IO\Http\Response;
+use Proem\IO\Response\Http\Standard as Response;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('\Proem\IO\Http\Response', new Response);
+        $this->assertInstanceOf('\Proem\IO\Response\Template', new Response);
     }
 
     public function testCanSetGetVersion()

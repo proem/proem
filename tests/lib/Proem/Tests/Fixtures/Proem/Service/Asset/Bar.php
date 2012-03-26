@@ -26,7 +26,7 @@
 
 namespace Proem\Service\Asset;
 
-class Bar
+class Bar extends \Proem\Service\Asset\Standard
 {
     public function hello()
     {

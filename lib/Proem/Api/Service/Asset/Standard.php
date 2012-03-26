@@ -30,10 +30,11 @@
  */
 namespace Proem\Api\Service\Asset;
 
-use Proem\Service\Manager;
+use Proem\Service\Asset\Template,
+    Proem\Service\Manager\Template as Manager;
 
 /**
- * Proem\Api\Service\Asset\Generic
+ * Proem\Api\Service\Asset\Standard
  *
  * An Asset container.
  *
@@ -42,7 +43,7 @@ use Proem\Service\Manager;
  * as well as having the ability to ijnstantiate an object using these parameters via a
  * Closure.
  */
-class Generic
+class Standard implements Template
 {
     /**
      * Store any required parameters

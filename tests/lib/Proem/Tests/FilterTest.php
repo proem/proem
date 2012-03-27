@@ -26,8 +26,8 @@
 
 namespace Proem\Tests;
 
-use Proem\Filter\Manager as FilterManager,
-    Proem\Service\Manager as ServiceManager;
+use Proem\Filter\Manager\Standard as FilterManager,
+    Proem\Service\Manager\Standard as ServiceManager;
 
 class FilterTest extends \PHPUnit_Framework_TestCase
 {
@@ -44,7 +44,7 @@ class FilterTest extends \PHPUnit_Framework_TestCase
     }
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Filter\Manager', new FilterManager(new ServiceManager));
+        $this->assertInstanceOf('Proem\Filter\Manager\Standard', new FilterManager(new ServiceManager));
     }
 
     public function testFilterManagerRun() {

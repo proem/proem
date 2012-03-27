@@ -2,7 +2,7 @@
 
 namespace MyApp\Module;
 
-use \Proem\Service\Manager;
+use \Proem\Service\Manager\Template as Manager;
 
 class Foo extends \Proem\Ext\Module\Generic
 {

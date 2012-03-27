@@ -26,59 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Routing
+ * @namespace Proem\Api\IO\Request
  */
-namespace Proem\Api\Routing;
-
-use Proem\Routing\Route\Generic as Route;
+namespace Proem\Api\IO\Request;
 
 /**
- * Proem\Api\Routing\Router
+ * Proem\Api\IO\Request\Template
  */
-class Router
+interface Template
 {
-    /**
-     * Store the request url
-     */
-    private $requestUrl;
-
-    /**
-     * Store our routes
-     *
-     * @var array
-     */
-    private $routes = [];
-
-    /**
-     * Setup
-     *
-     * @param string $requestUri
-     */
-    public function __construct($requestUri)
-    {
-        $this->requestUri = $requestUri;
-    }
-
-    /**
-     * Store route objects
-     */
-    public function map($name, Route $route)
-    {
-        $this->_routes[$name] = $route;
-        return $this;
-    }
-
-    /**
-     * Test routes for matching route and found return a DispatchPayload
-     */
-    public function route()
-    {
-        foreach ($this->_routes as $name => $route) {
-            $route->process($this->requestUri);
-            if ($route->isMatch() && $route->getPayload()->isPopulated()) {
-                break;
-            }
-        }
-        return $route->getPayload();
-    }
+    public function getBody($raw = true);
 }

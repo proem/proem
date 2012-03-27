@@ -26,19 +26,27 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\Signal\Event
  */
-namespace Proem\Api\Ext\Module;
+namespace Proem\Api\Signal\Event;
 
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
 /**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
+ * Proem\Api\Signal\Event\Template
  */
-abstract class Generic implements Template
+interface Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function setParams(array $params);
+
+    public function getParams();
+
+    public function setTarget($target);
+
+    public function getTarget();
+
+    public function setMethod($method);
+
+    public function getMethod();
 }

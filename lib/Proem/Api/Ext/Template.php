@@ -30,12 +30,12 @@
  */
 namespace Proem\Api\Ext;
 
-use Proem\Service\Manager;
+use Proem\Service\Manager\Template as Manager;
 
 /**
- * Proem\Api\Ext\Generic
- *
- * A base Module / Plugin.
+ * Proem\Api\Ext\Template
  */
-class Generic
-{}
+interface Template
+{
+    public function init(Manager $assets, $env = null);
+}

@@ -26,16 +26,17 @@
 
 
 /**
- * @namespace Proem\Api\IO\Http
+ * @namespace Proem\Api\IO\Request\Http
  */
-namespace Proem\Api\IO\Http;
+namespace Proem\Api\IO\Request\Http;
 
-use Proem\Util\Storage\KeyValStore;
+use Proem\IO\Request\Template,
+    Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Http\Request
+ * Proem\Api\IO\Http\Request\Standard
  */
-class Request
+class Standard implements Template
 {
     /**
      * Store data internally

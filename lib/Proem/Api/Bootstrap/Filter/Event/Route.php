@@ -30,17 +30,18 @@
  */
 namespace Proem\Api\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager,
+use Proem\Service\Manager\Template as Manager,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Service\Asset\Generic as Asset,
-    Proem\Routing\Router;
+    Proem\Service\Asset\Standard as Asset,
+    Proem\Routing\Router\Standard as Router,
+    Proem\Filter\Event\Generic as Event;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Route
  *
  * The default "Route" filter event.
  */
-class Route extends \Proem\Filter\Event\Generic
+class Route extends Event
 {
     /**
      * preIn
@@ -49,7 +50,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.route',
                 'params'    => [],
@@ -90,7 +91,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.route',
                 'params'    => [],
@@ -109,7 +110,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.route',
                 'params'    => [],
@@ -138,7 +139,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.route',
                 'params'    => [],

@@ -26,22 +26,23 @@
 
 
 /**
- * @namespace Proem\Api\Signal
+ * @namespace Proem\Api\Signal\Manager
  */
-namespace Proem\Api\Signal;
+namespace Proem\Api\Signal\Manager;
 
 use Proem\Util\Storage\Queue,
     Proem\Util\Process\Callback,
     Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
-    Proem\Signal\Event\Generic as Event;
+    Proem\Signal\Event\Standard as Event,
+    Proem\Signal\Manager\Template;
 
 /**
- * Proem\Api\Signal\Manager
+ * Proem\Api\Signal\Manager\Standard
  *
  * Manage the registration of and triggering of Events.
  */
-class Manager
+class Standard implements Template
 {
     /**
      * Make use of the Options trait
@@ -74,7 +75,7 @@ class Manager
      *   ], $options);
      * </code>
      */
-    public function attach(Array $options)
+    public function attach(array $options)
     {
         $ops = $this->setOptions([
             'name'      => (new Option())->required(),
@@ -103,11 +104,11 @@ class Manager
      *       'callback'  => (new Option())->type('callable'),
      *       'target'    => (new Option())->type('object'),
      *       'method'    => (new Option())->type('string'),
-     *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Generic')
+     *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
      *   ], $options);
      * </code>
      */
-    public function trigger(Array $options)
+    public function trigger(array $options)
     {
         $ops = $this->setOptions([
             'name'      => (new Option())->required(),
@@ -115,13 +116,13 @@ class Manager
             'callback'  => (new Option())->type('callable'),
             'target'    => (new Option())->type('object'),
             'method'    => (new Option())->type('string'),
-            'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Generic')
+            'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
         ], $options);
 
         if (isset($this->queues[$ops->name])) {
             foreach ($this->queues[$ops->name] as $event) {
                 $eventObj = $ops->event;
-                if ($eventObj instanceof \Proem\Signal\Event\Generic) {
+                if ($eventObj instanceof \Proem\Signal\Event\Template) {
                     if ($ops->has('params')) {
                         $eventObj->setParams($ops->params);
                     }

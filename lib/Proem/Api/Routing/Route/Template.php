@@ -26,19 +26,14 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\Routing\Route
  */
-namespace Proem\Api\Ext\Module;
-
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+namespace Proem\Api\Routing\Route;
 
 /**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
+ * Proem\Api\Routing\Route\Template
  */
-abstract class Generic implements Template
+interface Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function process($uri);
 }

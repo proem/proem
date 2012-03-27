@@ -31,16 +31,17 @@
  */
 
 /**
- * @namespace Proem\Api\IO\Http
+ * @namespace Proem\Api\IO\Request\Http
  */
-namespace Proem\Api\IO\Http;
+namespace Proem\Api\IO\Request\Http;
 
-use Proem\Util\Storage\KeyValStore;
+use Proem\IO\Request\Template,
+    Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Http\FakeRequest
+ * Proem\Api\IO\Request\Http\Fake
  */
-class FakeRequest extends Request
+class Fake extends Standard
 {
     /**
      * Instantiate a post from faked data.

@@ -26,19 +26,59 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\Routing\Router
  */
-namespace Proem\Api\Ext\Module;
+namespace Proem\Api\Routing\Router;
 
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Route\Template as Route;
 
 /**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
+ * Proem\Api\Routing\Router\Standard
  */
-abstract class Generic implements Template
+class Standard implements Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    /**
+     * Store the request url
+     */
+    private $requestUrl;
+
+    /**
+     * Store our routes
+     *
+     * @var array
+     */
+    private $routes = [];
+
+    /**
+     * Setup
+     *
+     * @param string $requestUri
+     */
+    public function __construct($requestUri)
+    {
+        $this->requestUri = $requestUri;
+    }
+
+    /**
+     * Store route objects
+     */
+    public function map($name, Route $route)
+    {
+        $this->_routes[$name] = $route;
+        return $this;
+    }
+
+    /**
+     * Test routes for matching route and found return a DispatchPayload
+     */
+    public function route()
+    {
+        foreach ($this->_routes as $name => $route) {
+            $route->process($this->requestUri);
+            if ($route->isMatch() && $route->getPayload()->isPopulated()) {
+                break;
+            }
+        }
+        return $route->getPayload();
+    }
 }

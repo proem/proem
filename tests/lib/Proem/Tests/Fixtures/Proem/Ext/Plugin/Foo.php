@@ -30,8 +30,8 @@
  */
 namespace Proem\Ext\Plugin;
 
-use Proem\Service\Manager,
-    Proem\Service\Asset\Generic as Asset;
+use Proem\Service\Manager\Template as Manager,
+    Proem\Service\Asset\Standard as Asset;
 
 /**
  * Proem\Ext\Plugin\Foo

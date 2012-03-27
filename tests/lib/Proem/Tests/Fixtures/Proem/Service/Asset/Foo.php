@@ -26,7 +26,7 @@
 
 namespace Proem\Service\Asset;
 
-class Foo
+class Foo extends \Proem\Service\Asset\Standard
 {
     private $name;
     private $bar;

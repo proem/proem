@@ -30,17 +30,18 @@
  */
 namespace Proem\Api\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager,
+use Proem\Service\Manager\Template as Manager,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Service\Asset\Generic as Asset,
-    Proem\IO\Http\Response as HTTPResponse;
+    Proem\Service\Asset\Standard as Asset,
+    Proem\IO\Response\Http\Standard as HTTPResponse,
+    Proem\Filter\Event\Generic as Event;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Response
  *
  * The default "Response" filter event.
  */
-class Response extends \Proem\Filter\Event\Generic
+class Response extends Event
 {
     /**
      * preIn
@@ -53,7 +54,7 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.response',
                 'params'    => [],
@@ -61,7 +62,7 @@ class Response extends \Proem\Filter\Event\Generic
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\IO\Http\Response')) {
+                    if ($e->provides('Proem\IO\Response\Template')) {
                         $assets->set('response', $e);
                     }
                 },
@@ -78,11 +79,11 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function inBound(Manager $assets)
     {
-        if (!$assets->provides('Proem\IO\Http\Response')) {
+        if (!$assets->provides('Proem\IO\Response\Template')) {
             $asset = new Asset;
             $assets->set(
                 'response',
-                $asset->set('Proem\IO\Http\Response', $asset->single(function() {
+                $asset->set('Proem\IO\Response\Template', $asset->single(function() {
                     return new HTTPResponse;
                 }))
             );
@@ -96,7 +97,7 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.response',
                 'params'    => [],
@@ -115,7 +116,7 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.response',
                 'params'    => [],
@@ -134,7 +135,7 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function outBound(Manager $assets)
     {
-        if ($assets->provides('Proem\IO\Http\Response')) {
+        if ($assets->provides('Proem\IO\Response\Template\Template')) {
             $assets->get('response')->send();
         }
     }
@@ -146,7 +147,7 @@ class Response extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.response',
                 'params'    => [],

@@ -30,14 +30,15 @@
  */
 namespace Proem\Api\Bootstrap\Signal\Event;
 
-use Proem\Service\Manager;
+use Proem\Service\Manager\Template as Manager,
+    Proem\Signal\Event\Standard as StandardEvent;
 
 /**
  * Proem\Api\Bootstrap\Signal\Event\Bootstrap
  *
  * A custom event used by the bootstrap triggered events.
  */
-class Bootstrap extends \Proem\Signal\Event\Generic
+class Bootstrap extends StandardEvent
 {
     /**
      * Store the service manager

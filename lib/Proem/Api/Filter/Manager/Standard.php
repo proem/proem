@@ -26,18 +26,19 @@
 
 
 /**
- * @namespace Proem\Api\Filter
+ * @namespace Proem\Api\Filter\Manager
  */
-namespace Proem\Api\Filter;
+namespace Proem\Api\Filter\Manager;
 
-use Proem\Filter\Event\Generic as Event,
+use Proem\Filter\Event\Template as Event,
     Proem\Util\Storage\Queue,
-    Proem\Service\Manager as ServiceManager;
+    Proem\Service\Manager\Template as ServiceManager,
+    Proem\Filter\Manager\Template;
 
 /**
- * Proem\Api\Filter\Manager
+ * Proem\Api\Filter\Manager\Standard
  */
-class Manager
+class Standard implements Template
 {
     /**
      * Constants used to priorities default events

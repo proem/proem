@@ -26,30 +26,30 @@
 
 namespace Proem\Tests\IO\Http;
 
-use Proem\IO\Http\FakeRequest;
+use Proem\IO\Request\Http\Fake;
 
 class FakeRequestTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('\Proem\IO\Http\FakeRequest', new FakeRequest(null));
+        $this->assertInstanceOf('\Proem\IO\Request\Template', new Fake(null));
     }
 
     public function testMagicGet()
     {
-        $this->assertInstanceOf('\Proem\Util\Storage\KeyValStore', (new FakeRequest(null))->get);
+        $this->assertInstanceOf('\Proem\Util\Storage\KeyValStore', (new Fake(null))->get);
     }
 
     public function testParsedComponents()
     {
-        $request = new FakeRequest('http://proemframework.org/foo/bar');
+        $request = new Fake('http://proemframework.org/foo/bar');
         $this->assertEquals('/foo/bar', $request->getRequestUri());
         $this->assertEquals('proemframework.org', $request->getHostName());
     }
 
     public function testCanSetGetParams()
     {
-        $request = new FakeRequest(null);
+        $request = new Fake(null);
         $request->param->set('foo', 'bar');
         $this->assertEquals('bar', $request->param->foo);
         $this->assertEquals('boo', $request->param->get('doesnotexist', 'boo'));
@@ -57,7 +57,7 @@ class FakeRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testCanManipulateMethodAndType()
     {
-        $request = new FakeRequest(null);
+        $request = new Fake(null);
         $this->assertEquals('GET', $request->getMethod());
         $request->setMethod('post');
         $this->assertEquals('POST', $request->getMethod());
@@ -66,7 +66,7 @@ class FakeRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testCanRetrieveJson()
     {
-        $request = new FakeRequest(null , 'PUT', '{"foo": "bar"}');
+        $request = new Fake(null , 'PUT', '{"foo": "bar"}');
         $request->setContentType('json');
         $this->assertEquals('bar', $request->getBody(false)->foo);
     }

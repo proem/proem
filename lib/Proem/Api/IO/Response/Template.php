@@ -26,19 +26,19 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\IO\Response
  */
-namespace Proem\Api\Ext\Module;
-
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+namespace Proem\Api\IO\Response;
 
 /**
- * Proem\Api\Ext\Module\Generic
+ * Proem\Api\IO\Response\Template
  *
- * A base Module abstract
  */
-abstract class Generic implements Template
+interface Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function appendToBody($string);
+
+    public function getBody();
+
+    public function send();
 }

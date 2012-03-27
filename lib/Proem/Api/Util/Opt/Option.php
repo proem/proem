@@ -31,8 +31,8 @@
 namespace Proem\Api\Util\Opt;
 
 use Proem\Util\Process\Callback,
-    Proem\Service\Asset\Generic as GenericAsset,
-    Proem\Service\Manager as ServiceManager;
+    Proem\Service\Asset\Standard as StandardAsset,
+    Proem\Service\Manager\Template as ServiceManager;
 
 /**
  * Proem\Api\Util\Opt\Option
@@ -237,7 +237,7 @@ class Option
         }
 
         if ($this->is_asset && $this->value !== __FILE__) {
-            if ($this->value instanceof GenericAsset) {
+            if ($this->value instanceof StandardAsset) {
                 if ($this->value->provides() !== $this->is_asset) {
                     if ($this->throws === null) {
                         throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');

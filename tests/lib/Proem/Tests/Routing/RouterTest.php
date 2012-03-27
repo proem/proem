@@ -26,15 +26,15 @@
 
 namespace Proem\Tests;
 
-use Proem\Routing\Router,
-    Proem\Routing\Route\Standard;
+use Proem\Routing\Router\Standard as Router,
+    Proem\Routing\Route\Standard as Route;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAsset()
     {
         $r = new Router('');
-        $this->assertInstanceOf('\Proem\Routing\Router', $r);
+        $this->assertInstanceOf('\Proem\Routing\Router\Template', $r);
     }
 
     public function testTargetedMapedRoute()
@@ -42,7 +42,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $router = new Router('/login');
         $payload = $router->map(
              'simple',
-             new Standard([
+             new Route([
                 'rule'      => '/login',
                 'targets'   => ['controller' => 'auth', 'action' => 'login']
             ])
@@ -73,19 +73,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $payload = $router
             ->map(
                 'home-page',
-                new Standard([
+                new Route([
                     'rule'      => '/',
                     'targets'   => ['controller' => 'home']
             ])
             )->map(
                 'login',
-                new Standard([
+                new Route([
                     'rule'      => '/login',
                     'targets'   => ['controller' => 'auth', 'action' => 'login']
             ])
             )->map(
                 'logout',
-                new Standard([
+                new Route([
                     'rule'      => '/logout',
                     'targets'   => ['controller' => 'auth', 'action' => 'logout']
             ])

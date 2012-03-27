@@ -26,18 +26,17 @@
 
 
 /**
- * @namespace Proem\Api\IO\Http
+ * @namespace Proem\Api\IO\Response\Http
  */
-namespace Proem\Api\IO\Http;
+namespace Proem\Api\IO\Response\Http;
 
-use Proem\Util\Storage\KeyValStore;
+use Proem\IO\Response\Template,
+    Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Http\Response
- *
- * TODO: Implement cookie handling.
+ * Proem\Api\IO\Response\Http\Standard
  */
-class Response
+class Standard implements Template
 {
     /**
      * Store the HTTP Version

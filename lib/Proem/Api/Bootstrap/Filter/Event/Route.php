@@ -30,15 +30,18 @@
  */
 namespace Proem\Api\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Service\Manager\Template as Manager,
+    Proem\Bootstrap\Signal\Event\Bootstrap,
+    Proem\Service\Asset\Standard as Asset,
+    Proem\Routing\Router\Standard as Router,
+    Proem\Filter\Event\Generic as Event;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Route
  *
  * The default "Route" filter event.
  */
-class Route extends \Proem\Filter\Event\Generic
+class Route extends Event
 {
     /**
      * preIn
@@ -47,14 +50,18 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.in.route',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($e) use ($assets) {
+                    if ($e->provides('Proem\Routing\Router')) {
+                        $assets->set('router', $e);
+                    }
+                },
             ]);
         }
     }
@@ -66,7 +73,15 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function inBound(Manager $assets)
     {
-
+        if (!$assets->provides('Proem\Routing\Router')) {
+            $asset = new Asset;
+            $assets->set(
+                'router',
+                $asset->set('Proem\Routing\Router', $asset->single(function() use ($assets) {
+                    return new Router($assets->get('request')->getRequestUri());
+                }))
+            );
+        }
     }
 
     /**
@@ -76,7 +91,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.in.route',
                 'params'    => [],
@@ -95,7 +110,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'pre.out.route',
                 'params'    => [],
@@ -124,7 +139,7 @@ class Route extends \Proem\Filter\Event\Generic
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager')) {
+        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'post.out.route',
                 'params'    => [],

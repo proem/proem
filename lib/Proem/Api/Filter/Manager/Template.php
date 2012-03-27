@@ -26,19 +26,26 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\Filter\Manager
  */
-namespace Proem\Api\Ext\Module;
+namespace Proem\Api\Filter\Manager;
 
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+use Proem\Filter\Event\Template as Event,
+    Proem\Util\Storage\Queue,
+    Proem\Service\Manager as ServiceManager;
 
 /**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
+ * Proem\Api\Filter\Manager\Template
  */
-abstract class Generic implements Template
+interface Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function attachEvent(Event $event, $priority);
+
+    public function getInitialEvent();
+
+    public function getNextEvent();
+
+    public function hasEvents();
+
+    public function init();
 }

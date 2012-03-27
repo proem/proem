@@ -26,16 +26,17 @@
 
 
 /**
- * @namespace Proem\Api\IO\Http
+ * @namespace Proem\Api\IO\Request\Http
  */
-namespace Proem\Api\IO\Http;
+namespace Proem\Api\IO\Request\Http;
 
-use Proem\Util\Storage\KeyValStore;
+use Proem\IO\Request\Template,
+    Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Http\Request
+ * Proem\Api\IO\Http\Request\Standard
  */
-class Request
+class Standard implements Template
 {
     /**
      * Store data internally
@@ -76,7 +77,7 @@ class Request
             'param'     => new KeyValStore($param),
             'get'       => new KeyValStore($_GET),
             'post'      => new KeyValStore($_POST),
-            'cookie'    => new KeyValStore($_COOKIES),
+            'cookie'    => new KeyValStore($_COOKIE),
             'file'      => new KeyValStore($_FILES),
             'meta'      => new KeyValStore($_SERVER),
             'header'    => new KeyValStore($this->formHeaders($_SERVER))

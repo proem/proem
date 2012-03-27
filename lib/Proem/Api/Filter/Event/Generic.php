@@ -30,13 +30,14 @@
  */
 namespace Proem\Api\Filter\Event;
 
-use Proem\Filter\Manager as FilterManager,
-    Proem\Service\Manager as ServiceManager;
+use Proem\Filter\Manager\Standard as FilterManager,
+    Proem\Service\Manager\Template as ServiceManager,
+    Proem\Filter\Event\Template as Template;
 
 /**
  * Proem\Api\Filter\Event\Generic
  */
-abstract class Generic
+abstract class Generic implements Template
 {
     /**
      * preIn

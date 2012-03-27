@@ -26,14 +26,15 @@
 
 
 /**
- * @namespace Proem\Api\Service
+ * @namespace Proem\Api\Service\Manager
  */
-namespace Proem\Api\Service;
+namespace Proem\Api\Service\Manager;
 
-use Proem\Service\Asset\Generic as Asset;
+use Proem\Service\Manager\Template,
+    Proem\Service\Asset\Template as Asset;
 
 /**
- * Proem\Api\Service\Manager
+ * Proem\Api\Service\Manager\Standard
  *
  * A Registry of Assets.
  *
@@ -43,9 +44,9 @@ use Proem\Service\Asset\Generic as Asset;
  * These containers contain the parameters required to instantiate an Asset as
  * well as a Closure capable of returning a configured and instantiated Asset.
  *
- * @see Proem\Api\Service\Asset\Generic
+ * @see Proem\Api\Service\Asset\Standard
  */
-class Manager
+class Standard implements Template
 {
     /**
      * Store assets
@@ -64,7 +65,7 @@ class Manager
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Service\Asset\Generic $asset
+     * @param Proem\Api\Service\Asset\Template $asset
      */
     public function set($index, Asset $asset)
     {

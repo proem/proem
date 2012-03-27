@@ -24,21 +24,41 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Tests;
 
-/**
- * @namespace Proem\Ext\Module
- */
-namespace Proem\Api\Ext\Module;
+use Proem\Autoloader,
+    MyApp\Module\Foo;
 
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
-
-/**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
- */
-abstract class Generic implements Template
+class ExtTest extends \PHPUnit_Framework_TestCase
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function setUp()
+    {
+        (new Autoloader)
+            ->registerNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
+            ->register();
+    }
+
+    public function testFooModuleLoads()
+    {
+        $this->expectOutputString('Foo Module Loaded');
+
+        (new \Proem\Proem)
+            ->attachModule(new Foo)
+            ->init();
+    }
+
+    /**
+     * The Foo module listens for the pre.in.route signal event,
+     * Loading it now (at post.in.route) will never give it a chance
+     * to set itself up.
+     */
+    public function testFooModuleWontLoadWhenAttachedTooLate()
+    {
+        $this->expectOutputString('');
+
+        (new \Proem\Proem)
+            ->attachModule(new Foo, 'post.in.route')
+            ->init();
+    }
+
 }

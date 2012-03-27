@@ -26,8 +26,8 @@
 
 namespace Proem\Tests;
 
-use Proem\Signal\Event\Generic as Event,
-    Proem\Signal\Manager;
+use Proem\Signal\Event\Standard as Event,
+    Proem\Signal\Manager\Standard as Manager;
 
 class SignalTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,8 +35,8 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Signal\Event\Generic', new Event(['name' => 'foo', 'params' => []]));
-        $this->assertInstanceOf('Proem\Signal\Manager', new Manager);
+        $this->assertInstanceOf('Proem\Signal\Event\Template', new Event(['name' => 'foo', 'params' => []]));
+        $this->assertInstanceOf('Proem\Signal\Manager\Template', new Manager);
     }
 
     public function testCanPriority()

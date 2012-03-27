@@ -1,7 +1,3 @@
-#!/usr/bin/env php
-<?php
-
-$header = <<<EOD
 <?php
 
 /**
@@ -30,21 +26,14 @@ $header = <<<EOD
 
 
 /**
- * @namespace Proem\
+ * @namespace Proem\Api\Routing\Route
  */
-namespace Proem\;
+namespace Proem\Api\Routing\Route;
 
 /**
- * Proem\
- *
- *
+ * Proem\Api\Routing\Route\Template
  */
-class
+interface Template
 {
-
-}
-EOD;
-
-if ($argc == 2) {
-    file_put_contents($argv[1], $header);
+    public function process($uri);
 }

@@ -26,19 +26,16 @@
 
 
 /**
- * @namespace Proem\Ext\Module
+ * @namespace Proem\Api\Signal\Manager
  */
-namespace Proem\Api\Ext\Module;
-
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+namespace Proem\Api\Signal\Manager;
 
 /**
- * Proem\Api\Ext\Module\Generic
- *
- * A base Module abstract
+ * Proem\Api\Signal\Manager\Template
  */
-abstract class Generic implements Template
+interface Template
 {
-    public abstract function init(Manager $assets, $env = null);
+    public function attach(array $options);
+
+    public function trigger(array $options);
 }

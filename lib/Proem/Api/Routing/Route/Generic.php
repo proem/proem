@@ -33,12 +33,13 @@ namespace Proem\Api\Routing\Route;
 use Proem\Dispatch\Payload,
     Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
-    Proem\Util\ArrayHelper;
+    Proem\Util\ArrayHelper,
+    Proem\Routing\Route\Template;
 
 /**
  * Proem\Api\Routing\Route
  */
-abstract class Generic
+abstract class Generic implements Template
 {
     use Options;
     use ArrayHelper;

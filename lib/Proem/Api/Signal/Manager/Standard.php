@@ -50,6 +50,11 @@ class Standard implements Template
     use Options;
 
     /**
+     * Wildcard used when listening for all events
+     */
+    const WILDCARD = '*';
+
+    /**
      * Stores listeners in a hash of priority queues.
      *
      * @var array $queues
@@ -94,18 +99,34 @@ class Standard implements Template
         if (is_array($ops->name)) {
             foreach ($ops->name as $event) {
                 if (isset($this->queues[$event])) {
-                    $this->queues[$event]->insert($key, $ops->priority);
+                    if ($event == self::WILDCARD) {
+                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                    } else {
+                        $this->queues[$event]->insert($key, $ops->priority);
+                    }
                 } else {
-                    $this->queues[$event] = new Queue;
-                    $this->queues[$event]->insert($key, $ops->priority);
+                    if ($event == self::WILDCARD) {
+                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                    } else {
+                        $this->queues[$event] = new Queue;
+                        $this->queues[$event]->insert($key, $ops->priority);
+                    }
                 }
             }
         } else {
             if (isset($this->queues[$ops->name])) {
-                $this->queues[$ops->name]->insert($key, $ops->priority);
+                if ($ops->name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                } else {
+                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                }
             } else {
-                $this->queues[$ops->name] = new Queue;
-                $this->queues[$ops->name]->insert($key, $ops->priority);
+                if ($ops->name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                } else {
+                    $this->queues[$ops->name] = new Queue;
+                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                }
             }
         }
 
@@ -138,7 +159,17 @@ class Standard implements Template
             'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
         ], $options);
 
-        if (isset($this->queues[$ops->name])) {
+        if (isset($this->queues[$ops->name]) || isset($this->queues[self::WILDCARD])) {
+            if (isset($this->queues[self::WILDCARD])) {
+                foreach ($this->queues[self::WILDCARD] as $listener) {
+                    if (isset($this->queues[$ops->name])) {
+                        $this->queues[$ops->name]->insert($listener[0], $listener[1]);
+                    } else {
+                        $this->queues[$ops->name] = new Queue;
+                        $this->queues[$ops->name]->insert($listener[0], $listener[1]);
+                    }
+                }
+            }
             foreach ($this->queues[$ops->name] as $key) {
                 $event = $ops->event;
                 if ($event instanceof \Proem\Signal\Event\Template) {

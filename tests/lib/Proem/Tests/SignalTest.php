@@ -92,6 +92,23 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $r->out);
     }
 
+    public function testListenerCanListenToAllEvents()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+        (new Manager)->attach([
+            'name'      => '*',
+            'callback'  => function($e) use ($r) {
+                $r->out++;
+            }
+        ])
+        ->trigger(['name' => 'a'])
+        ->trigger(['name' => 'b'])
+        ->trigger(['name' => 'c']);
+
+        $this->assertEquals(3, $r->out);
+    }
+
     public function testListenerReceivesParams()
     {
         $r = new \StdClass;

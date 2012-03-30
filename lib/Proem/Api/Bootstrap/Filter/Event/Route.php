@@ -58,7 +58,7 @@ class Route extends Event
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Routing\Router')) {
+                    if ($e->provides('Proem\Routing\Router\Template')) {
                         $assets->set('router', $e);
                     }
                 },
@@ -77,7 +77,7 @@ class Route extends Event
             $asset = new Asset;
             $assets->set(
                 'router',
-                $asset->set('Proem\Routing\Router', $asset->single(function() use ($assets) {
+                $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
                     return new Router($assets->get('request')->getRequestUri());
                 }))
             );

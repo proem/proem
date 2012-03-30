@@ -135,7 +135,7 @@ class Response extends Event
      */
     public function outBound(Manager $assets)
     {
-        if ($assets->provides('Proem\IO\Response\Template\Template')) {
+        if ($assets->provides('Proem\IO\Response\Template')) {
             $assets->get('response')->send();
         }
     }

@@ -52,7 +52,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.route',
+                'name'      => 'pre.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -93,7 +93,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.route',
+                'name'      => 'post.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -112,7 +112,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.route',
+                'name'      => 'pre.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -141,7 +141,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.route',
+                'name'      => 'post.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

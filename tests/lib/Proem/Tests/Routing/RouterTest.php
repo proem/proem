@@ -48,7 +48,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             ])
         )->route();
 
-        $this->assertInstanceOf('\Proem\Dispatch\Payload', $payload);
+        $this->assertInstanceOf('\Proem\Routing\Route\Payload', $payload);
         $this->assertTrue($payload->isPopulated());
         $this->assertEquals('auth', $payload->controller);
         $this->assertEquals('login', $payload->action);
@@ -91,7 +91,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             ])
         )->route();
 
-        $this->assertInstanceOf('\Proem\Dispatch\Payload', $payload);
+        $this->assertInstanceOf('\Proem\Routing\Route\Payload', $payload);
         $this->assertTrue($payload->isPopulated());
         $this->assertEquals($controller, $payload->controller);
         $this->assertEquals($action, $payload->get('action', 'index'));

@@ -46,7 +46,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($route->getPayload()->isPopulated());
         $this->assertEquals('foo', $route->getPayload()->controller);
         $this->assertEquals('bar', $route->getPayload()->action);
-        $this->assertEquals('b', $route->getPayload()->a);
+        $this->assertEquals('b', $route->getPayload()->params['a']);
     }
 
     public function testModule()
@@ -60,7 +60,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('bob', $route->getPayload()->module);
         $this->assertEquals('foo', $route->getPayload()->controller);
         $this->assertEquals('bar', $route->getPayload()->action);
-        $this->assertEquals('b', $route->getPayload()->a);
+        $this->assertEquals('b', $route->getPayload()->params['a']);
     }
 
     public function testAnotherRoute()

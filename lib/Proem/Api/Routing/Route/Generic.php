@@ -30,7 +30,7 @@
  */
 namespace Proem\Api\Routing\Route;
 
-use Proem\Dispatch\Payload,
+use Proem\Routing\Route\Payload,
     Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
     Proem\Util\ArrayHelper,

@@ -24,41 +24,43 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
 
-use Proem\Autoloader,
-    MyApp\Module\Foo;
+/**
+ * @namespace Proem\Api\Routing\Signal\Event
+ */
+namespace Proem\Api\Routing\Signal\Event;
 
-class ExtTest extends \PHPUnit_Framework_TestCase
+use Proem\Signal\Event\Standard,
+    Proem\Routing\Route\Payload;
+
+/**
+ * Proem\Api\Bootstrap\Signal\Event\Bootstrap
+ *
+ * A custom event used by the router to communicate matching routes
+ */
+class RouteMatch extends Standard
 {
-    public function setUp()
-    {
-        (new Autoloader)
-            ->registerNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
-            ->register();
-    }
+    /**
+     * Store the routes payload
+     */
+    private $payload;
 
-    public function testFooModuleLoads()
+    /**
+     * Set the payload
+     *
+     * @param Proem\Dispatch\Payload $payload
+     */
+    public function setPayload(Payload $payload)
     {
-        $this->expectOutputString('Foo Module Loaded<h3>404 - Page Not Found</h3>');
-
-        (new \Proem\Proem)
-            ->attachModule(new Foo)
-            ->init();
+        $this->payload = $payload;
+        return $this;
     }
 
     /**
-     * The Foo module listens for the pre.in.route signal event,
-     * Loading it now (at post.in.route) will never give it a chance
-     * to set itself up.
+     * Retrieve the payload
      */
-    public function testFooModuleWontLoadWhenAttachedTooLate()
+    public function getPayload()
     {
-        $this->expectOutputString('<h3>404 - Page Not Found</h3>');
-
-        (new \Proem\Proem)
-            ->attachModule(new Foo, 'post.in.route')
-            ->init();
+        return $this->payload;
     }
-
 }

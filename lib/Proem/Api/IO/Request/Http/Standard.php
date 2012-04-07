@@ -192,6 +192,14 @@ class Standard implements Template
     }
 
     /**
+     * Set GET data
+     */
+    public function setGetData(array $data)
+    {
+        $this->data['get']->set($data);
+    }
+
+    /**
      * Get request method.
      */
     public function getMethod()

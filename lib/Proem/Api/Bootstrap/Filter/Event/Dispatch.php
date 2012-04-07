@@ -31,8 +31,11 @@
 namespace Proem\Api\Bootstrap\Filter\Event;
 
 use Proem\Service\Manager\Template as Manager,
+    Proem\Service\Asset\Standard as Asset,
     Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Event\Generic as Event;
+    Proem\Filter\Event\Generic as Event,
+    Proem\Dispatch\Standard as DispatchStandard,
+    Proem\Dispatch\Stage as DispatchStage;
 
 /**
  * Proem\Api\Bootstrap\Filter\Event\Dispatch
@@ -55,7 +58,11 @@ class Dispatch extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($e) use ($assets) {
+                    if ($e->provides('Proem\Dispatch\Template')) {
+                        $assets->set('dispatch', $e);
+                    }
+                },
             ]);
         }
     }
@@ -67,7 +74,15 @@ class Dispatch extends Event
      */
     public function inBound(Manager $assets)
     {
-
+        if (!$assets->provides('Proem\Dispatch\Template')) {
+            $asset = new Asset;
+            $assets->set(
+                'dispatch',
+                $asset->set('Proem\Dispatch\Template', $asset->single(function() use ($assets) {
+                    return new DispatchStandard($assets);
+                }))
+            );
+        }
     }
 
     /**
@@ -87,6 +102,9 @@ class Dispatch extends Event
                 'callback'  => function($e) {},
             ]);
         }
+
+        // Dispatch to userland.
+        (new DispatchStage($assets));
     }
 
     /**

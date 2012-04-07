@@ -24,41 +24,20 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
 
-use Proem\Autoloader,
-    MyApp\Module\Foo;
+/**
+ * @namespace Proem\Api\Routing\Signal\Event
+ */
+namespace Proem\Api\Routing\Signal\Event;
 
-class ExtTest extends \PHPUnit_Framework_TestCase
+use Proem\Signal\Event\Standard,
+    Proem\Routing\Route\Payload;
+
+/**
+ * Proem\Api\Bootstrap\Signal\Event\Bootstrap
+ *
+ * A custom event used by the router to communicate exhausted routes
+ */
+class RouteExhausted extends Standard
 {
-    public function setUp()
-    {
-        (new Autoloader)
-            ->registerNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
-            ->register();
-    }
-
-    public function testFooModuleLoads()
-    {
-        $this->expectOutputString('Foo Module Loaded<h3>404 - Page Not Found</h3>');
-
-        (new \Proem\Proem)
-            ->attachModule(new Foo)
-            ->init();
-    }
-
-    /**
-     * The Foo module listens for the pre.in.route signal event,
-     * Loading it now (at post.in.route) will never give it a chance
-     * to set itself up.
-     */
-    public function testFooModuleWontLoadWhenAttachedTooLate()
-    {
-        $this->expectOutputString('<h3>404 - Page Not Found</h3>');
-
-        (new \Proem\Proem)
-            ->attachModule(new Foo, 'post.in.route')
-            ->init();
-    }
-
 }

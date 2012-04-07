@@ -26,14 +26,14 @@
 
 
 /**
- * @namespace Proem\Api\Dispatch
+ * @namespace Proem\Api\Routing\Route
  */
-namespace Proem\Api\Dispatch;
+namespace Proem\Api\Routing\Route;
 
 use Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\Dispatch\Payload
+ * Proem\Api\Routing\Route\Payload
  */
 class Payload extends KeyValStore
 {

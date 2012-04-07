@@ -106,13 +106,13 @@ class ProemTest extends \PHPUnit_Framework_TestCase
                 }
             ])
             ->attachEventListener([
-                'name'      => 'pre.in.route',
+                'name'      => 'pre.in.router',
                 'callback'  => function($e) use ($results) {
                     $results->triggered++;
                 }
             ])
             ->attachEventListener([
-                'name'      => 'post.in.route',
+                'name'      => 'post.in.router',
                 'callback'  => function($e) use ($results) {
                     $results->triggered++;
                 }

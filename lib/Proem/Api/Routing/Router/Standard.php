@@ -30,7 +30,10 @@
  */
 namespace Proem\Api\Routing\Router;
 
-use Proem\Routing\Route\Template as Route;
+use Proem\Routing\Router\Template,
+    Proem\Routing\Route\Template as Route,
+    Proem\Routing\Signal\Event\RouteMatch,
+    Proem\Signal\Manager\Template as SignalManager;
 
 /**
  * Proem\Api\Routing\Router\Standard
@@ -54,9 +57,9 @@ class Standard implements Template
      *
      * @param string $requestUri
      */
-    public function __construct($requestUri)
+    public function __construct($requestUrl)
     {
-        $this->requestUri = $requestUri;
+        $this->requestUrl = $requestUrl;
     }
 
     /**
@@ -64,21 +67,34 @@ class Standard implements Template
      */
     public function map($name, Route $route)
     {
-        $this->_routes[$name] = $route;
+        $this->routes[$name] = $route;
         return $this;
     }
 
     /**
-     * Test routes for matching route and found return a DispatchPayload
+     * Recurse through the Routes until a match is found.
+     *
+     * When called multiple times (in a loop for instance)
+     * this method will return a new matching route until
+     * all routes have been processed.
+     *
+     * Once exhausted this function returns false and the
+     * internal pointer is reset so the Router can be used
+     * again.
      */
     public function route()
     {
-        foreach ($this->_routes as $name => $route) {
-            $route->process($this->requestUri);
+        if ($route = current($this->routes)) {
+            next($this->routes);
+            $route->process($this->requestUrl);
+
             if ($route->isMatch() && $route->getPayload()->isPopulated()) {
-                break;
+                return $route->getPayload();
+            } else {
+                return $this->route();
             }
         }
-        return $route->getPayload();
+        reset($this->routes);
+        return false;
     }
 }

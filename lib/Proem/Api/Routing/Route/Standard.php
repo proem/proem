@@ -41,7 +41,7 @@ class Standard extends Generic
     /**
      * Store default tokens.
      */
-    private $_default_tokens = [];
+    private $default_tokens = [];
 
     /**
      * Store default filters.
@@ -54,7 +54,7 @@ class Standard extends Generic
     public function __construct(array $options) {
         parent::__construct($options);
 
-        $this->_default_filters = [
+        $this->default_filters = [
             ':default'  => '[a-zA-Z0-9_\+\-%]+',
             ':gobble'   => '[a-zA-Z0-9_\+\-%\/]+',
             ':int'      => '[0-9]+',
@@ -62,11 +62,11 @@ class Standard extends Generic
             ':slug'     => '[a-zA-Z0-9_-]+'
         ];
 
-        $this->_default_tokens = [
-            'module'     => $this->_default_filters[':default'],
-            'controller' => $this->_default_filters[':default'],
-            'action'     => $this->_default_filters[':default'],
-            'params'     => $this->_default_filters[':gobble']
+        $this->default_tokens = [
+            'module'     => $this->default_filters[':default'],
+            'controller' => $this->default_filters[':default'],
+            'action'     => $this->default_filters[':default'],
+            'params'     => $this->default_filters[':gobble']
         ];
     }
 
@@ -105,8 +105,8 @@ class Standard extends Generic
         $rule               = $this->options->rule;
         $target             = $this->options->targets;
         $custom_filters     = $this->options->filters;
-        $default_tokens     = $this->_default_tokens;
-        $default_filters    = $this->_default_filters;
+        $default_tokens     = $this->default_tokens;
+        $default_filters    = $this->default_filters;
 
         $keys   = [];
         $values = [];
@@ -129,7 +129,7 @@ class Standard extends Generic
                 } else if (array_key_exists($key, $default_tokens)) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
-                    return $default_filters['default'];
+                    return $default_filters[':default'];
                 }
             },
             $rule
@@ -139,7 +139,9 @@ class Standard extends Generic
             array_shift($values);
 
             foreach ($keys as $index => $value) {
-                $params[substr($value, 1)] = urldecode($values[$index]);
+                if (isset($values[$index])) {
+                    $params[substr($value, 1)] = urldecode($values[$index]);
+                }
             }
 
             foreach ($target as $key => $value) {
@@ -152,7 +154,7 @@ class Standard extends Generic
                 // parse it into an array and send it to setParams() instead
                 // of the singular setParam.
                 if ($key == 'params' && strpos($value, '/') !== false) {
-                    $this->getPayload()->set($this->createAssocArray(explode('/', trim($value, '/'))));
+                    $this->getPayload()->set('params', $this->createAssocArray(explode('/', trim($value, '/'))));
                 } else {
                     $this->getPayload()->set($key, $value);
                 }

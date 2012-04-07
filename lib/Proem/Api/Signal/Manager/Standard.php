@@ -50,11 +50,21 @@ class Standard implements Template
     use Options;
 
     /**
-     * Stores Events in a hash of priority queues.
+     * Wildcard used when listening for all events
+     */
+    const WILDCARD = '*';
+
+    /**
+     * Stores listeners in a hash of priority queues.
      *
      * @var array $queues
      */
     private $queues = [];
+
+    /**
+     * Store listener callbacks
+     */
+    private $callbacks = [];
 
     /**
      * Register a listener attached to a particular named Event.
@@ -83,11 +93,41 @@ class Standard implements Template
             'priority'  => 0
         ], $options);
 
-        if (isset($this->queues[$ops->name])) {
-            $this->queues[$ops->name]->insert($ops->callback, $ops->priority);
+        $key = md5(microtime());
+        $this->callbacks[$key] = $ops->callback;
+
+        if (is_array($ops->name)) {
+            foreach ($ops->name as $event) {
+                if (isset($this->queues[$event])) {
+                    if ($event == self::WILDCARD) {
+                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                    } else {
+                        $this->queues[$event]->insert($key, $ops->priority);
+                    }
+                } else {
+                    if ($event == self::WILDCARD) {
+                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                    } else {
+                        $this->queues[$event] = new Queue;
+                        $this->queues[$event]->insert($key, $ops->priority);
+                    }
+                }
+            }
         } else {
-            $this->queues[$ops->name] = new Queue;
-            $this->queues[$ops->name]->insert($ops->callback, $ops->priority);
+            if (isset($this->queues[$ops->name])) {
+                if ($ops->name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                } else {
+                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                }
+            } else {
+                if ($ops->name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                } else {
+                    $this->queues[$ops->name] = new Queue;
+                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                }
+            }
         }
 
         return $this;
@@ -119,17 +159,27 @@ class Standard implements Template
             'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
         ], $options);
 
-        if (isset($this->queues[$ops->name])) {
-            foreach ($this->queues[$ops->name] as $event) {
-                $eventObj = $ops->event;
-                if ($eventObj instanceof \Proem\Signal\Event\Template) {
-                    if ($ops->has('params')) {
-                        $eventObj->setParams($ops->params);
+        if (isset($this->queues[$ops->name]) || isset($this->queues[self::WILDCARD])) {
+            if (isset($this->queues[self::WILDCARD])) {
+                foreach ($this->queues[self::WILDCARD] as $listener) {
+                    if (isset($this->queues[$ops->name])) {
+                        $this->queues[$ops->name]->insert($listener[0], $listener[1]);
+                    } else {
+                        $this->queues[$ops->name] = new Queue;
+                        $this->queues[$ops->name]->insert($listener[0], $listener[1]);
                     }
                 }
-                $eventObj->setTarget($ops->target);
-                $eventObj->setMethod($ops->method);
-                if ($return = $event($eventObj)) {
+            }
+            foreach ($this->queues[$ops->name] as $key) {
+                $event = $ops->event;
+                if ($event instanceof \Proem\Signal\Event\Template) {
+                    if ($ops->has('params')) {
+                        $event->setParams($ops->params);
+                    }
+                }
+                $event->setTarget($ops->target);
+                $event->setMethod($ops->method);
+                if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
                     if ($ops->has('callback')) {
                         (new Callback($ops->callback, $return))->call();
                     }

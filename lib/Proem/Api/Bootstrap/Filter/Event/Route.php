@@ -34,6 +34,7 @@ use Proem\Service\Manager\Template as Manager,
     Proem\Bootstrap\Signal\Event\Bootstrap,
     Proem\Service\Asset\Standard as Asset,
     Proem\Routing\Router\Standard as Router,
+    Proem\Routing\Route\Standard as StandardRoute,
     Proem\Filter\Event\Generic as Event;
 
 /**
@@ -52,13 +53,13 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.route',
+                'name'      => 'pre.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Routing\Router')) {
+                    if ($e->provides('Proem\Routing\Router\Template')) {
                         $assets->set('router', $e);
                     }
                 },
@@ -77,8 +78,56 @@ class Route extends Event
             $asset = new Asset;
             $assets->set(
                 'router',
-                $asset->set('Proem\Routing\Router', $asset->single(function() use ($assets) {
-                    return new Router($assets->get('request')->getRequestUri());
+                $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
+                    $router = (new Router($assets->get('request')->getRequestUri()))
+                        ->map(
+                            'default-module-controller-action-params',
+                            new StandardRoute([
+                                'rule' => '/:module/:controller/:action/:params'
+                            ])
+                        )
+                        ->map(
+                            'default-module-controller-action-noparams',
+                            new StandardRoute([
+                                'rule' => '/:module/:controller/:action'
+                            ])
+                        )
+                        ->map(
+                            'default-module-controller-noaction',
+                            new StandardRoute([
+                                'rule'      => '/:module/:controller',
+                                'targets'    => ['action' => 'index']
+                            ])
+                        )
+                        ->map(
+                            'default-nomodule-controller',
+                            new StandardRoute([
+                                'rule'      => '/:controller',
+                                'targets'    => ['module' => 'index', 'action' => 'index']
+                            ])
+                        )
+                        ->map(
+                            'default-module-nocontroller',
+                            new StandardRoute([
+                                'rule'      => '/:module',
+                                'targets'    => ['controller' => 'index', 'action' => 'index']
+                            ])
+                        )
+                        ->map(
+                            'default-params',
+                            new StandardRoute([
+                                'rule'      => '/:params',
+                                'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
+                            ])
+                        )
+                        ->map(
+                            'default-noparams',
+                            new StandardRoute([
+                                'rule'      => '/',
+                                'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
+                            ])
+                        );
+                        return $router;
                 }))
             );
         }
@@ -93,7 +142,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.route',
+                'name'      => 'post.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -112,7 +161,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.route',
+                'name'      => 'pre.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -141,7 +190,7 @@ class Route extends Event
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.route',
+                'name'      => 'post.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

@@ -35,6 +35,8 @@ namespace Proem\Api\Signal\Manager;
  */
 interface Template
 {
+    public function remove($name);
+
     public function attach(array $options);
 
     public function trigger(array $options);

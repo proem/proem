@@ -49,7 +49,7 @@ class Standard implements Template
      * Store an array of patterns used to searching
      * for classes within a namepspace.
      */
-    protected $namespacePatterns = [];
+    protected $controllerMaps = [];
 
     /**
      * Store the absolute namespace to the current class
@@ -81,7 +81,7 @@ class Standard implements Template
     public function __construct(Manager $assets)
     {
         $this->assets = $assets;
-        $this->namespacePatterns = ['Module\:module\Controller\:controller'];
+        $this->controllerMaps = ['Module\:module\Controller\:controller'];
     }
 
     public function setPayload(Payload $payload)
@@ -90,17 +90,21 @@ class Standard implements Template
         return $this;
     }
 
+    public function registerControllerMap($map) {
+        $this->controllerMaps[] = $map;
+    }
+
     public function isDispatchable()
     {
         $this->module     = $this->payload->has('module')           ? ucfirst(strtolower($this->payload->get('module')))      : '';
         $this->controller = $this->payload->has('controller')       ? ucfirst(strtolower($this->payload->get('controller')))  : '';
         $this->action     = $this->payload->has('action')           ? $this->payload->get('action') : '';
 
-        foreach ($this->namespacePatterns as $pattern) {
+        foreach ($this->controllerMaps as $map) {
             $this->class = str_replace(
                 [':module', ':controller'],
                 [$this->module, $this->controller],
-                $pattern
+                $map
             );
 
             if (class_exists($this->class)) {

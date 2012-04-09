@@ -109,8 +109,10 @@ class Standard implements Template
 
             if (class_exists($this->class)) {
                 $this->class = new $this->class($this->assets);
-                if (method_exists($this->class, $this->action)) {
-                    return true;
+                if ($this->class instanceof \Proem\Controller\Template) {
+                    if (method_exists($this->class, $this->action)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -124,9 +126,9 @@ class Standard implements Template
             $this->assets->get('request')
                 ->setGetData($this->payload->get('params'));
         }
-        $this->class->setUp();
+        $this->class->preAction();
         $this->class->{$this->action}();
-        $this->class->tearDown();
+        $this->class->postAction();
         return $this;
     }
 }

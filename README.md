@@ -16,6 +16,9 @@ A lightweight, simple MVC for PHP5.4
 
 The main objective here is to create a lightweight, simple & fast MVC implementation using PHP5.4
 
+## NEWS
+As of 0.3.0 we now use a community licensed version of [Atlassian's](http://www.atlassian.com) awesome issue tracker, Jira. This can be found [here](https://proemframework.atlassian.net).
+
 ## INSTALLATION
 
 Installation is simple. Place the root Proem directory wherever you like and insure that the
@@ -33,7 +36,7 @@ Also available now is an irc channel (#proem) on freenode. Join if you have any 
 
 #### Committing and Pull Requests
 
-If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](http://github.com/proem/proem/issues).
+If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](https://proemframework.atlassian.net).
 
 Next, [create an account on Github](https://github.com/signup/free) (if you haven't done so already).
 

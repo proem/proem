@@ -24,20 +24,19 @@
  * THE SOFTWARE.
  */
 
-
 /**
- * @namespace Proem\Api\Signal\Manager
+ * @namespace Proem\Api\Controller
  */
-namespace Proem\Api\Signal\Manager;
+namespace Proem\Api\Controller;
+
+use Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * Proem\Api\Signal\Manager\Template
+ * Proem\Api\Controller\Template
  */
 interface Template
 {
-    public function remove($name);
+    public function preAction();
 
-    public function attach(array $options);
-
-    public function trigger(array $options);
+    public function postAction();
 }

@@ -67,6 +67,16 @@ class Standard implements Template
     private $callbacks = [];
 
     /**
+     * Remove Event listeners from the Queue.
+     */
+    public function remove($name)
+    {
+        if (isset($this->queues[$name])) {
+            unset($this->queues[$name]);
+        }
+    }
+
+    /**
      * Register a listener attached to a particular named Event.
      *
      * All listeners are store within a hash of priority queues. Each Queue contains

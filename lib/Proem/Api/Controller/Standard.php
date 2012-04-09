@@ -24,20 +24,47 @@
  * THE SOFTWARE.
  */
 
+/**
+ * @namespace Proem\Api\Controller
+ */
+namespace Proem\Api\Controller;
+
+use Proem\Controller\Template as ControllerTemplate,
+    Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * @namespace Proem\Api\Signal\Manager
+ * Proem\Api\Controller\Standard
  */
-namespace Proem\Api\Signal\Manager;
-
-/**
- * Proem\Api\Signal\Manager\Template
- */
-interface Template
+class Standard implements ControllerTemplate
 {
-    public function remove($name);
+    /**
+     * Store the Service Manager
+     *
+     * @var Proem\Service\Manager\Template
+     */
+    protected $assets;
 
-    public function attach(array $options);
+    /**
+     * The __construct sets up the Service Manager and
+     * is marked final so it can not be overloaded.
+     */
+    public final function __construct(ServiceManager $assets)
+    {
+        $this->assets = $assets;
+    }
 
-    public function trigger(array $options);
+    /**
+     * Method called prior to any action
+     */
+    public function preAction()
+    {
+    }
+
+    /**
+     * Method called after any action
+     */
+    public function postAction()
+    {
+    }
+
 }

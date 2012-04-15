@@ -43,9 +43,9 @@ use Proem\Service\Manager\Standard as ServiceManager,
     Proem\Ext\Plugin\Generic as Plugin;
 
 /**
- * Proem\Api\Proem
+ * The Proem boostrap wrapper
  *
- * The Proem boostrap wrapper (eventually)
+ * Responsible for aiding in the boostrap process
  */
 class Proem
 {
@@ -57,14 +57,25 @@ class Proem
     /**
      * Store events
      *
-     * @var Proem\Api\Signal\Manager
+     * @var Proem\Signal\Manager\Template
      */
     private $events;
 
-    private $serviceManager;
+    /**
+     * Store the service manager
+     *
+     * @var Proem\Service\Manager\Template
+     */
 
     /**
-     * Register Modules / Plugins
+     * Register an extension
+     *
+     * An extension is just a lower level interface that modules and plugins implement
+     *
+     * @param Proem\Ext\Template $extension
+     * @param string $event The event that will trigger this extensions init() method
+     * @param int $priority The priority the Event Listener is registered at
+     * @return Proem\Proem
      */
     private function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
@@ -92,18 +103,24 @@ class Proem
     }
 
     /**
-     * Attach a listener to the Signal Event Manager
+     * Attach a listener to the signal event manager
+     *
+     * @param array $listener
+     * @return Proem\Proem
      */
-    public function attachEventListener(Array $listener)
+    public function attachEventListener(array $listener)
     {
         $this->events->get()->attach($listener);
         return $this;
     }
 
     /**
-     * Attach a series of event to the Signal Event Manager
+     * Attach a series of events to the signal event manager
+     *
+     * @param array $listeners
+     * @return Proem\Proem
      */
-    public function attachEventListeners(Array $listeners)
+    public function attachEventListeners(array $listeners)
     {
         foreach ($listeners as $listener) {
             $this->attachEventListener($listener);
@@ -112,7 +129,12 @@ class Proem
     }
 
     /**
-     * Register a Plugin
+     * Register a plugin
+     *
+     * @param Proem\Ext\Plugin\Generic
+     * @param string $event The event that will trigger this extensions init() method
+     * @param int $priority The priority the Event Listener is registered at
+     * @return Proem\Proem
      */
     public function attachPlugin(Plugin $plugin, $event = 'proem.init', $priority = 0)
     {
@@ -120,7 +142,12 @@ class Proem
     }
 
     /**
-     * Register a Module
+     * Register a module
+     *
+     * @param Proem\Proem\Ext\Module\Generic
+     * @param string $event The event that will trigger this extensions init() method
+     * @param int $priority The priority the Event Listener is registered at
+     * @return Proem\Proem
      */
     public function attachModule(Module $module, $event = 'proem.init', $priority = 0)
     {
@@ -128,7 +155,11 @@ class Proem
     }
 
     /**
-     * Setup and execute the Filter Manager
+     * Initialise the boostrap process
+     *
+     * This simple call will start the filter chain in motion
+     *
+     * @param string|null $environment
      */
     public function init($environment = null)
     {

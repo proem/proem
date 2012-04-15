@@ -39,12 +39,22 @@ use Proem\IO\Request\Template,
     Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Request\Http\Fake
+ * A fake http request implementation.
+ *
+ * This call is useful for faking http requests to the framework.
  */
 class Fake extends Standard
 {
     /**
-     * Instantiate a post from faked data.
+     * Instantiate a request using fake data.
+     *
+     * @param string $uri
+     * @param string $method
+     * @param string $body
+     * @param array $param
+     * @param array $cookie
+     * @param array $file
+     * @param array $meta
      */
     public function __construct($uri, $method = 'GET', $body = '', $param = [], $cookie = [], $file = [], $meta = [])
     {
@@ -141,5 +151,4 @@ class Fake extends Standard
             'header'    => new KeyValStore($this->formHeaders($meta))
         ];
     }
-
 }

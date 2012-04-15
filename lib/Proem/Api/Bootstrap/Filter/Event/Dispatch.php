@@ -38,16 +38,20 @@ use Proem\Service\Manager\Template as Manager,
     Proem\Dispatch\Stage as DispatchStage;
 
 /**
- * Proem\Api\Bootstrap\Filter\Event\Dispatch
- *
  * The default "Dispatch" filter event.
  */
 class Dispatch extends Event
 {
     /**
-     * preIn
+     * Called prior to inBound.
      *
-     * Called prior to inBound
+     * A listener responding with an object implementing the
+     * Proem\Dispatch\Template interface, will result in that object being
+     * placed within the main service manager under the index of *dispatch*.
+     *
+     * @see Proem\Api\Dispatch\Template
+     * @param Proem\Service\Manager\Template
+     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.dispatch
      */
     public function preIn(Manager $assets)
     {
@@ -68,9 +72,14 @@ class Dispatch extends Event
     }
 
     /**
-     * inBound
-     *
      * Method to be called on the way into the filter.
+     *
+     * If not already provided, this method will add a default
+     * Proem\Dispatch\Template implementation to the main service
+     * manager under the index of *dispatch*.
+     *
+     * @see Proem\Api\Dispatch\Template
+     * @param Proem\Service\Manager\Template
      */
     public function inBound(Manager $assets)
     {
@@ -86,9 +95,13 @@ class Dispatch extends Event
     }
 
     /**
-     * postIn
+     * Called after outBound.
      *
-     * Called after outBound
+     * This method is reponsible for executing the DispatchStage process.
+     *
+     * @see Proem\Api\Dispatch\Stage
+     * @param Proem\Service\Manager\Template
+     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap post.in.dispatch
      */
     public function postIn(Manager $assets)
     {
@@ -103,14 +116,14 @@ class Dispatch extends Event
             ]);
         }
 
-        // Dispatch to userland.
         (new DispatchStage($assets));
     }
 
     /**
-     * preOut
+     * Called prior to outBound.
      *
-     * Called prior to outBound
+     * @param Proem\Service\Manager\Template
+     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.out.dispatch
      */
     public function preOut(Manager $assets)
     {
@@ -127,9 +140,9 @@ class Dispatch extends Event
     }
 
     /**
-     * outBound
-     *
      * Method to be called on the way out of the filter.
+     *
+     * @param Proem\Service\Manager\Template
      */
     public function outBound(Manager $assets)
     {
@@ -137,9 +150,10 @@ class Dispatch extends Event
     }
 
     /**
-     * postOut
+     * Called after outBound.
      *
-     * Called after outBound
+     * @param Proem\Service\Manager\Template
+     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap post.out.dispatch
      */
     public function postOut(Manager $assets)
     {

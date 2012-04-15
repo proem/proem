@@ -31,29 +31,42 @@
 namespace Proem\Api\Util\Storage;
 
 /**
- * Proem\Api\Util\Storage\Queue
+ * Priority queue implementation.
+ *
+ * Implements the \IteratorAggregate and \Countable interfaces.
+ *
+ * Internally we use SplPriorityQueues to implement the priority parts.
+ * Wrapping the SplPriorityQueue within a IterattorAggregate means however
+ * that we can rewind and play the queue again if required. This cannot be
+ * achieved with the SplPRiorityQueue alone because it is a stack and as
+ * such items are lost as they are iterated over.
  */
 class Queue implements \IteratorAggregate, \Countable
 {
     /**
-     * Store the SplPriorityQueue
+     * Store the SplPriorityQueue.
+     *
+     * @var \SplPriorityQueue
      */
-    private $queue;
 
     /**
-     * Data aggregated in the priority queue
+     * Data aggregated in the priority queue.
+     *
+     * @var array
      */
-    private $data;
 
     /**
-     * Store a very high number.
+     * Store a very large number.
+     *
+     * @var int
      */
     protected $max = PHP_INT_MAX;
 
     /**
-     * Retrieve the internal queue
+     * Retrieve the internal queue.
+     *
+     * @return \SplPriorityQueue
      */
-    private function getSplQueue()
     {
         if (null === $this->queue) {
             $this->queue = new \SplPriorityQueue;
@@ -62,10 +75,11 @@ class Queue implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Insert an item into the queue
+     * Insert an item into the queue.
      *
      * @param mixed $data
      * @param int $priority
+     * @return Proem\Util\Storage\Queue
      */
     public function insert($data, $priority = 0)
     {
@@ -81,6 +95,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Retrieve current item from the queue
+     *
+     * @return mixed
      */
     public function current()
     {
@@ -89,6 +105,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Return current node index
+     *
+     * @return mixed
      */
     public function key()
     {
@@ -97,6 +115,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Move to the next node
+     *
+     * @return mixed
      */
     public function next()
     {
@@ -105,6 +125,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Rewind iterator back to the start (no-op)
+     *
+     * @return mixed
      */
     public function rewind()
     {
@@ -113,6 +135,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Check whether the queue contains more nodes
+     *
+     * @return mixed
      */
     public function valid()
     {
@@ -121,6 +145,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Return count of items in the queue
+     *
+     * @return int
      */
     public function count()
     {
@@ -129,6 +155,8 @@ class Queue implements \IteratorAggregate, \Countable
 
     /**
      * Clone the internal priority queue and return it for iterating over.
+     *
+     * @return \SplPriorityQueue
      */
     public function getIterator()
     {

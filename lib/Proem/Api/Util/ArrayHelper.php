@@ -31,17 +31,23 @@
 namespace Proem\Api\Util;
 
 /**
- * Proem\Api\Util\ArrayHelper
+ * A utitlity providing array helpers.
  */
 trait ArrayHelper
 {
     /**
      * Turn a numerically indexed array into an associative array.
      *
-     * eg;
-     *   ['foo', 'bar', 'bob', 'boo']
-     * becomes:
-     *   ['foo' => 'bar', 'bob' => 'boo']
+     * <code>
+     * $a = ['foo', 'bar', 'bob', 'boo'];
+     *
+     * // would become
+     *
+     * $a = ['foo' => 'bar', 'bob' => 'boo'];
+     * </code>
+     *
+     * @param array $params
+     * @return array
      */
     public function createAssocArray($params)
     {

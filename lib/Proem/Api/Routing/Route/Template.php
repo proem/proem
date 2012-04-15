@@ -31,9 +31,14 @@
 namespace Proem\Api\Routing\Route;
 
 /**
- * Proem\Api\Routing\Route\Template
+ * Interface that all routes must implement.
  */
 interface Template
 {
+    /**
+     * Process this route
+     *
+     * @param string $uri
+     */
     public function process($uri);
 }

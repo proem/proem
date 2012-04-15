@@ -33,7 +33,7 @@ namespace Proem\Api\Util\Opt;
 use Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\Util\Opt\Payload
+ * Options payload.
  */
 class Payload extends KeyValStore
 {

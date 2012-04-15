@@ -33,9 +33,15 @@ namespace Proem\Api\Ext;
 use Proem\Service\Manager\Template as Manager;
 
 /**
- * Proem\Api\Ext\Template
+ * Base interface that all modules and plugins must implement.
  */
 interface Template
 {
-    public function init(Manager $assets, $env = null);
+    /**
+     * Called on initialisation.
+     *
+     * @param Proem\Service\Manager\Template $assets
+     * @param string $environment
+     */
+    public function init(Manager $assets, $environment = null);
 }

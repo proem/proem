@@ -32,11 +32,21 @@ namespace Proem\Api\Controller;
 use Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * Proem\Api\Controller\Template
+ * Interface describing a controller.
  */
 interface Template
 {
+    /**
+     * Method called prior to any action.
+     *
+     * @todo This could likely be replaced by some event
+     */
     public function preAction();
 
+    /**
+     * Method called after any action.
+     *
+     * @todo This could likely be replaced by some event
+     */
     public function postAction();
 }

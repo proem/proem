@@ -37,11 +37,32 @@ use Proem\Service\Manager\Template as Manager,
  */
 interface Template
 {
+    /**
+     * Setup the dispatcher
+     *
+     * @param Proem\Service\Manager\Template $assets
+     */
     public function __construct(Manager $assets);
 
+    /**
+     * Set the payload object
+     *
+     * @param Proem\Routing\Route\Payload $payload
+     * @return Proem\Api\Dispatch\Template
+     */
     public function setPayload(Payload $payload);
 
+    /**
+     * Test to see if the current payload is dispatchable.
+     *
+     * @return bool
+     */
     public function isDispatchable();
 
+    /**
+     * Dispatch the current controller/action
+     *
+     * @return Proem\Api\Dispatch\Teample
+     */
     public function dispatch();
 }

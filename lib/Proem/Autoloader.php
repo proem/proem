@@ -30,18 +30,31 @@
 namespace Proem;
 
 /**
- * Proem\Autoloader
+ * The Proem Autoloader
+ *
+ * An autoloader implementing the PSR-0 standard
+ *
+ * @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md
  */
 class Autoloader
 {
-    private $namespaces     = [];
-    private $pearPrefixes   = [];
+    /**
+     * Store namespaces
+     *
+     * @var array $namespaces
+     */
 
     /**
-     * Register an array of namespaces.
+     * Store Pear prefixes
+     *
+     * @var array $pearPrefixes
+     */
+
+    /**
+     * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function registerNamespaces(array $namespaces)
     {
@@ -54,9 +67,9 @@ class Autoloader
     /**
      * Register a namespace.
      *
-     * @param string       $namespace The namespace
-     * @param array|string $paths     The path to the namespace
-     * @return Proem\Api\Autoloader
+     * @param string $namespace The namespace
+     * @param array|string $paths The path to the namespace
+     * @return Proem\Autoloader
      */
     public function registerNamespace($namespace, $paths)
     {
@@ -65,7 +78,7 @@ class Autoloader
     }
 
     /**
-     * Registers an array of classes using the Pear coding standard.
+     * Registers an array of classes using the Pear naming convention
      *
      * @param array $classes
      * @return Proem\Api\Autoloader
@@ -79,10 +92,10 @@ class Autoloader
     }
 
     /**
-     * Register a class using the PEAR naming convention.
+     * Register a class using the PEAR naming convention
      *
-     * @param string       $prefix  The prefix
-     * @param array|string $paths   The path
+     * @param string $prefix The prefix
+     * @param array|string $paths The path
      * @return Proem\Api\Autoloader
      */
     public function registerPearPrefix($prefix, $paths)
@@ -93,6 +106,8 @@ class Autoloader
 
     /**
      * Register the autoloader.
+     *
+     * @return Proem\Api\Autoloader
      */
     public function register()
     {
@@ -101,9 +116,17 @@ class Autoloader
     }
 
     /**
-     * Load a class.
+     * Load a class
      *
-     * @param string $class The name of the class
+     * This load mechanism is not only responsible for locating and including the
+     * file where a class is defined, but is also responsible for implementing Proem's
+     * cascading file system. This is achieved by suffixing \Api onto the Proem part
+     * of any namespace starting with Proem, including the class from within the Proem\Api
+     * namespace, and then aliasing that class back to Proem (without the \Api suffix)
+     *
+     * @link http://proemframework.org/docs/cascading-namespace.html
+     * @param string $class The absolute (including namespace) name of the class
+     * @return Proem\Api\Autoloader
      */
     public function load($class)
     {
@@ -129,7 +152,6 @@ class Autoloader
      * Locate the path to the file where $class is defined.
      *
      * @param string $class The name of the class
-     *
      * @return string|null The path, if found
      */
     private function locate($class)

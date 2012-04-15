@@ -33,7 +33,7 @@ namespace Proem\Api\Routing\Route;
 use Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\Routing\Route\Payload
+ * The route payload.
  */
 class Payload extends KeyValStore
 {
@@ -46,6 +46,8 @@ class Payload extends KeyValStore
 
     /**
      * Is the Payload Populated?
+     *
+     * @return bool
      */
     public function isPopulated()
     {
@@ -54,9 +56,12 @@ class Payload extends KeyValStore
 
     /**
      * Set the populated flag
+     *
+     * @return Proem\Routing\Route\Template
      */
     public function setPopulated()
     {
         $this->populated = true;
+        return $this;
     }
 }

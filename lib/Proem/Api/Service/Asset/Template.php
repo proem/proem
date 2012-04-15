@@ -33,23 +33,69 @@ namespace Proem\Api\Service\Asset;
 use Proem\Service\Manager\Template as Manager;
 
 /**
- * Proem\Api\Service\Asset\Template
+ * Interface that all assets must implement.
  */
 interface Template
 {
+    /**
+     * Retrieve what this object provides.
+     *
+     * @return string
+     */
     public function provides();
 
+    /**
+     * Set a parameter by named index.
+     *
+     * @param string $index
+     * @param mixed $value
+     * @return Proem\Service\Asset\Template
+     */
     public function setParam($index, $value);
 
+    /**
+     * Set multiple parameters use a key => value array.
+     *
+     * @param array $params
+     * @return Proem\Service\Asset\Template
+     */
     public function setParams(array $params);
 
+    /**
+     * Retrieve a parameter by named index.
+     *
+     * @param string $index
+     */
     public function getParam($index);
 
+    /**
+     * Retrieve all parameters.
+     *
+     * @return array
+     */
     public function getParams();
 
+    /**
+     * Store the Closure reponsible for instantiating an asset.
+     *
+     * @param string The object this asset provides
+     * @param Closure $closure
+     * @return Proem\Service\Asset\Template
+     */
     public function set($provides, \Closure $closure);
 
+    /**
+     * Validate and retrieve an instantiated asset.
+     *
+     * @param Proem\Service\Manager\Template $assetManager
+     */
     public function get(Manager $assetManager = null);
 
+    /**
+     * Store an asset in such a way that when it is retrieved it will always return
+     * the same instance.
+     *
+     * @param closure $closure
+     */
     public function single(\Closure $closure);
 }

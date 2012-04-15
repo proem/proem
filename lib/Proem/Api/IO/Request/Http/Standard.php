@@ -34,22 +34,28 @@ use Proem\IO\Request\Template,
     Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Http\Request\Standard
+ * The standard http request class.
  */
 class Standard implements Template
 {
     /**
-     * Store data internally
+     * Store all internal data.
+     *
+     * @var array $data
      */
     protected $data = [];
 
     /**
-     * Store the raw body of the request.
+     * Store the request body.
+     *
+     * @var string $body
      */
     protected $body;
 
     /**
-     * Store valid content types by index.
+     * Store a hash of valid content types.
+     *
+     * @var array $contentTypes
      */
     protected $contentTypes = [
         'form' => ['application/x-www-form-urlencoded'],
@@ -65,12 +71,16 @@ class Standard implements Template
     ];
 
     /**
-     * Valid request methods
+     * Valid request methods.
+     *
+     * @var array $methods
      */
     protected $methods = ['GET', 'POST', 'PUT', 'DELETE'];
 
     /**
-     * Instantiate the a from the super globals.
+     * Instantiate the request using data supplied by the super globals.
+     *
+     * @param array $param
      */
     public function __construct(array $param = []) {
         $this->data = [
@@ -85,9 +95,10 @@ class Standard implements Template
     }
 
     /**
-     * Used to split the HTTP headers into there own store.
+     * Used to split the HTTP headers into there own storage.
      *
      * @param array $meta
+     * @return array
      */
     protected function formHeaders($meta)
     {
@@ -106,6 +117,7 @@ class Standard implements Template
      * Retrieve data by index.
      *
      * @param string $index
+     * @return string
      */
     public function __get($index)
     {
@@ -116,6 +128,7 @@ class Standard implements Template
      * Retrieve the body of the request.
      *
      * @param bool $raw return body in it's raw format
+     * @return string
      */
     public function getBody($raw = true)
     {
@@ -140,6 +153,7 @@ class Standard implements Template
      * Set the content type.
      *
      * @param string $type
+     * @return Proem\IO\Request\Template
      */
     public function setContentType($type)
     {
@@ -165,7 +179,9 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve request content type
+     * Retrieve request content type.
+     *
+     * @return string
      */
     public function getContentType()
     {
@@ -176,6 +192,7 @@ class Standard implements Template
      * Set the request method.
      *
      * @param string $method
+     * @return Proem\IO\Request\Template
      */
     public function setMethod($method)
     {
@@ -192,15 +209,21 @@ class Standard implements Template
     }
 
     /**
-     * Set GET data
+     * Set GET data.
+     *
+     * @param array $data
+     * @return Proem\IO\Request\Template
      */
     public function setGetData(array $data)
     {
         $this->data['get']->set($data);
+        return $this;
     }
 
     /**
      * Get request method.
+     *
+     * @return string
      */
     public function getMethod()
     {
@@ -209,6 +232,8 @@ class Standard implements Template
 
     /**
      * Is this a GET request?
+     *
+     * @return bool
      */
     public function isGet()
     {
@@ -217,6 +242,8 @@ class Standard implements Template
 
     /**
      * Is this a POST request?
+     *
+     * @return bool
      */
     public function isPost()
     {
@@ -225,6 +252,8 @@ class Standard implements Template
 
     /**
      * Is this a XmlHttpRequest request?
+     *
+     * @return bool
      */
     public function isAjax() {
         return $this->data['header']->get('X_REQUESTED_WITH') === 'XMLHttpRequest';
@@ -232,6 +261,8 @@ class Standard implements Template
 
     /**
      * Retrieve the request uri.
+     *
+     * @return string
      */
     public function getRequestUri() {
         return $this->data['meta']->get('REQUEST_URI');
@@ -239,6 +270,8 @@ class Standard implements Template
 
     /**
      * Retrieve the host name
+     *
+     * @return string
      */
     public function getHostName()
     {
@@ -246,7 +279,9 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve the clinet's ip address.
+     * Retrieve the client ip address.
+     *
+     * @return string
      */
     public function getClientIp()
     {

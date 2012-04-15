@@ -32,17 +32,18 @@ namespace Proem\Api\Routing\Router;
 
 use Proem\Routing\Router\Template,
     Proem\Routing\Route\Template as Route,
-    Proem\Routing\Signal\Event\RouteMatch,
     Proem\Signal\Manager\Template as SignalManager,
     Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\Routing\Router\Standard
+ * The standard router.
  */
 class Standard implements Template
 {
     /**
      * Store the request url
+     *
+     * @var string $requestUrl
      */
     private $requestUrl;
 
@@ -56,7 +57,7 @@ class Standard implements Template
     /**
      * Setup
      *
-     * @param string $requestUri
+     * @param string $requestUrl
      */
     public function __construct($requestUrl)
     {
@@ -65,7 +66,12 @@ class Standard implements Template
     }
 
     /**
-     * Store route objects
+     * Store route objects.
+     *
+     * @param string $name
+     * @param Proem\Routing\Route\Template $route
+     * @return Proem\Signal\Manager\Template
+     * @todo This method should be renamed to register()
      */
     public function map($name, Route $route)
     {
@@ -83,6 +89,8 @@ class Standard implements Template
      * Once exhausted this function returns false and the
      * internal pointer is reset so the Router can be used
      * again.
+     *
+     * @return bool|Proem\Routing\Route\Payload
      */
     public function route()
     {

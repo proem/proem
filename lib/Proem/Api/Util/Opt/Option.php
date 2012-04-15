@@ -35,27 +35,74 @@ use Proem\Util\Process\Callback,
     Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * Proem\Api\Util\Opt\Option
+ * Provides a mechanism for validiting a value.
+ *
+ * These values are used by the Proem\Utils\Opt\Options trait.
  */
 class Option
 {
-    private $value;
-    private $is_required        = false;
-    private $is_type;
-    private $is_asset;
-    private $is_object;
-    private $is_classof;
-    private $throws             = null;
-    private $unless             = [];
-    private $type_validators    = [];
+    /**
+     * Store the value.
+     *
+     * @var mixed $value
+     */
 
     /**
-     * Instantiate the Option object
+     * Store a is_required flag.
      *
-     * @param mixed $value
+     * @var bool
+     */
+
+    /**
+     * Store a is_type flag.
+     *
+     * @var string
+     */
+
+    /**
+     * Store a is_asset flag.
+     *
+     * @var string
+     */
+
+    /**
+     * Store a is_object flag.
+     *
+     * @var bool
+     */
+
+    /**
+     * Store a is_classof flag.
+     *
+     * @var string
+     */
+
+    /**
+     * Store a throws flag.
+     *
+     * @var string
+     */
+
+    /**
+     * Store a unless flag.
+     *
+     * @var array
+     */
+
+    /**
+     * Store type_validators.
+     *
+     * @var array
+     */
+
+    /**
+     * Instantiate the option object.
      *
      * We use the __FILE__ constant as a default here because
-     * it is unlikely to ever be used as an actual value
+     * it is unlikely to ever be used as an actual value.
+     *
+     * @param mixed $value
+     * @todo Using the __FILE__ constant here sux. Fix it!
      */
     public function __construct($value = __FILE__) {
         $this->value = $value;
@@ -71,12 +118,12 @@ class Option
     }
 
     /**
-     * Add a custom Type validator or override an existing validator
+     * Add a custom type validator or override an existing validator.
      *
      * @param string $type
      * @param function $callback
      * @param bool $override
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function addTypeValidator($type, $callback, $override = false)
     {
@@ -87,10 +134,10 @@ class Option
     }
 
     /**
-     * Set the value of this Option object
+     * Set the value.
      *
      * @param mixed $value
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function setValue($value) {
         $this->value = $value;
@@ -98,7 +145,7 @@ class Option
     }
 
     /**
-     * Get the value of this Option object
+     * Get the value.
      *
      * @return mixed $this->value
      */
@@ -107,24 +154,29 @@ class Option
     }
 
     /**
-     * Set this Option as required
+     * Set this as required.
      *
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function required() {
         $this->is_required = true;
         return $this;
     }
 
+    /**
+     * Is this option required?
+     *
+     * @return bool
+     */
     public function isRequired() {
         return $this->is_required;
     }
 
     /**
-     * Disable this Option from being required if some other argument(s) has been provided
+     * Disable this option from being required if some other argument(s) has been provided
      *
-     * @param string|array $options
-     * @return Option
+     * @param string|array $options An array of Proem\Util\Opt\Option objects
+     * @return Proem\Util\Opt\Option
      */
     public function unless($options)
     {
@@ -137,13 +189,13 @@ class Option
     }
 
     /**
-     * Force this Option value to be of a certain type
+     * Force this options value to be of a certain type.
      *
-     * Once specified, this Option's value will then be processed through
-     * an appropriate "type" validator.
+     * Once specified, this options value will then be processed through
+     * an appropriate *type* validator.
      *
      * @param string $type
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function type($type)
     {
@@ -152,10 +204,10 @@ class Option
     }
 
     /**
-     * Force this Option's value to be an instance of a particular object
+     * Force this options value to be an instance of a particular object.
      *
      * @param string $object A string representation of a class name
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function object($object)
     {
@@ -164,10 +216,11 @@ class Option
     }
 
     /**
-     * Force this Option's value to be an Asset or an ServiceMananger
-     * providing a specific object.
+     * Force this options value to be an asset or an service mananger
+     * providing a specific asset.
      *
-     * @param $provides The Asset this Option provides
+     * @param $provides The asset this option provides
+     * @return Proem\Util\Opt\Option
      */
     public function asset($provides)
     {
@@ -176,7 +229,10 @@ class Option
     }
 
     /**
-     * The exception to throw if invalid
+     * Set a custom exception to throw if invalid.
+     *
+     * @param \Exception $exception
+     * @return Proem\Util\Opt\Option
      */
     public function throws(callable $exception) {
         $this->throws = $exception;
@@ -184,11 +240,11 @@ class Option
     }
 
     /**
-     * Force this Option's value to be a string representation of a
-     * particular class or subclass
+     * Force this pptions value to be a string representation of a
+     * particular class or subclass.
      *
      * @param string $class
-     * @return Option
+     * @return Proem\Util\Opt\Option
      */
     public function classof($class)
     {
@@ -197,12 +253,13 @@ class Option
     }
 
     /**
-     * Validate this Option's value according to specified rules.
+     * Validate this options value according to specified rules.
      *
      * @param array $options An array of all options that may have been processed alongside this Option
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
-     * @return true
+     * @return bool
+     * @todo This method should likely be broken down into smaller chunks
      */
     public function validate($options = []) {
         if ($this->unless) {

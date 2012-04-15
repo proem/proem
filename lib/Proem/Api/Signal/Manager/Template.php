@@ -35,9 +35,27 @@ namespace Proem\Api\Signal\Manager;
  */
 interface Template
 {
+    /**
+     * Remove event listeners from a particular index.
+     *
+     * @param string $name
+     * @return Proem\Api\Signal\Manager\Template
+     */
     public function remove($name);
 
+    /**
+     * Register a listener attached to a particular named event.
+     *
+     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @return Proem\Api\Signal\Manager\Template
+     */
     public function attach(array $options);
 
+    /**
+     * Trigger the execution of all event listeners attached to a named event.
+     *
+     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @return Proem\Api\Signal\Manager\Template
+     */
     public function trigger(array $options);
 }

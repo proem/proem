@@ -36,9 +36,28 @@ namespace Proem\Api\IO\Response;
  */
 interface Template
 {
+    /**
+     * Append to the HTTP body.
+     *
+     * As data is appended to the body the $length
+     * property should be incremented accordingly.
+     *
+     * @param string $string
+     * @return Proem\IO\Response\Template;
+     */
     public function appendToBody($string);
 
+    /**
+     * Retrieve the HTTP body as string.
+     *
+     * @return string
+     */
     public function getBody();
 
+    /**
+     * Send the response to the client.
+     *
+     * This method should first send any headers and then the request body.
+     */
     public function send();
 }

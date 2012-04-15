@@ -31,20 +31,27 @@
 namespace Proem\Api\Util\Process;
 
 /**
- * Proem\Api\Util\Process\Callback
- *
- * A wrapper around call_user_func_array
+ * A simple wrapper around call_user_func_array
  */
 class Callback
 {
-    public $callback;
-    public $params = [];
+    /**
+     * Store the callback
+     *
+     * @var callable
+     */
+
+    /**
+     * Store any params
+     *
+     * @var array
+     */
 
     /**
      * Instantiate the Callback object
      *
      * @param callable $callback A valid callback
-     * @param Mixed $params Params passed to the callback
+     * @param mixed $params Params passed to the callback
      */
     public function __construct(callable $callback, $params = [])
     {
@@ -54,6 +61,8 @@ class Callback
 
     /**
      * Execute the callback and return it's results.
+     *
+     * @return mixed
      */
     public function call()
     {

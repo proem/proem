@@ -80,7 +80,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.match Event.
      */
-    private function registerRouteMatchListener()
+    protected function registerRouteMatchListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
@@ -93,7 +93,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.exhausted Event.
      */
-    private function registerRouteExhaustedListener()
+    protected function registerRouteExhaustedListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
@@ -118,7 +118,7 @@ class Stage
      * @triggers Proem\Routing\Signal\Event\RouteExhausted route.exhausted
      * @todo Instead of setting a dispatchable flag, a new event could likely be triggered
      */
-    private function processRoutes()
+    protected function processRoutes()
     {
         if ($this->assets->has('router') && $this->assets->has('events')) {
             $router = $this->assets->get('router');
@@ -149,7 +149,7 @@ class Stage
     /**
      * Dispatch the payload.
      */
-    private function dispatch()
+    protected function dispatch()
     {
         if ($this->assets->has('dispatch')) {
             $this->assets->get('dispatch')->dispatch();
@@ -181,7 +181,7 @@ class Stage
      *
      * @param Proem\Routing\Signal\Event\RouteMatch $e
      */
-    public function routesExhausted()
+    public function routesExhausted($e)
     {
         if ($this->assets->has('response')) {
             $this->assets->get('response')

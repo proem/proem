@@ -43,21 +43,21 @@ class Standard implements Template
      *
      * @var string
      */
-    protected $httpVersion  = '1.1';
+    protected $httpVersion = '1.1';
 
     /**
      * Store the HTTP Status code
      *
      * @var int
      */
-    protected $httpStatus   = 200;
+    protected $httpStatus = 200;
 
     /**
      * Store response body
      *
      * @var string
      */
-    protected $body         = '';
+    protected $body = '';
 
     /**
      * Store headers

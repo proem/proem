@@ -43,7 +43,7 @@ class RouteMatch extends Standard
     /**
      * Store the routes payload
      */
-    private $payload;
+    protected $payload;
 
     /**
      * Set the payload

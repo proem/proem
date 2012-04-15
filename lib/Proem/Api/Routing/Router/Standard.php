@@ -45,14 +45,14 @@ class Standard implements Template
      *
      * @var string $requestUrl
      */
-    private $requestUrl;
+    protected $requestUrl;
 
     /**
      * Store our routes
      *
      * @var Proem\Util\Storage\KeyValStore
      */
-    private $routes;
+    protected $routes;
 
     /**
      * Setup

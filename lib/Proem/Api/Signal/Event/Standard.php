@@ -49,21 +49,21 @@ class Standard implements Template
      *
      * @var array
      */
-    private $params;
+    protected $params;
 
     /**
      * Store target
      *
      * @var object $target
      */
-    private $target = null;
+    protected $target = null;
 
     /**
      * Store the method
      *
      * @var string
      */
-    private $method = null;
+    protected $method = null;
 
     /**
      * Set params

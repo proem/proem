@@ -46,14 +46,14 @@ class Standard extends Generic
      *
      * @var array
      */
-    private $default_tokens = [];
+    protected $default_tokens = [];
 
     /**
      * Store default filters.
      *
      * @var array
      */
-    private $default_filters = [];
+    protected $default_filters = [];
 
     /**
      * Instantiate object & setup default filters / tokens.

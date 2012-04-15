@@ -48,27 +48,28 @@ class Standard implements Template
      *
      * @var array @params
      */
-    private $params = [];
+    protected $params = [];
 
     /**
      * The Closure responsible for instantiating the payload.
      *
      * @var closure $asset
      */
-    private $asset;
+    protected $asset;
 
     /**
      * Store a flag indicating what object this Asset provides.
      *
      * @var string $provides
      */
-    private $provides = null;
+    protected $provides = null;
 
     /**
      * Validate that this object is what it advertises.
      *
      * @param object
      */
+    protected function validate($object)
     {
         $object = (object) $object;
         if ($this->provides === null) {

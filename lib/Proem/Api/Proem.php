@@ -59,13 +59,14 @@ class Proem
      *
      * @var Proem\Signal\Manager\Template
      */
-    private $events;
+    protected $events;
 
     /**
      * Store the service manager
      *
      * @var Proem\Service\Manager\Template
      */
+    protected $serviceManager;
 
     /**
      * Register an extension
@@ -77,7 +78,7 @@ class Proem
      * @param int $priority The priority the Event Listener is registered at
      * @return Proem\Proem
      */
-    private function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
+    protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
         $this->attachEventListener([
             'name'      => $event,

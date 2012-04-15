@@ -43,12 +43,14 @@ class Autoloader
      *
      * @var array $namespaces
      */
+    protected $namespaces = [];
 
     /**
      * Store Pear prefixes
      *
      * @var array $pearPrefixes
      */
+    protected $pearPrefixes = [];
 
     /**
      * Register an array of namespaces

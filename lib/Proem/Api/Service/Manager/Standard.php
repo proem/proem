@@ -51,7 +51,7 @@ class Standard implements Template
      *
      * @var $assets array
      */
-    private $assets = [];
+    protected $assets = [];
 
     /**
      * Store an array containing information about what
@@ -59,7 +59,7 @@ class Standard implements Template
      *
      * @var array
      */
-    private $provides = [];
+    protected $provides = [];
 
     /**
      * Store an Asset container by named index.

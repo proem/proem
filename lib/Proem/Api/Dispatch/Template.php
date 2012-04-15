@@ -62,7 +62,7 @@ interface Template
     /**
      * Dispatch the current controller/action
      *
-     * @return Proem\Api\Dispatch\Teample
+     * @return Proem\Api\Dispatch\Template
      */
     public function dispatch();
 }

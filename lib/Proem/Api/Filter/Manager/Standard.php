@@ -53,14 +53,14 @@ class Standard implements Template
      *
      * @var Proem\Util\Storage\Queue $queue
      */
-    private $queue;
+    protected $queue;
 
     /**
      * Store the service manager.
      *
      * @var Proem\Service\Manager
      */
-    private $serviceManager;
+    protected $serviceManager;
 
     /**
      * Instantiate the Filter Manager.

@@ -42,7 +42,7 @@ class Payload extends KeyValStore
      *
      * @var bool
      */
-    private $populated = false;
+    protected $populated = false;
 
     /**
      * Is the Payload Populated?

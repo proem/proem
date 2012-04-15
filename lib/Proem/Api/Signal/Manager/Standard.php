@@ -60,14 +60,14 @@ class Standard implements Template
      *
      * @var array $queues
      */
-    private $queues = [];
+    protected $queues = [];
 
     /**
      * Store listener callbacks.
      *
      * @var array callbacks
      */
-    private $callbacks = [];
+    protected $callbacks = [];
 
     /**
      * Remove event listeners from a particular index.

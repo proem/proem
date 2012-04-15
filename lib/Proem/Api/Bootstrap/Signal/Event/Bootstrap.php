@@ -43,14 +43,14 @@ class Bootstrap extends StandardEvent
      *
      * @var Proem\Service\Manager\Template
      */
-    private $serviceManager;
+    protected $serviceManager;
 
     /**
      * Store the environment.
      *
      * @var string $environment
      */
-    private $environment;
+    protected $environment;
 
     /**
      * Set the service manager

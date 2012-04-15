@@ -46,54 +46,63 @@ class Option
      *
      * @var mixed $value
      */
+    protected $value;
 
     /**
      * Store a is_required flag.
      *
      * @var bool
      */
+    protected $is_required = false;
 
     /**
      * Store a is_type flag.
      *
      * @var string
      */
+    protected $is_type;
 
     /**
      * Store a is_asset flag.
      *
      * @var string
      */
+    protected $is_asset;
 
     /**
      * Store a is_object flag.
      *
      * @var bool
      */
+    protected $is_object;
 
     /**
      * Store a is_classof flag.
      *
      * @var string
      */
+    protected $is_classof;
 
     /**
      * Store a throws flag.
      *
      * @var string
      */
+    protected $throws = null;
 
     /**
      * Store a unless flag.
      *
      * @var array
      */
+    protected $unless = [];
 
     /**
      * Store type_validators.
      *
      * @var array
      */
+    protected $type_validators    = [];
 
     /**
      * Instantiate the option object.

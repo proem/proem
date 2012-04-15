@@ -40,12 +40,14 @@ class Callback
      *
      * @var callable
      */
+    protected $callback;
 
     /**
      * Store any params
      *
      * @var array
      */
+    protected $params = [];
 
     /**
      * Instantiate the Callback object

@@ -48,12 +48,14 @@ class Queue implements \IteratorAggregate, \Countable
      *
      * @var \SplPriorityQueue
      */
+    protected $queue;
 
     /**
      * Data aggregated in the priority queue.
      *
      * @var array
      */
+    protected $data;
 
     /**
      * Store a very large number.
@@ -67,6 +69,7 @@ class Queue implements \IteratorAggregate, \Countable
      *
      * @return \SplPriorityQueue
      */
+    protected function getSplQueue()
     {
         if (null === $this->queue) {
             $this->queue = new \SplPriorityQueue;

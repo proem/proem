@@ -118,6 +118,17 @@ class Autoloader
     }
 
     /**
+     * Unregister the autoloader.
+     *
+     * @return Proem\Api\Autoloader
+     */
+    public function unregister()
+    {
+        spl_autoload_unregister([$this, 'load']);
+        return $this;
+    }
+
+    /**
      * Load a class
      *
      * This load mechanism is not only responsible for locating and including the

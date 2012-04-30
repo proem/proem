@@ -40,7 +40,7 @@ use Proem\Util\Opt\Options,
 class Standard implements Template
 {
     /**
-     * @use Proem\Util\Opt\Options
+     * @use Proem\Api\Util\Opt\Options
      */
     use Options;
 
@@ -69,7 +69,7 @@ class Standard implements Template
      * Set params
      *
      * @param array $params
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setParams(array $params)
     {
@@ -94,7 +94,7 @@ class Standard implements Template
      * this event was triggered from.
      *
      * @param object $target
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setTarget($target)
     {
@@ -119,7 +119,7 @@ class Standard implements Template
      * the method which has triggered this event.
      *
      * @param string $method
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setMethod($method)
     {

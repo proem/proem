@@ -47,42 +47,42 @@ abstract class Generic implements Template
     /**
      * Called prior to inBound
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function preIn(ServiceManager $assets) {}
 
     /**
      * Define the method to be called on the way into the filter.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public abstract function inBound(ServiceManager $assets);
 
     /**
      * Called after inBound
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function postIn(ServiceManager $assets) {}
 
     /**
      * Called prior outBound
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function preOut(ServiceManager $assets) {}
 
     /**
      * Define the method to be called on the way out of the filter.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public abstract function outBound(ServiceManager $assets);
 
     /**
      * Called after outBound
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function postOut(ServiceManager $assets) {}
 
@@ -93,8 +93,8 @@ abstract class Generic implements Template
      * in the filter chain before returning to execute preOut(), outBound()
      * and finally postOut().
      *
-     * @param Proem\Filter\Manager $filterManager
-     * @return Proem\Filter\Manager
+     * @param Proem\Api\Filter\Manager $filterManager
+     * @return Proem\Api\Filter\Manager
      */
     public function init(FilterManager $filterManager)
     {

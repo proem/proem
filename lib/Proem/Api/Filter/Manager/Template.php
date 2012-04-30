@@ -42,23 +42,23 @@ interface Template
     /**
      * Insert an event into the queue
      *
-     * @param Proem\Filter\Event\Template $event
+     * @param Proem\Api\Filter\Event\Template $event
      * @param int $priority
-     * @return Proem\Filter\Manager\Template
+     * @return Proem\Api\Filter\Manager\Template
      */
     public function attachEvent(Event $event, $priority);
 
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Filter\Event\Template
+     * @return Proem\Api\Filter\Event\Template
      */
     public function getInitialEvent();
 
     /**
      * Retrieve the next event in the filter
      *
-     * @return Proem\Filter\Event\Generic
+     * @return Proem\Api\Filter\Event\Generic
      */
     public function getNextEvent();
 
@@ -72,7 +72,7 @@ interface Template
     /**
      * Get the first event in the filter and execute it's init() method
      *
-     * @return Proem\Filter\Event\Template
+     * @return Proem\Api\Filter\Event\Template
      */
     public function init();
 }

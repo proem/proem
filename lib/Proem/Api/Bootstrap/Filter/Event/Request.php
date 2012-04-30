@@ -45,11 +45,11 @@ class Request extends Event
      * Called prior to inBound.
      *
      * A listener responding with an object that implements the
-     * Proem\IO\Request\Template interface will result in that object
+     * Proem\Api\IO\Request\Template interface will result in that object
      * being placed within the service manager under the *request* index.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.request
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.request
      */
     public function preIn(Manager $assets)
     {
@@ -73,10 +73,10 @@ class Request extends Event
      * Method to be called on the way into the filter.
      *
      * If not already provided this method will add a default
-     * Proem\IO\Request\Template implementation to the service manager
+     * Proem\Api\IO\Request\Template implementation to the service manager
      * under the index of *request*.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function inBound(Manager $assets)
     {
@@ -94,8 +94,8 @@ class Request extends Event
     /**
      * Called after outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap post.in.request
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.request
      */
     public function postIn(Manager $assets)
     {
@@ -114,8 +114,8 @@ class Request extends Event
     /**
      * Called prior to outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.out.request
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.request
      */
     public function preOut(Manager $assets)
     {
@@ -134,7 +134,7 @@ class Request extends Event
     /**
      * Method to be called on the way out of the filter.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function outBound(Manager $assets)
     {
@@ -144,8 +144,8 @@ class Request extends Event
     /**
      * Called after outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap post.out.request
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.request
      */
     public function postOut(Manager $assets)
     {

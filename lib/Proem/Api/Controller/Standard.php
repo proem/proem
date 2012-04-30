@@ -40,7 +40,7 @@ class Standard implements ControllerTemplate
     /**
      * Store the service manager.
      *
-     * @var Proem\Service\Manager\Template
+     * @var Proem\Api\Service\Manager\Template
      */
     protected $assets;
 
@@ -50,7 +50,7 @@ class Standard implements ControllerTemplate
      * This construct has been marked final so that it can not
      * be overriden by child implementations.
      *
-     * @param Proem\Service\Manager\Template
+     * @param Proem\Api\Service\Manager\Template
      */
     public final function __construct(ServiceManager $assets)
     {

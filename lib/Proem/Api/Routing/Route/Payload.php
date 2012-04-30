@@ -57,11 +57,12 @@ class Payload extends KeyValStore
     /**
      * Set the populated flag
      *
-     * @return Proem\Routing\Route\Template
+     * @return Proem\Api\Routing\Route\Template
      */
     public function setPopulated()
     {
         $this->populated = true;
         return $this;
     }
+
 }

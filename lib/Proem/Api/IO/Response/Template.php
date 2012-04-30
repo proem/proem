@@ -31,7 +31,7 @@
 namespace Proem\Api\IO\Response;
 
 /**
- * Proem\Api\IO\Response\Template
+ * Interface that all Response objects must implement.
  *
  */
 interface Template
@@ -43,7 +43,7 @@ interface Template
      * property should be incremented accordingly.
      *
      * @param string $string
-     * @return Proem\IO\Response\Template;
+     * @return Proem\Api\IO\Response\Template;
      */
     public function appendToBody($string);
 
@@ -60,4 +60,5 @@ interface Template
      * This method should first send any headers and then the request body.
      */
     public function send();
+
 }

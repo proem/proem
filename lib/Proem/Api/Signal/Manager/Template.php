@@ -31,7 +31,7 @@
 namespace Proem\Api\Signal\Manager;
 
 /**
- * Proem\Api\Signal\Manager\Template
+ * Interface that all signal managers must implement.
  */
 interface Template
 {
@@ -46,7 +46,7 @@ interface Template
     /**
      * Register a listener attached to a particular named event.
      *
-     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @param array $options An array of Proem\Api\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
     public function attach(array $options);
@@ -54,8 +54,9 @@ interface Template
     /**
      * Trigger the execution of all event listeners attached to a named event.
      *
-     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @param array $options An array of Proem\Api\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
     public function trigger(array $options);
+
 }

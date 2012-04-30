@@ -42,7 +42,7 @@ interface Template
      * Set params
      *
      * @param array $params
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setParams(array $params);
 
@@ -60,7 +60,7 @@ interface Template
      * this event was triggered from.
      *
      * @param object $target
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setTarget($target);
 
@@ -78,7 +78,7 @@ interface Template
      * the method which has triggered this event.
      *
      * @param string $method
-     * @return Proem\Signal\Event\Template
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setMethod($method);
 
@@ -88,4 +88,5 @@ interface Template
      * @return object
      */
     public function getMethod();
+
 }

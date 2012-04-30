@@ -34,21 +34,21 @@ use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
 
 /**
- * Proem\Api\Bootstrap\Signal\Event\Bootstrap
- *
  * A custom event used by the router to communicate matching routes
  */
 class RouteMatch extends Standard
 {
     /**
      * Store the routes payload
+     *
+     * @var Proem\Api\Dispatch\Payload $payload
      */
     protected $payload;
 
     /**
      * Set the payload
      *
-     * @param Proem\Dispatch\Payload $payload
+     * @param Proem\Api\Dispatch\Payload $payload
      */
     public function setPayload(Payload $payload)
     {
@@ -58,6 +58,8 @@ class RouteMatch extends Standard
 
     /**
      * Retrieve the payload
+     *
+     * @return Proem\Api\Dispatch\Payload $payload
      */
     public function getPayload()
     {

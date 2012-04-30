@@ -65,7 +65,7 @@ class Standard implements Template
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Service\Asset\Template $asset
+     * @param Proem\Api\Service\Asset\Template $asset
      * @return Proem\Api\Service\Manager\Template
      */
     public function set($index, Asset $asset)
@@ -79,7 +79,7 @@ class Standard implements Template
      * Retrieve an asset container by named index.
      *
      * @param string $index The index the asset is referenced by.
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function getContainer($index)
     {

@@ -46,7 +46,7 @@ use Proem\Util\Storage\Queue,
 class Standard implements Template
 {
     /**
-     * @use Proem\Util\Opt\Options
+     * @use Proem\Api\Util\Opt\Options
      */
     use Options;
 
@@ -227,4 +227,5 @@ class Standard implements Template
 
         return $this;
     }
+
 }

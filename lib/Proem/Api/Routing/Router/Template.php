@@ -41,7 +41,7 @@ interface Template
      * Register a route with the router.
      *
      * @param string $name
-     * @param Proem\Routing\Route\Template $route
+     * @param Proem\Api\Routing\Route\Template $route
      * @todo This method should be renamed to register()
      */
     public function map($name, Route $route);
@@ -58,4 +58,5 @@ interface Template
      * again.
      */
     public function route();
+
 }

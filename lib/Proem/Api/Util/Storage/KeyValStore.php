@@ -93,7 +93,7 @@ class KeyValStore implements \Iterator
      *
      * @param string|array $index
      * @param mixed $value
-     * @return Proem\Util\Storage\KeyValStore
+     * @return Proem\Api\Util\Storage\KeyValStore
      */
     public function set($index, $value = null)
     {
@@ -121,7 +121,7 @@ class KeyValStore implements \Iterator
      * Remove an item by index
      *
      * @param string $index
-     * @return Proem\Util\Storage\KeyValStore
+     * @return Proem\Api\Util\Storage\KeyValStore
      */
     public function remove($index)
     {
@@ -186,4 +186,5 @@ class KeyValStore implements \Iterator
     public function valid() {
         return $this->current();
     }
+
 }

@@ -33,21 +33,21 @@ use Proem\Service\Manager\Template as Manager,
     Proem\Routing\Route\Payload as Payload;
 
 /**
- * Proem\Dispatch\Template
+ * Interface all dispatcher must implement.
  */
 interface Template
 {
     /**
      * Setup the dispatcher
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function __construct(Manager $assets);
 
     /**
      * Set the payload object
      *
-     * @param Proem\Routing\Route\Payload $payload
+     * @param Proem\Api\Routing\Route\Payload $payload
      * @return Proem\Api\Dispatch\Template
      */
     public function setPayload(Payload $payload);

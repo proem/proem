@@ -56,7 +56,7 @@ class Autoloader
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerNamespaces(array $namespaces)
     {
@@ -71,7 +71,7 @@ class Autoloader
      *
      * @param string $namespace The namespace
      * @param array|string $paths The path to the namespace
-     * @return Proem\Autoloader
+     * @return Proem\Api\Autoloader
      */
     public function registerNamespace($namespace, $paths)
     {

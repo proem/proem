@@ -46,12 +46,12 @@ class Route extends Event
      * Called prior to inBound.
      *
      * A listener responding with an object implementing the
-     * Proem\Routing\Router\Template interface, will result in that
+     * Proem\Api\Routing\Router\Template interface, will result in that
      * object being placed within the main service manager under
      * the index of *router*.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
      */
     public function preIn(Manager $assets)
     {
@@ -76,7 +76,7 @@ class Route extends Event
      *
      * This method is responsible for setting up the default routes.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function inBound(Manager $assets)
     {
@@ -142,8 +142,8 @@ class Route extends Event
     /**
      * Called after outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
      */
     public function postIn(Manager $assets)
     {
@@ -162,8 +162,8 @@ class Route extends Event
     /**
      * Called prior to outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
      */
     public function preOut(Manager $assets)
     {
@@ -182,7 +182,7 @@ class Route extends Event
     /**
      * Method to be called on the way out of the filter.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function outBound(Manager $assets)
     {
@@ -192,8 +192,8 @@ class Route extends Event
     /**
      * Called after outBound.
      *
-     * @param Proem\Service\Manager\Template $assets
-     * @triggers Proem\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
      */
     public function postOut(Manager $assets)
     {

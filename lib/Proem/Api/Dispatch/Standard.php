@@ -41,7 +41,7 @@ class Standard implements Template
     /**
      * Store the Assets manager
      *
-     * @var Proem\Service\Manager\Template
+     * @var Proem\Api\Service\Manager\Template
      */
     protected $assets;
 
@@ -63,7 +63,7 @@ class Standard implements Template
     /**
      * Store the Router Payload.
      *
-     * @var Proem\Routing\Route\Payload $payload
+     * @var Proem\Api\Routing\Route\Payload $payload
      */
     protected $payload;
 
@@ -91,7 +91,7 @@ class Standard implements Template
     /**
      * Setup the dispatcher
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function __construct(Manager $assets)
     {
@@ -102,7 +102,7 @@ class Standard implements Template
     /**
      * Set the payload object
      *
-     * @param Proem\Routing\Route\Payload $payload
+     * @param Proem\Api\Routing\Route\Payload $payload
      * @return Proem\Api\Dispatch\Template
      */
     public function setPayload(Payload $payload)
@@ -124,7 +124,7 @@ class Standard implements Template
      * with the module and controller that are made available via the payload.
      *
      * @param string $map
-     * @return Proem\Dispatch\Template
+     * @return Proem\Api\Dispatch\Template
      */
     public function registerControllerMap($map) {
         $this->controllerMaps[] = $map;

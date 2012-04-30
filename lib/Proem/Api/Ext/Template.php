@@ -26,7 +26,7 @@
 
 
 /**
- * @namespace Proem\Ext
+ * @namespace Proem\Api\Ext
  */
 namespace Proem\Api\Ext;
 
@@ -40,7 +40,7 @@ interface Template
     /**
      * Called on initialisation.
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      * @param string $environment
      */
     public function init(Manager $assets, $environment = null);

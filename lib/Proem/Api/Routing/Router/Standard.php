@@ -50,7 +50,7 @@ class Standard implements Template
     /**
      * Store our routes
      *
-     * @var Proem\Util\Storage\KeyValStore
+     * @var Proem\Api\Util\Storage\KeyValStore
      */
     protected $routes;
 
@@ -69,8 +69,8 @@ class Standard implements Template
      * Store route objects.
      *
      * @param string $name
-     * @param Proem\Routing\Route\Template $route
-     * @return Proem\Signal\Manager\Template
+     * @param Proem\Api\Routing\Route\Template $route
+     * @return Proem\Api\Signal\Manager\Template
      * @todo This method should be renamed to register()
      */
     public function map($name, Route $route)
@@ -90,7 +90,7 @@ class Standard implements Template
      * internal pointer is reset so the Router can be used
      * again.
      *
-     * @return bool|Proem\Routing\Route\Payload
+     * @return bool|Proem\Api\Routing\Route\Payload
      */
     public function route()
     {
@@ -107,4 +107,5 @@ class Standard implements Template
         $this->routes->rewind();
         return false;
     }
+
 }

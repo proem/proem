@@ -44,7 +44,7 @@ class Stage
     /**
      * Store the Services Manager
      *
-     * @var Proem\Services\Manager\Template
+     * @var Proem\Api\Services\Manager\Template
      */
     protected $assets;
 
@@ -63,7 +63,7 @@ class Stage
      * flag is true the route is dispatched and execution moves
      * into userland *controller* code
      *
-     * @param Proem\Service\Manager\Template $assets
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function __construct(Manager $assets)
     {
@@ -114,8 +114,8 @@ class Stage
      * If all matching routes have been exhausted a route.exhausted event
      * is triggered.
      *
-     * @triggers Proem\Routing\Signal\Event\RouteMatch route.match
-     * @triggers Proem\Routing\Signal\Event\RouteExhausted route.exhausted
+     * @triggers Proem\Api\Routing\Signal\Event\RouteMatch route.match
+     * @triggers Proem\Api\Routing\Signal\Event\RouteExhausted route.exhausted
      * @todo Instead of setting a dispatchable flag, a new event could likely be triggered
      */
     protected function processRoutes()
@@ -162,7 +162,7 @@ class Stage
      * Pass the RouteMatch event to the dispatcher and have it tested
      * to see if it is dispatchable. Return the result.
      *
-     * @param Proem\Routing\Signal\Event\RouteMatch $e
+     * @param Proem\Api\Routing\Signal\Event\RouteMatch $e
      * @return bool
      */
     public function isDispatchable($e)
@@ -179,7 +179,7 @@ class Stage
      *
      * If triggered, dispatch a very standard default 404
      *
-     * @param Proem\Routing\Signal\Event\RouteMatch $e
+     * @param Proem\Api\Routing\Signal\Event\RouteMatch $e
      */
     public function routesExhausted($e)
     {

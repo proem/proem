@@ -41,7 +41,7 @@ class Bootstrap extends StandardEvent
     /**
      * Store the service manager.
      *
-     * @var Proem\Service\Manager\Template
+     * @var Proem\Api\Service\Manager\Template
      */
     protected $serviceManager;
 
@@ -55,7 +55,7 @@ class Bootstrap extends StandardEvent
     /**
      * Set the service manager
      *
-     * @param Proem\Service\Manager $serviceManager
+     * @param Proem\Api\Service\Manager $serviceManager
      * @return Proem\Api\Bootstrap\Signal\Event\Bootstrap
      */
     public function setServiceManager(Manager $serviceManager)
@@ -67,7 +67,7 @@ class Bootstrap extends StandardEvent
     /**
      * Retrieve the service manager
      *
-     * @return Proem\Service\Manager
+     * @return Proem\Api\Service\Manager
      */
     public function getServiceManager()
     {

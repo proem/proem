@@ -98,7 +98,7 @@ class Standard implements Template
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function setParam($index, $value)
     {
@@ -111,7 +111,7 @@ class Standard implements Template
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function __set($index, $value) {
         return $this->setParam($index, $value);
@@ -121,7 +121,7 @@ class Standard implements Template
      * Set multiple parameters use a key => value array.
      *
      * @param array $params
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function setParams(Array $params)
     {
@@ -163,7 +163,7 @@ class Standard implements Template
      *
      * @param string The object this asset provides
      * @param Closure $closure
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function set($provides, \Closure $closure)
     {
@@ -181,7 +181,7 @@ class Standard implements Template
      * This provides the closure with the ability to use any required parameters
      * and also be able to call upon any other assets stored in the service manager.
      *
-     * @param Proem\Service\Manager\Template $assetManager
+     * @param Proem\Api\Service\Manager\Template $assetManager
      */
     public function get(Manager $assetManager = null)
     {
@@ -216,4 +216,5 @@ class Standard implements Template
             return $obj;
         };
     }
+
 }

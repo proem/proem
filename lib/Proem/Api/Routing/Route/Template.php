@@ -41,4 +41,5 @@ interface Template
      * @param string $uri
      */
     public function process($uri);
+
 }

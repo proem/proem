@@ -37,7 +37,7 @@ use Proem\Util\Process\Callback,
 /**
  * Provides a mechanism for validiting a value.
  *
- * These values are used by the Proem\Utils\Opt\Options trait.
+ * These values are used by the Proem\Api\Utils\Opt\Options trait.
  */
 class Option
 {
@@ -132,7 +132,7 @@ class Option
      * @param string $type
      * @param function $callback
      * @param bool $override
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function addTypeValidator($type, $callback, $override = false)
     {
@@ -146,7 +146,7 @@ class Option
      * Set the value.
      *
      * @param mixed $value
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function setValue($value) {
         $this->value = $value;
@@ -165,7 +165,7 @@ class Option
     /**
      * Set this as required.
      *
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function required() {
         $this->is_required = true;
@@ -184,8 +184,8 @@ class Option
     /**
      * Disable this option from being required if some other argument(s) has been provided
      *
-     * @param string|array $options An array of Proem\Util\Opt\Option objects
-     * @return Proem\Util\Opt\Option
+     * @param string|array $options An array of Proem\Api\Util\Opt\Option objects
+     * @return Proem\Api\Util\Opt\Option
      */
     public function unless($options)
     {
@@ -204,7 +204,7 @@ class Option
      * an appropriate *type* validator.
      *
      * @param string $type
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function type($type)
     {
@@ -216,7 +216,7 @@ class Option
      * Force this options value to be an instance of a particular object.
      *
      * @param string $object A string representation of a class name
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function object($object)
     {
@@ -229,7 +229,7 @@ class Option
      * providing a specific asset.
      *
      * @param $provides The asset this option provides
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function asset($provides)
     {
@@ -241,7 +241,7 @@ class Option
      * Set a custom exception to throw if invalid.
      *
      * @param \Exception $exception
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function throws(callable $exception) {
         $this->throws = $exception;
@@ -253,7 +253,7 @@ class Option
      * particular class or subclass.
      *
      * @param string $class
-     * @return Proem\Util\Opt\Option
+     * @return Proem\Api\Util\Opt\Option
      */
     public function classof($class)
     {
@@ -354,4 +354,5 @@ class Option
 
         return true;
     }
+
 }

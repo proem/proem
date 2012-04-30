@@ -153,7 +153,7 @@ class Standard implements Template
      * Set the content type.
      *
      * @param string $type
-     * @return Proem\IO\Request\Template
+     * @return Proem\Api\IO\Request\Template
      */
     public function setContentType($type)
     {
@@ -192,7 +192,7 @@ class Standard implements Template
      * Set the request method.
      *
      * @param string $method
-     * @return Proem\IO\Request\Template
+     * @return Proem\Api\IO\Request\Template
      */
     public function setMethod($method)
     {
@@ -212,7 +212,7 @@ class Standard implements Template
      * Set GET data.
      *
      * @param array $data
-     * @return Proem\IO\Request\Template
+     * @return Proem\Api\IO\Request\Template
      */
     public function setGetData(array $data)
     {
@@ -296,4 +296,5 @@ class Standard implements Template
 
         return $this->data['meta']->get('REMOTE_ADDR');
     }
+
 }

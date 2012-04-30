@@ -51,14 +51,14 @@ class Standard implements Template
     /**
      * Store the priority queue.
      *
-     * @var Proem\Util\Storage\Queue $queue
+     * @var Proem\Api\Util\Storage\Queue $queue
      */
     protected $queue;
 
     /**
      * Store the service manager.
      *
-     * @var Proem\Service\Manager
+     * @var Proem\Api\Service\Manager
      */
     protected $serviceManager;
 
@@ -67,7 +67,7 @@ class Standard implements Template
      *
      * This sets up the queues and service manager.
      *
-     * @param Proem\Service\Manager\Template
+     * @param Proem\Api\Service\Manager\Template
      */
     public function __construct(ServiceManager $serviceManager)
     {
@@ -78,9 +78,9 @@ class Standard implements Template
     /**
      * Insert an event into the queue
      *
-     * @param Proem\Filter\Event\Template $event
+     * @param Proem\Api\Filter\Event\Template $event
      * @param int $priority
-     * @return Proem\Filter\Manager\Template
+     * @return Proem\Api\Filter\Manager\Template
      */
     public function attachEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
     {
@@ -91,7 +91,7 @@ class Standard implements Template
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Filter\Event\Template
+     * @return Proem\Api\Filter\Event\Template
      */
     public function getInitialEvent()
     {
@@ -101,7 +101,7 @@ class Standard implements Template
     /**
      * Retrieve the next event in the filter
      *
-     * @return Proem\Filter\Event\Template
+     * @return Proem\Api\Filter\Event\Template
      */
     public function getNextEvent()
     {
@@ -112,7 +112,7 @@ class Standard implements Template
     /**
      * Retrieve the Service Manager
      *
-     * @return Proem\Service\Manager\Template
+     * @return Proem\Api\Service\Manager\Template
      */
     public function getServiceManager()
     {
@@ -132,7 +132,7 @@ class Standard implements Template
     /**
      * Get the first event in the filter and execute it's init() method
      *
-     * @return Proem\Filter\Event\Template
+     * @return Proem\Api\Filter\Event\Template
      */
     public function init()
     {

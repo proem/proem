@@ -49,7 +49,7 @@ interface Template
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function setParam($index, $value);
 
@@ -57,7 +57,7 @@ interface Template
      * Set multiple parameters use a key => value array.
      *
      * @param array $params
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function setParams(array $params);
 
@@ -80,14 +80,14 @@ interface Template
      *
      * @param string The object this asset provides
      * @param Closure $closure
-     * @return Proem\Service\Asset\Template
+     * @return Proem\Api\Service\Asset\Template
      */
     public function set($provides, \Closure $closure);
 
     /**
      * Validate and retrieve an instantiated asset.
      *
-     * @param Proem\Service\Manager\Template $assetManager
+     * @param Proem\Api\Service\Manager\Template $assetManager
      */
     public function get(Manager $assetManager = null);
 
@@ -98,4 +98,5 @@ interface Template
      * @param closure $closure
      */
     public function single(\Closure $closure);
+
 }

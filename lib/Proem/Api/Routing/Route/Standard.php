@@ -104,7 +104,7 @@ class Standard extends Generic
      * into key => value pairs).
      *
      * @param string $uri
-     * @return Proem\Routing\Route\Template
+     * @return Proem\Api\Routing\Route\Template
      */
     public function process($uri)
     {
@@ -174,4 +174,5 @@ class Standard extends Generic
         }
         return $this;
     }
+
 }

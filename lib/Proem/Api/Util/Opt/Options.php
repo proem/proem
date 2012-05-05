@@ -31,16 +31,16 @@
 namespace Proem\Api\Util\Opt;
 
 /**
- * Proem\Api\Util\Opt\Options
+ * The options trait.
  */
 trait Options
 {
     /**
-     * Merge default Options with user supplied arguments applying validation in the process.
+     * Merge default options with user supplied arguments applying validation in the process.
      *
-     * @param array $default Default Options
+     * @param array $defaults Default Options
      * @param array $options User supplied Options
-     * @return array $defaults End result of merging default options with validated user options
+     * @return Proem\Api\Util\Opt\Payload End result of merging default options with validated user options
      */
     public function setOptions($defaults, $options)
     {
@@ -71,4 +71,5 @@ trait Options
         }
         return $payload;
     }
+
 }

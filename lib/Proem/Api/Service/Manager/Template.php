@@ -33,19 +33,59 @@ namespace Proem\Api\Service\Manager;
 use Proem\Service\Asset\Template as Asset;
 
 /**
- * Proem\Api\Service\Manager\Template
+ * Interface that all asset managers must implement.
  */
 interface Template
 {
+    /**
+     * Store an Asset container by named index.
+     *
+     * @param string $index The index the asset will be referenced by.
+     * @param Proem\Api\Service\Asset\Template $asset
+     * @return Proem\Api\Service\Manager\Template
+     */
     public function set($index, Asset $asset);
 
+    /**
+     * Retrieve an asset container by named index.
+     *
+     * @param string $index The index the asset is referenced by.
+     * @return Proem\Api\Service\Asset\Template
+     */
     public function getContainer($index);
 
+    /**
+     * Retrieve an actual instantiated ssset object from within it's container.
+     *
+     * @param string $index The index the asset is referenced by
+     * @return object The object provided by the asset container
+     */
     public function get($index);
 
+    /**
+     * Check to see if this manager has a specific asset.
+     *
+     * @param string $index The index the asset is referenced by
+     * @return bool
+     */
     public function has($index);
 
+    /**
+     * Check to see if this manager provides a specifically named
+     * asset and that it provides a specific object.
+     *
+     * @param string $index
+     * @param string|null $provides
+     * @return bool
+     */
     public function provides($index, $provides = null);
 
+    /**
+     * Retrieve an asset by what it provides.
+     *
+     * @param string $provides
+     * @return object
+     */
     public function getProvided($provides);
+
 }

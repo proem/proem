@@ -33,11 +33,30 @@ namespace Proem\Api\Routing\Router;
 use Proem\Routing\Route\Template as Route;
 
 /**
- * Proem\Api\Routing\Route\Template
+ * Interface all routers must implement.
  */
 interface Template
 {
+    /**
+     * Register a route with the router.
+     *
+     * @param string $name
+     * @param Proem\Api\Routing\Route\Template $route
+     * @todo This method should be renamed to register()
+     */
     public function map($name, Route $route);
 
+    /**
+     * Recurse through the Routes until a match is found.
+     *
+     * When called multiple times (in a loop for instance)
+     * this method should return a new matching route until
+     * all routes have been processed.
+     *
+     * Once exhausted this function should return false and the
+     * internal pointer should be reset so the router can be used
+     * again.
+     */
     public function route();
+
 }

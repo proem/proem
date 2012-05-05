@@ -37,15 +37,24 @@ use Proem\Routing\Route\Payload,
     Proem\Routing\Route\Template;
 
 /**
- * Proem\Api\Routing\Route
+ * Generic route abstract.
  */
 abstract class Generic implements Template
 {
+    /**
+     * @uses Proem\Api\Util\Opt\Options
+     */
     use Options;
+
+    /**
+     * @uses Proem\Api\Util\ArrayHelper
+     */
     use ArrayHelper;
 
     /**
      * Store the options for this route
+     *
+     * @var array
      */
     protected $options = [];
 
@@ -58,11 +67,15 @@ abstract class Generic implements Template
 
     /**
      * Store matched parameters within a Dispatch\Payload object.
+     *
+     * @var Proem\Api\Routing\Route\Payload
      */
     protected $payload = null;
 
     /**
      * Instantiate this route
+     *
+     * @param array $options An array of Proem\Api\Util\Opt\Option objects
      */
     public function __construct(array $options)
     {
@@ -85,6 +98,8 @@ abstract class Generic implements Template
 
     /**
      * Set matched flag.
+     *
+     * @return Proem\Api\Routing\Route\Template
      */
     public function setMatch()
     {
@@ -94,6 +109,8 @@ abstract class Generic implements Template
 
     /**
      * Retrieve the Payload.
+     *
+     * @return Proem\Api\Routing\Route\Payload
      */
     public function getPayload()
     {
@@ -111,8 +128,8 @@ abstract class Generic implements Template
      * and the payload needs to be instantiated to contain the relevent
      * matched data.
      *
-     * @param \Proem\IO\Url $url
-     * @param array $options Options dependent on your implementation.
+     * @param string $uri
      */
     abstract public function process($uri);
+
 }

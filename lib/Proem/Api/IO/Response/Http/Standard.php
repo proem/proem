@@ -34,24 +34,30 @@ use Proem\IO\Response\Template,
     Proem\Util\Storage\KeyValStore;
 
 /**
- * Proem\Api\IO\Response\Http\Standard
+ * A standard http response implementation.
  */
 class Standard implements Template
 {
     /**
      * Store the HTTP Version
+     *
+     * @var string
      */
-    protected $httpVersion  = '1.1';
+    protected $httpVersion = '1.1';
 
     /**
      * Store the HTTP Status code
+     *
+     * @var int
      */
-    protected $httpStatus   = 200;
+    protected $httpStatus = 200;
 
     /**
      * Store response body
+     *
+     * @var string
      */
-    protected $body         = '';
+    protected $body = '';
 
     /**
      * Store headers
@@ -62,11 +68,15 @@ class Standard implements Template
 
     /**
      * Store response body length
+     *
+     * @var int
      */
     protected $length;
 
     /**
-     * Map HTTP status codes to message
+     * Hash of status code -> message
+     *
+     * @var array
      */
     protected $httpStatusCodes = [
         100 => 'Continue',
@@ -112,7 +122,7 @@ class Standard implements Template
     ];
 
     /**
-     * Instantiate the Response.
+     * Instantiate the http response.
      */
     public function __construct()
     {
@@ -128,6 +138,8 @@ class Standard implements Template
      * egg more than anything. Removing it from this Request may
      * not remove it all together as PHP itself can produce this
      * same heeader.
+     *
+     * @return Proem\Api\IO\Response\Template;
      */
     public function silence()
     {
@@ -136,9 +148,10 @@ class Standard implements Template
     }
 
     /**
-     * Set the HTTP version
+     * Set the HTTP version.
      *
      * @param float $version
+     * @return Proem\Api\IO\Response\Template;
      */
     public function setHttpVersion($version)
     {
@@ -149,7 +162,7 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve the HTTP version
+     * Retrieve the HTTP version.
      */
     public function getHttpVersion()
     {
@@ -157,9 +170,10 @@ class Standard implements Template
     }
 
     /**
-     * Set the HTTP status
+     * Set the HTTP status.
      *
      * @param int $status
+     * @return Proem\Api\IO\Response\Template;
      */
     public function setHttpStatus($status)
     {
@@ -175,9 +189,10 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve the HTTP status
+     * Retrieve the HTTP status.
      *
      * @param bool $asMessage Retrieve status as message instead of code
+     * @return int|string
      */
     public function getHttpStatus($asMessage = false)
     {
@@ -188,10 +203,11 @@ class Standard implements Template
     }
 
     /**
-     * Set a HTTP header by index
+     * Set a HTTP header by index.
      *
      * @param string $index
      * @param string $value
+     * @return Proem\Api\IO\Response\Template;
      */
     public function setHeader($index, $value)
     {
@@ -200,9 +216,10 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve a HTTP header by index
+     * Retrieve a HTTP header by index.
      *
      * @param string $index
+     * @return string
      */
     public function getHeader($index)
     {
@@ -212,9 +229,9 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve HTTP headers
+     * Retrieve HTTP headers.
      *
-     * @return Proem\Api\IO\Http\Response
+     * @return Proem\Api\Util\Storage\KeyValStore
      */
     public function getHeaders()
     {
@@ -222,9 +239,13 @@ class Standard implements Template
     }
 
     /**
-     * Append to the HTTP body
+     * Append to the HTTP body.
+     *
+     * As data is appended to the body the $length
+     * property is incremented accordingly.
      *
      * @param string $string
+     * @return Proem\Api\IO\Response\Template;
      */
     public function appendToBody($string)
     {
@@ -236,7 +257,9 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve the HTTP body as string
+     * Retrieve the HTTP body as string.
+     *
+     * @return string
      */
     public function getBody()
     {
@@ -244,7 +267,7 @@ class Standard implements Template
     }
 
     /**
-     * Send the HTTP headers to the client
+     * Send the HTTP headers to the client.
      */
     public function sendHeaders()
     {
@@ -266,7 +289,9 @@ class Standard implements Template
     }
 
     /**
-     * Send the Response to the client.
+     * Send the response to the client.
+     *
+     * This method will first send any headers and then the request body.
      */
     public function send()
     {
@@ -276,4 +301,5 @@ class Standard implements Template
             echo $this->body;
         }
     }
+
 }

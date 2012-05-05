@@ -38,14 +38,15 @@ use Proem\Util\Storage\Queue,
     Proem\Signal\Manager\Template;
 
 /**
- * Proem\Api\Signal\Manager\Standard
+ * Standard event manager implementation.
  *
- * Manage the registration of and triggering of Events.
+ * Stores event listeners and provides the functionality
+ * required to trigger an event.
  */
 class Standard implements Template
 {
     /**
-     * Make use of the Options trait
+     * @use Proem\Api\Util\Opt\Options
      */
     use Options;
 
@@ -59,34 +60,56 @@ class Standard implements Template
      *
      * @var array $queues
      */
-    private $queues = [];
+    protected $queues = [];
 
     /**
-     * Store listener callbacks
+     * Store listener callbacks.
+     *
+     * @var array callbacks
      */
-    private $callbacks = [];
+    protected $callbacks = [];
 
     /**
-     * Remove Event listeners from the Queue.
+     * Remove event listeners from a particular index.
+     *
+     * Be aware that removeing listeners from the wildcard '*' will not literally
+     * remove them from *all* events. If they have been registered to a specifically
+     * named event that will need to be removed seperately.
+     *
+     * @param string $name
+     * @return Proem\Api\Signal\Manager\Template
      */
     public function remove($name)
     {
         if (isset($this->queues[$name])) {
             unset($this->queues[$name]);
         }
+        return $this;
     }
 
     /**
-     * Register a listener attached to a particular named Event.
+     * Register a listener attached to a particular named event.
      *
-     * All listeners are store within a hash of priority queues. Each Queue contains
-     * all listeners registred to listen to a particular Event. The priority Queue
-     * enables lsiteners to respond to an Event according to the priority that is set.
+     * All listeners have there callbacks firstly stored within an associative array
+     * using a unique md5 hash as an index and the callback as it's value.
+     *
+     * All event names are then stored within an associative array of splpriorityqueues. The
+     * index of these arrays is the name of the event while the value inserted into the queue
+     * is the above metnioned unique md5 hash.
+     *
+     * This allows a listener to register itself to be triggered against multiple events
+     * without having multiple copies of the callback being stored.
      *
      * Default priority is 0, the higher the number of the priority the earlier the
-     * listener will respond.
+     * listener will respond, negative priorities are allowed.
      *
-     * @param array $options
+     * The name option can optionally take the form of an array of events for the listener
+     * to register itself with. A wildcard '*' is also provided and will register the
+     * listener to be triggered against all events.
+     *
+     * Be aware that registering a listener to the same event multiple times will trigger
+     * that listener multiple times. This includes using the wildcard.
+     *
      * <code>
      *   $ops = $this->setOptions([
      *       'name'      => (new Option())->required(),                     // The name of the event to listen to
@@ -94,6 +117,9 @@ class Standard implements Template
      *       'priority'  => 0                                               // The priority at which this listner will be executed
      *   ], $options);
      * </code>
+     *
+     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @return Proem\Api\Signal\Manager\Template
      */
     public function attach(array $options)
     {
@@ -144,9 +170,8 @@ class Standard implements Template
     }
 
     /**
-     * Trigger the execution of all event listeners attached to an Event.
+     * Trigger the execution of all event listeners attached to a named event.
      *
-     * @param array $options
      * <code>
      *   $ops = $this->setOptions([
      *       'name'      => (new Option())->required(),
@@ -157,6 +182,9 @@ class Standard implements Template
      *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
      *   ], $options);
      * </code>
+     *
+     * @param array $options An array of Proem\Util\Opt\Options objects
+     * @return Proem\Api\Signal\Manager\Template
      */
     public function trigger(array $options)
     {
@@ -199,4 +227,5 @@ class Standard implements Template
 
         return $this;
     }
+
 }

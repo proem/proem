@@ -5,14 +5,17 @@ group('dev', function() {
     desc('Run the unit tests');
     task('tests', function($args) {
         if (isset($args['verbose'])) {
-            system('phpunit --colors --debug --verbose --configuration tests/phpunit.xml');
+            system('phpunit --colors --debug --verbose --configuration vendor/proem/proem-test-suite/phpunit.xml');
         } else {
-            system('phpunit --colors --configuration tests/phpunit.xml');
+            system('phpunit --colors --configuration vendor/proem/proem-test-suite/phpunit.xml');
         }
     });
 
     desc('Build the Phar archive');
     task('build', 'tests', function($args) {
+        if (!is_dir('build')) {
+            mkdir('build');
+        }
         chdir('lib');
         $phar = new Phar('proem.phar');
         $phar->buildFromDirectory('.');
@@ -55,7 +58,34 @@ group('dev', function() {
             file_put_contents('lib/Proem/Api/Proem.php', $file);
         }
     });
+});
 
+desc('Generate a file of aliased definitions, helpful for IDEs that are having trouble with code completion');
+task('gen-ide-help', function() {
+    function recurseDir($path = '.')
+    {
+        $ignore = ['.', '..'];
+        $dh = @opendir($path);
+        while(false !== ($file = readdir($dh))) {
+            if (!in_array($file, $ignore)) {
+                if (is_dir("$path/$file")) {
+                    recurseDir("$path/$file");
+                } else {
+                    $filepath = "$path/$file";
+                    foreach (file($filepath) as $line) {
+                        if (preg_match('/^(class|abstract|trait)/', $line, $matches)) {
+                            $type = $matches[1];
+                            $class = str_replace(['lib/Proem/Api/', '.php', '/'], ['Proem/', '', '\\'], "$path/$file");
+                            $extends = str_replace(['lib/', '.php', '/'], ['', '', '\\'], "$path/$file");
+                            echo "$type $class extends $extends {}\n";
+                        }
+                    }
+                }
+            }
+        }
+        closedir( $dh );
+    }
+    recurseDir('lib');
 });
 
 task('default', 'dev:tests');

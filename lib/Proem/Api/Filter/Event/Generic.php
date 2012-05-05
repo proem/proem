@@ -35,56 +35,63 @@ use Proem\Filter\Manager\Standard as FilterManager,
     Proem\Filter\Event\Template as Template;
 
 /**
- * Proem\Api\Filter\Event\Generic
+ * Filter event abstract
+ *
+ * @todo A lot of the functionality described in this abstract
+ * is really only useful when used by the bootstrap process. The
+ * pre* and post* events should likely be moved into another filter
+ * designed specifically for the bootstrap.
  */
 abstract class Generic implements Template
 {
     /**
-     * preIn
-     *
      * Called prior to inBound
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function preIn(ServiceManager $assets) {}
 
     /**
-     * inBound
-     *
      * Define the method to be called on the way into the filter.
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public abstract function inBound(ServiceManager $assets);
 
     /**
-     * postIn
-     *
      * Called after inBound
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function postIn(ServiceManager $assets) {}
 
     /**
-     * preOut
-     *
      * Called prior outBound
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function preOut(ServiceManager $assets) {}
 
     /**
-     * outBound
-     *
      * Define the method to be called on the way out of the filter.
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public abstract function outBound(ServiceManager $assets);
 
     /**
-     * postOut
-     *
      * Called after outBound
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function postOut(ServiceManager $assets) {}
 
     /**
-     * init
+     * Execute this event.
      *
-     * Call inBound(), the next event in the filter, then outBound()
+     * Executes preIn(), inBound() and postIn() then init() on the next event
+     * in the filter chain before returning to execute preOut(), outBound()
+     * and finally postOut().
      *
      * @param Proem\Api\Filter\Manager $filterManager
      * @return Proem\Api\Filter\Manager

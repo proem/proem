@@ -34,26 +34,36 @@ use Proem\Service\Manager\Template as Manager,
     Proem\Routing\Signal\Event\RouteExhausted;
 
 /**
- * Proem\Dispatch\Stage
+ * The dispatch stage.
+ *
+ * This object sets up a staging area where the router and dispatcher
+ * can put on there show
  */
 class Stage
 {
     /**
-     * Store the Services Manager.
+     * Store the Services Manager
      *
-     * @var Proem\Services\Manager\Template
+     * @var Proem\Api\Services\Manager\Template
      */
     protected $assets;
 
     /**
-     * Store a *Dispatchable* flag.
+     * Store a flag
      */
     protected $dispatchable = false;
 
     /**
-     * This object represents the Dispatch staging area.
+     * Setup the stage and start the dispatch process
      *
-     * It is here that the Dispatch process puts on it's show.
+     * Within this single construct we register listeners
+     * for both the route.macth & route.exhausted events
+     *
+     * We then start processing the routes. Once the dispatchable
+     * flag is true the route is dispatched and execution moves
+     * into userland *controller* code
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function __construct(Manager $assets)
     {
@@ -70,7 +80,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.match Event.
      */
-    private function registerRouteMatchListener()
+    protected function registerRouteMatchListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
@@ -83,7 +93,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.exhausted Event.
      */
-    private function registerRouteExhaustedListener()
+    protected function registerRouteExhaustedListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
@@ -96,8 +106,19 @@ class Stage
     /**
      * Iterate through matching routes and trigger a match.route Event
      * on each iteration.
+     *
+     * A listener returning the bool true indicates that the payload is
+     * dispatchable. This sets the dispatchable flag to true and will
+     * exit this method.
+     *
+     * If all matching routes have been exhausted a route.exhausted event
+     * is triggered.
+     *
+     * @triggers Proem\Api\Routing\Signal\Event\RouteMatch route.match
+     * @triggers Proem\Api\Routing\Signal\Event\RouteExhausted route.exhausted
+     * @todo Instead of setting a dispatchable flag, a new event could likely be triggered
      */
-    private function processRoutes()
+    protected function processRoutes()
     {
         if ($this->assets->has('router') && $this->assets->has('events')) {
             $router = $this->assets->get('router');
@@ -128,7 +149,7 @@ class Stage
     /**
      * Dispatch the payload.
      */
-    private function dispatch()
+    protected function dispatch()
     {
         if ($this->assets->has('dispatch')) {
             $this->assets->get('dispatch')->dispatch();
@@ -136,9 +157,13 @@ class Stage
     }
 
     /**
-     * Listen for the route.event Event. If the RouteMatch event passed in
-     * produces a Dispatchable Payload return a Dispatchable flag and Dispatch
-     * the object.
+     * Listen for the route.match Event.
+     *
+     * Pass the RouteMatch event to the dispatcher and have it tested
+     * to see if it is dispatchable. Return the result.
+     *
+     * @param Proem\Api\Routing\Signal\Event\RouteMatch $e
+     * @return bool
      */
     public function isDispatchable($e)
     {
@@ -152,9 +177,11 @@ class Stage
     /**
      * Listen for a route.exhuasted Event.
      *
-     * If triggered, dispatch a 404
+     * If triggered, dispatch a very standard default 404
+     *
+     * @param Proem\Api\Routing\Signal\Event\RouteMatch $e
      */
-    public function routesExhausted()
+    public function routesExhausted($e)
     {
         if ($this->assets->has('response')) {
             $this->assets->get('response')

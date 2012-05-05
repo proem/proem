@@ -31,16 +31,15 @@
 namespace Proem\Api\Util\Storage;
 
 /**
- * Proem\Api\Util\Storage\KeyValStore
- *
- * A generic key => value storage mechanism.
+ * A simple, generic key => value storage mechanism
+ * implementing the \Iterator interface.
  */
 class KeyValStore implements \Iterator
 {
     /**
-     * Store the data
+     * Store the data.
      *
-     * @param array $data
+     * @var array $data
      */
     protected $data = [];
 
@@ -49,13 +48,13 @@ class KeyValStore implements \Iterator
      *
      * @param array $data
      */
-    public function __construct(Array $data = [])
+    public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
     /**
-     * Retrieve all data
+     * Retrieve all data.
      *
      * @return array
      */
@@ -65,22 +64,24 @@ class KeyValStore implements \Iterator
     }
 
     /**
-     * Retrieve a value by index
+     * Retrieve a value by index.
      *
      * Optionaly returns a default value.
      *
      * @param string $index
      * @param mixed $default
+     * @return mixed
      */
     public function get($index, $default = null)
     {
         return $this->has($index) ? $this->data[$index] : $default;
     }
 
-    /*
+    /**
      * Magic proxy to get()
      *
      * @param string $index
+     * @return mixed
      */
     public function __get($index)
     {
@@ -92,6 +93,7 @@ class KeyValStore implements \Iterator
      *
      * @param string|array $index
      * @param mixed $value
+     * @return Proem\Api\Util\Storage\KeyValStore
      */
     public function set($index, $value = null)
     {
@@ -107,7 +109,8 @@ class KeyValStore implements \Iterator
      * Magic proxy to set()
      *
      * @param string $index
-     * @param mixed $index
+     * @param mixed $value
+     * @return mixed
      */
     public function __set($index, $value)
     {
@@ -118,18 +121,21 @@ class KeyValStore implements \Iterator
      * Remove an item by index
      *
      * @param string $index
+     * @return Proem\Api\Util\Storage\KeyValStore
      */
     public function remove($index)
     {
         if (isset($this->data[$index])) {
             unset($this->data[$index]);
         }
+        return $this;
     }
 
     /**
      * Has storage have index?
      *
      * @param string $index
+     * @return mixed
      */
     public function has($index)
     {
@@ -138,6 +144,8 @@ class KeyValStore implements \Iterator
 
     /**
      * Reset internal pointer
+     *
+     * @return mixed
      */
     public function rewind() {
         return reset($this->data);
@@ -145,6 +153,8 @@ class KeyValStore implements \Iterator
 
     /**
      * Return the current element
+     *
+     * @return mixed
      */
     public function current() {
         return current($this->data);
@@ -152,6 +162,8 @@ class KeyValStore implements \Iterator
 
     /**
      * Fetch current key
+     *
+     * @return mixed
      */
     public function key() {
         return key($this->data);
@@ -159,6 +171,8 @@ class KeyValStore implements \Iterator
 
     /**
      * Advance the internal pointer and return its data
+     *
+     * @return mixed
      */
     public function next() {
         return next($this->data);
@@ -166,8 +180,11 @@ class KeyValStore implements \Iterator
 
     /**
      * Does the current internal pointer position point to an existing element?
+     *
+     * @return mixed
      */
     public function valid() {
         return $this->current();
     }
+
 }

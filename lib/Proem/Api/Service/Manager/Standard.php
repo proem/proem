@@ -34,50 +34,52 @@ use Proem\Service\Manager\Template,
     Proem\Service\Asset\Template as Asset;
 
 /**
- * Proem\Api\Service\Manager\Standard
+ * A registry of assets.
  *
- * A Registry of Assets.
+ * Within the manager itself assets are stored in a hash of key values where each
+ * value is an asset container.
  *
- * Within the manager itself Assets are stored in a hash of key values where each
- * value is an Asset container.
- *
- * These containers contain the parameters required to instantiate an Asset as
- * well as a Closure capable of returning a configured and instantiated Asset.
+ * These containers contain the parameters required to instantiate an asset as
+ * well as a closure capable of returning a configured and instantiated asset.
  *
  * @see Proem\Api\Service\Asset\Standard
  */
 class Standard implements Template
 {
     /**
-     * Store assets
+     * Store assets.
      *
      * @var $assets array
      */
-    private $assets = [];
+    protected $assets = [];
 
     /**
      * Store an array containing information about what
-     * Assets this manager provides
+     * Assets this manager provides.
+     *
+     * @var array
      */
-    private $provides = [];
+    protected $provides = [];
 
     /**
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
      * @param Proem\Api\Service\Asset\Template $asset
+     * @return Proem\Api\Service\Manager\Template
      */
     public function set($index, Asset $asset)
     {
-        $this->assets[$index]   = $asset;
-        $this->provides[]       = $asset->provides();
+        $this->assets[$index] = $asset;
+        $this->provides[]     = $asset->provides();
         return $this;
     }
 
     /**
-     * Retrieve an Asset container by named index.
+     * Retrieve an asset container by named index.
      *
      * @param string $index The index the asset is referenced by.
+     * @return Proem\Api\Service\Asset\Template
      */
     public function getContainer($index)
     {
@@ -85,9 +87,10 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve an actual instantiated Asset object from within it's container.
+     * Retrieve an actual instantiated ssset object from within it's container.
      *
-     * @param string $index The index the asset is referenced by.
+     * @param string $index The index the asset is referenced by
+     * @return object The object provided by the asset container
      */
     public function get($index)
     {
@@ -95,9 +98,10 @@ class Standard implements Template
     }
 
     /**
-     * Check to see if this manager has a specific asset
+     * Check to see if this manager has a specific asset.
      *
-     * @param string $index The index the asset is referenced by.
+     * @param string $index The index the asset is referenced by
+     * @return bool
      */
     public function has($index)
     {
@@ -105,9 +109,16 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve a "provides" flag
+     * Check to see if this manager provides a specifically named
+     * asset and that it provides a specific object.
      *
-     * @param string $provides
+     * <code>
+     * if ($am->provies('foo', 'Some\Bar\Object')) {}
+     * </code>
+     *
+     * @param string $index
+     * @param string|null $provides
+     * @return bool
      */
     public function provides($index, $provides = null)
     {
@@ -131,9 +142,15 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve an Asset by what it provides
+     * Retrieve an asset by what it provides.
+     *
+     * When called, this method will search all assets until it
+     * finds the first that provides the functionality asked for.
+     *
+     * It then returns that object.
      *
      * @param string $provides
+     * @return object
      */
     public function getProvided($provides)
     {

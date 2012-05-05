@@ -35,14 +35,12 @@ use Proem\Util\Opt\Options,
     Proem\Signal\Event\Template;
 
 /**
- * Proem\Api\Signal\Event\Standard
- *
- * A base Event implementation
+ * The standard event implementation
  */
 class Standard implements Template
 {
     /**
-     * Make use of the Options trait
+     * @use Proem\Api\Util\Opt\Options
      */
     use Options;
 
@@ -51,24 +49,27 @@ class Standard implements Template
      *
      * @var array
      */
-    private $params;
+    protected $params;
 
     /**
      * Store target
      *
      * @var object $target
      */
-    private $target = null;
+    protected $target = null;
 
     /**
      * Store the method
      *
      * @var string
      */
-    private $method = null;
+    protected $method = null;
 
     /**
      * Set params
+     *
+     * @param array $params
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setParams(array $params)
     {
@@ -78,6 +79,8 @@ class Standard implements Template
 
     /**
      * Retrieve any parameters passed to this Event
+     *
+     * @return array
      */
     public function getParams()
     {
@@ -87,7 +90,11 @@ class Standard implements Template
     /**
      * Set the target.
      *
-     * The target should be an instance of whatever object this event was triggered from
+     * The target should be an instance of whatever object
+     * this event was triggered from.
+     *
+     * @param object $target
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setTarget($target)
     {
@@ -98,7 +105,7 @@ class Standard implements Template
     /**
      * Retrieve target.
      *
-     * The target should be an instance of whatever object this event was triggered from
+     * @return object
      */
     public function getTarget()
     {
@@ -108,7 +115,11 @@ class Standard implements Template
     /**
      * Set the method.
      *
-     * The method should be a string representing the name of the method which has triggered this event
+     * The method should be a string representing the name of
+     * the method which has triggered this event.
+     *
+     * @param string $method
+     * @return Proem\Api\Signal\Event\Template
      */
     public function setMethod($method)
     {
@@ -119,7 +130,7 @@ class Standard implements Template
     /**
      * Retrieve method
      *
-     * The method should be a string containing the name of the function this event was triggered from
+     * @return object
      */
     public function getMethod()
     {

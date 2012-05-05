@@ -33,7 +33,7 @@ Also available now is an irc channel (#proem) on freenode. Join if you have any 
 
 #### Committing and Pull Requests
 
-If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](http://github.com/proem/proem/issues).
+If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](https://proemframework.atlassian.net).
 
 Next, [create an account on Github](https://github.com/signup/free) (if you haven't done so already).
 

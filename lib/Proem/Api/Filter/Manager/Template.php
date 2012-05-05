@@ -35,17 +35,44 @@ use Proem\Filter\Event\Template as Event,
     Proem\Service\Manager as ServiceManager;
 
 /**
- * Proem\Api\Filter\Manager\Template
+ * Interface that service managers must implement.
  */
 interface Template
 {
+    /**
+     * Insert an event into the queue
+     *
+     * @param Proem\Api\Filter\Event\Template $event
+     * @param int $priority
+     * @return Proem\Api\Filter\Manager\Template
+     */
     public function attachEvent(Event $event, $priority);
 
+    /**
+     * Rewind the queue to the start and return the first event
+     *
+     * @return Proem\Api\Filter\Event\Template
+     */
     public function getInitialEvent();
 
+    /**
+     * Retrieve the next event in the filter
+     *
+     * @return Proem\Api\Filter\Event\Generic
+     */
     public function getNextEvent();
 
+    /**
+     * Check to see if there are more events left in the filter.
+     *
+     * @return bool
+     */
     public function hasEvents();
 
+    /**
+     * Get the first event in the filter and execute it's init() method
+     *
+     * @return Proem\Api\Filter\Event\Template
+     */
     public function init();
 }

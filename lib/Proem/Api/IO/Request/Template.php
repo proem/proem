@@ -31,9 +31,15 @@
 namespace Proem\Api\IO\Request;
 
 /**
- * Proem\Api\IO\Request\Template
+ * Interface that all request object must implement.
  */
 interface Template
 {
+    /**
+     * Return body of response
+     *
+     * @param bool $raw
+     */
     public function getBody($raw = true);
+
 }

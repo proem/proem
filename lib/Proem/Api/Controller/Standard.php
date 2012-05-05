@@ -33,20 +33,24 @@ use Proem\Controller\Template as ControllerTemplate,
     Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * Proem\Api\Controller\Standard
+ * The standard controller implementation.
  */
 class Standard implements ControllerTemplate
 {
     /**
-     * Store the Service Manager
+     * Store the service manager.
      *
-     * @var Proem\Service\Manager\Template
+     * @var Proem\Api\Service\Manager\Template
      */
     protected $assets;
 
     /**
-     * The __construct sets up the Service Manager and
-     * is marked final so it can not be overloaded.
+     * Setup the service manager.
+     *
+     * This construct has been marked final so that it can not
+     * be overriden by child implementations.
+     *
+     * @param Proem\Api\Service\Manager\Template
      */
     public final function __construct(ServiceManager $assets)
     {
@@ -54,14 +58,18 @@ class Standard implements ControllerTemplate
     }
 
     /**
-     * Method called prior to any action
+     * Method called prior to any action.
+     *
+     * @todo This could likely be replaced by some event
      */
     public function preAction()
     {
     }
 
     /**
-     * Method called after any action
+     * Method called after any action.
+     *
+     * @todo This could likely be replaced by some event
      */
     public function postAction()
     {

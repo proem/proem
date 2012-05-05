@@ -34,22 +34,31 @@ use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic;
 
 /**
- * Proem\Api\Routing\Route\Standard
+ * Proem's standard route.
+ *
+ * This rouyte should cover most use cases and is currently the only
+ * route provided within the framework.
  */
 class Standard extends Generic
 {
     /**
      * Store default tokens.
+     *
+     * @var array
      */
-    private $default_tokens = [];
+    protected $default_tokens = [];
 
     /**
      * Store default filters.
+     *
+     * @var array
      */
-    private $default_filters = [];
+    protected $default_filters = [];
 
     /**
-     * Instantiate object & setup default filters.
+     * Instantiate object & setup default filters / tokens.
+     *
+     * @param array $options Array of Proem\Utils\Option objects
      */
     public function __construct(array $options) {
         parent::__construct($options);
@@ -71,7 +80,7 @@ class Standard extends Generic
     }
 
     /**
-     * Process the gievn url.
+     * Process the supplied url.
      *
      * This route takes a simplified series of patterns such as :controller and
      * replaces them with more complex regular expressions which are then used
@@ -95,6 +104,7 @@ class Standard extends Generic
      * into key => value pairs).
      *
      * @param string $uri
+     * @return Proem\Api\Routing\Route\Template
      */
     public function process($uri)
     {
@@ -164,4 +174,5 @@ class Standard extends Generic
         }
         return $this;
     }
+
 }

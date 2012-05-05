@@ -37,20 +37,20 @@ use Proem\Service\Manager\Template as Manager,
     Proem\Filter\Event\Generic as Event;
 
 /**
- * Proem\Api\Bootstrap\Filter\Event\Response
- *
  * The default "Response" filter event.
  */
 class Response extends Event
 {
     /**
-     * preIn
+     * Called prior to inBound.
      *
-     * Called prior to inBound
+     * A listener responding with an object implementing the
+     * Proem\Api\IO\Response\Template interface, will result in that
+     * object being placed within the main service manager under
+     * the index of *response*.
      *
-     * The preIn Filter event will trigger a pre.in.response Signal.
-     *
-     * If this Signal returns a Proem\IO\Http\Response object load it into the Asset Manager.
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.response
      */
     public function preIn(Manager $assets)
     {
@@ -71,11 +71,13 @@ class Response extends Event
     }
 
     /**
-     * inBound
-     *
      * Method to be called on the way into the filter.
      *
-     * Checks to see if we already have an Asset providing Proem\IO\Http\Response, if not, we provide one.
+     * If not already provided, this method will add a default
+     * Proem\Api\IO\Response\Template implementation to the main service
+     * manager under the index of *response*.
+     *
+     * @param Proem\Api\Service\Manager\Template $assets
      */
     public function inBound(Manager $assets)
     {
@@ -91,9 +93,10 @@ class Response extends Event
     }
 
     /**
-     * postIn
+     * Called after outBound.
      *
-     * Called after outBound
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.response
      */
     public function postIn(Manager $assets)
     {
@@ -110,9 +113,10 @@ class Response extends Event
     }
 
     /**
-     * preOut
+     * Called prior to outBound.
      *
-     * Called prior to outBound
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.response
      */
     public function preOut(Manager $assets)
     {
@@ -129,9 +133,14 @@ class Response extends Event
     }
 
     /**
-     * outBound
-     *
      * Method to be called on the way out of the filter.
+     *
+     * This method is responseible for sending the response
+     * to the client.
+     *
+     * @see Proem\Api\IO\Response\Template
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.response
      */
     public function outBound(Manager $assets)
     {
@@ -141,9 +150,10 @@ class Response extends Event
     }
 
     /**
-     * postOut
+     * Called after outBound.
      *
-     * Called after outBound
+     * @param Proem\Api\Service\Manager\Template $assets
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.response
      */
     public function postOut(Manager $assets)
     {

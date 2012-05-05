@@ -13,6 +13,9 @@ group('dev', function() {
 
     desc('Build the Phar archive');
     task('build', 'tests', function($args) {
+        if (!is_dir('build')) {
+            mkdir('build');
+        }
         chdir('lib');
         $phar = new Phar('proem.phar');
         $phar->buildFromDirectory('.');

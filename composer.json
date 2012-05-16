@@ -14,7 +14,6 @@
   ],
   "require-dev": {
     "php": ">=5.4.0",
-    "jaz303/phake": "dev-master",
-    "proem/proem-test-suite": "dev-develop"
+    "jaz303/phake": "dev-master"
   }
 }

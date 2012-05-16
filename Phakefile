@@ -5,9 +5,9 @@ group('dev', function() {
     desc('Run the unit tests');
     task('tests', function($args) {
         if (isset($args['verbose'])) {
-            system('phpunit --colors --debug --verbose --configuration vendor/proem/proem-test-suite/phpunit.xml');
+            system('phpunit --colors --debug --verbose --configuration tests/phpunit.xml');
         } else {
-            system('phpunit --colors --configuration vendor/proem/proem-test-suite/phpunit.xml');
+            system('phpunit --colors --configuration tests/phpunit.xml');
         }
     });
 

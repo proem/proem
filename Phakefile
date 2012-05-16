@@ -1,5 +1,18 @@
 <?php
 
+require_once 'lib/Proem/Autoloader.php';
+
+(new \Proem\Autoloader)
+    ->registerNamespace('Proem', 'lib')
+    ->register();
+
+group('proem', function() {
+    desc('Get curreent version of proem');
+    task('version', function() {
+        echo Proem\Proem::VERSION . "\n";
+    });
+});
+
 group('dev', function() {
 
     desc('Run the unit tests');

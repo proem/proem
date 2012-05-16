@@ -45,7 +45,7 @@ use Proem\Service\Manager\Standard as ServiceManager,
 /**
  * The Proem boostrap wrapper
  *
- * Responsible for aiding in the boostrap process
+ * Responsible for aiding in the bootstrap process
  */
 class Proem
 {

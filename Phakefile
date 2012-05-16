@@ -1,13 +1,26 @@
 <?php
 
+require_once 'lib/Proem/Autoloader.php';
+
+(new \Proem\Autoloader)
+    ->registerNamespace('Proem', 'lib')
+    ->register();
+
+group('proem', function() {
+    desc('Get curreent version of proem');
+    task('version', function() {
+        echo Proem\Proem::VERSION . "\n";
+    });
+});
+
 group('dev', function() {
 
     desc('Run the unit tests');
     task('tests', function($args) {
         if (isset($args['verbose'])) {
-            system('phpunit --colors --debug --verbose --configuration vendor/proem/proem-test-suite/phpunit.xml');
+            system('phpunit --colors --debug --verbose --configuration tests/phpunit.xml');
         } else {
-            system('phpunit --colors --configuration vendor/proem/proem-test-suite/phpunit.xml');
+            system('phpunit --colors --configuration tests/phpunit.xml');
         }
     });
 

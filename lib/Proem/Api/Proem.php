@@ -45,14 +45,14 @@ use Proem\Service\Manager\Standard as ServiceManager,
 /**
  * The Proem boostrap wrapper
  *
- * Responsible for aiding in the boostrap process
+ * Responsible for aiding in the bootstrap process
  */
 class Proem
 {
     /**
      * Store the framework version
      */
-    const VERSION = '0.3.1';
+    const VERSION = '0.4.0';
 
     /**
      * Store events

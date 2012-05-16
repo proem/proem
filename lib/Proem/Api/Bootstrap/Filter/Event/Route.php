@@ -106,10 +106,10 @@ class Route extends Event
                             ])
                         )
                         ->map(
-                            'default-nomodule-controller',
+                            'default-nomodule-controller-action',
                             new StandardRoute([
-                                'rule'      => '/:controller',
-                                'targets'    => ['module' => 'index', 'action' => 'index']
+                                'rule'      => '/:controller/:action',
+                                'targets'    => ['module' => 'index']
                             ])
                         )
                         ->map(
@@ -117,6 +117,13 @@ class Route extends Event
                             new StandardRoute([
                                 'rule'      => '/:module',
                                 'targets'    => ['controller' => 'index', 'action' => 'index']
+                            ])
+                        )
+                        ->map(
+                            'default-nomodule-controller',
+                            new StandardRoute([
+                                'rule'      => '/:controller',
+                                'targets'    => ['module' => 'index', 'action' => 'index']
                             ])
                         )
                         ->map(

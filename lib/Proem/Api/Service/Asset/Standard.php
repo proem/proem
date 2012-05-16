@@ -123,7 +123,7 @@ class Standard implements Template
      * @param array $params
      * @return Proem\Api\Service\Asset\Template
      */
-    public function setParams(Array $params)
+    public function setParams(array $params)
     {
         $this->params = array_merge($this->params, $params);
         return $this;

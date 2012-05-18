@@ -69,10 +69,15 @@ class Standard implements Template
      *
      * @param Proem\Api\Service\Manager\Template
      */
-    public function __construct(ServiceManager $serviceManager)
+    public function __construct()
     {
-        $this->queue            = new Queue;
+        $this->queue = new Queue;
+    }
+
+    public function setServiceManager(ServiceManager $serviceManager)
+    {
         $this->serviceManager   = $serviceManager;
+        return $this;
     }
 
     /**

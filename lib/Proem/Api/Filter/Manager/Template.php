@@ -32,13 +32,15 @@ namespace Proem\Api\Filter\Manager;
 
 use Proem\Filter\Event\Template as Event,
     Proem\Util\Storage\Queue,
-    Proem\Service\Manager as ServiceManager;
+    Proem\Service\Manager\Template as ServiceManager;
 
 /**
  * Interface that service managers must implement.
  */
 interface Template
 {
+    public function setServiceManager(ServiceManager $serviceManager);
+
     /**
      * Insert an event into the queue
      *

@@ -215,6 +215,7 @@ class Standard implements Template
                         $event->setParams($ops->params);
                     }
                 }
+                $event->setName($ops->name);
                 $event->setTarget($ops->target);
                 $event->setMethod($ops->method);
                 if ($return = (new Callback($this->callbacks[$key], $event))->call()) {

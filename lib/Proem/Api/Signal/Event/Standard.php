@@ -52,6 +52,13 @@ class Standard implements Template
     protected $params;
 
     /**
+     * Store the name of the event
+     *
+     * @var string $name
+     */
+    protected $name = null;
+
+    /**
      * Store target
      *
      * @var object $target
@@ -85,6 +92,30 @@ class Standard implements Template
     public function getParams()
     {
         return $this->params;
+    }
+
+    /**
+     * Set the name
+     *
+     * Set the name of the event being triggered.
+     *
+     * @param string $name
+     * @return Proem\Api\Signal\Event\Template
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Retrieve the event name.
+     *
+     * @return string The name of the event triggered.
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

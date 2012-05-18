@@ -62,6 +62,13 @@ class Proem
     protected $events;
 
     /**
+     * Store the filter manager
+     *
+     * @var Proem\Api\Filter\Manager\Template
+     */
+    protected $filterManager;
+
+    /**
      * Store the service manager
      *
      * @var Proem\Api\Service\Manager\Template
@@ -168,12 +175,20 @@ class Proem
 
         $this->events->get()->trigger([
             'name'  => 'proem.init',
-            'event' => (new Bootstrap)
-                ->setServiceManager($this->serviceManager)
-                ->setEnvironment($environment)
+            'event' => (new Bootstrap)->setServiceManager($this->serviceManager)->setEnvironment($environment),
+            'callback'  => function($e) {
+                if ($e instanceof Proem\Filter\Manager\Template) {
+                    $this->filterManager = $e;
+                }
+            }
         ]);
 
-        (new FilterManager($this->serviceManager))
+        if ($this->filterManager === null) {
+            $this->filterManager = new FilterManager;
+        }
+
+        $this->filterManager
+            ->setServiceManager($this->serviceManager)
             ->attachEvent(new Response, FilterManager::RESPONSE_EVENT_PRIORITY)
             ->attachEvent(new Request, FilterManager::REQUEST_EVENT_PRIORITY)
             ->attachEvent(new Route, FilterManager::ROUTE_EVENT_PRIORITY)

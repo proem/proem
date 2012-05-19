@@ -62,7 +62,9 @@ class FilterTest extends \PHPUnit_Framework_TestCase
         $this->dispatch->expects($this->once())->method('inBound')->will($this->returnCallback(function() use ($r)  {$r->out .= "dispatch in, ";}));
         $this->dispatch->expects($this->once())->method('outBound')->will($this->returnCallback(function() use ($r) {$r->out .= "dispatch out, ";}));
 
-        (new FilterManager(new ServiceManager))
+
+        (new FilterManager)
+            ->setServiceManager(new ServiceManager)
             ->attachEvent($this->response, FilterManager::RESPONSE_EVENT_PRIORITY)
             ->attachEvent($this->request, FilterManager::REQUEST_EVENT_PRIORITY)
             ->attachEvent($this->route, FilterManager::ROUTE_EVENT_PRIORITY)

@@ -30,6 +30,7 @@
 namespace Proem\Api\Controller;
 
 use Proem\Controller\Template as ControllerTemplate,
+    Proem\Api\Bootstrap\Signal\Event\Bootstrap as Bootstrap,
     Proem\Service\Manager\Template as ServiceManager;
 
 /**
@@ -55,24 +56,45 @@ class Standard implements ControllerTemplate
     public final function __construct(ServiceManager $assets)
     {
         $this->assets = $assets;
+        $this->init();
     }
 
     /**
-     * Method called prior to any action.
-     *
-     * @todo This could likely be replaced by some event
+     * Method called on instantiation.
      */
-    public function preAction()
+    public function init()
     {
     }
 
     /**
-     * Method called after any action.
-     *
-     * @todo This could likely be replaced by some event
+     * Metod called to dispatch an action.
      */
-    public function postAction()
-    {
-    }
+    public function dispatch($action) {
+        $action = strtolower($action);
 
+        if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
+            $this->assets->get('events')->trigger([
+                'name'      => 'proem.pre.action.' . $action,
+                'params'    => [],
+                'target'    => $this,
+                'method'    => __FUNCTION__,
+                'event'     => (new Bootstrap())->setServiceManager($this->assets)
+            ]);
+        }
+
+        $method = $action . 'Action';
+        $result = $this->{$method}();
+
+        if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
+            $this->assets->get('events')->trigger([
+                'name'      => 'proem.post.action.' . $action,
+                'params'    => [],
+                'target'    => $this,
+                'method'    => __FUNCTION__,
+                'event'     => (new Bootstrap())->setServiceManager($this->assets)
+            ]);
+        }
+
+        return $result;
+    }
 }

@@ -71,9 +71,8 @@ class Standard implements Template
      * @param string $name
      * @param Proem\Api\Routing\Route\Template $route
      * @return Proem\Api\Signal\Manager\Template
-     * @todo This method should be renamed to attach()
      */
-    public function map($name, Route $route)
+    public function attach($name, Route $route)
     {
         $this->routes->set($name, $route);
         return $this;

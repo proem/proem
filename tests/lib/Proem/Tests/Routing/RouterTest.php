@@ -40,7 +40,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testTargetedMapedRoute()
     {
         $router = new Router('/login');
-        $payload = $router->map(
+        $payload = $router->attach(
              'simple',
              new Route([
                 'rule'      => '/login',
@@ -71,19 +71,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $router = new Router($uri);
         $payload = $router
-            ->map(
+            ->attach(
                 'home-page',
                 new Route([
                     'rule'      => '/',
                     'targets'   => ['controller' => 'home']
             ])
-            )->map(
+            )->attach(
                 'login',
                 new Route([
                     'rule'      => '/login',
                     'targets'   => ['controller' => 'auth', 'action' => 'login']
             ])
-            )->map(
+            )->attach(
                 'logout',
                 new Route([
                     'rule'      => '/logout',

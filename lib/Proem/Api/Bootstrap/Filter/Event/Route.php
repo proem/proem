@@ -86,54 +86,54 @@ class Route extends Event
                 'router',
                 $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
                     $router = (new Router($assets->get('request')->getRequestUri()))
-                        ->map(
+                        ->attach(
                             'default-module-controller-action-params',
                             new StandardRoute([
                                 'rule' => '/:module/:controller/:action/:params'
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-controller-action-noparams',
                             new StandardRoute([
                                 'rule' => '/:module/:controller/:action'
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-controller-noaction',
                             new StandardRoute([
                                 'rule'      => '/:module/:controller',
                                 'targets'    => ['action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-nomodule-controller-action',
                             new StandardRoute([
                                 'rule'      => '/:controller/:action',
                                 'targets'    => ['module' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-nocontroller',
                             new StandardRoute([
                                 'rule'      => '/:module',
                                 'targets'    => ['controller' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-nomodule-controller',
                             new StandardRoute([
                                 'rule'      => '/:controller',
                                 'targets'    => ['module' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-params',
                             new StandardRoute([
                                 'rule'      => '/:params',
                                 'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-noparams',
                             new StandardRoute([
                                 'rule'      => '/',

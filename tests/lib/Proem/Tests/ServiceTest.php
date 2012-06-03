@@ -183,16 +183,16 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $foo = new Asset;
         $foo->set('Proem\Service\Asset\Foo', function($a, $am) {
             $f = new Foo('something');
-            $f->setBar($am->get('bar'));
+            $f->setBar($am->bar);
             return $f;
         });
 
         $am = new Manager;
         $am->set('foo', $foo)->set('bar', $bar);
 
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('bar'));
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('foo'));
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->get('foo')->getBar());
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->bar);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->foo);
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $am->foo->getBar());
     }
 
     public function testManagerHas()
@@ -203,7 +203,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         });
 
         $am = new Manager;
-        $am->set('bar', $bar);
+        $am->bar = $bar;
 
         $this->assertTrue($am->has('bar'));
     }

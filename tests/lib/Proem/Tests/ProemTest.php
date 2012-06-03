@@ -44,7 +44,7 @@ class ProemTest extends \PHPUnit_Framework_TestCase
     /**
      * This test injects a Foo object into the main service manager
      * via a plugin (\Proem\Ext\Plugin\Foo - Found in Fixtures) which
-     * registers on the pre.in.dispatch event. It then uses an event
+     * attaches on the pre.in.dispatch event. It then uses an event
      * to test to see of that object has indeed been injected properly.
      */
     public function testCanLoadExtensions()

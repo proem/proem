@@ -36,7 +36,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         (new Autoloader)
-            ->registerNamespace('Controller', dirname(__FILE__) . '/Fixtures')
+            ->attachNamespace('Controller', dirname(__FILE__) . '/Fixtures')
             ->register();
 
         $events = new \Proem\Service\Asset\Standard;

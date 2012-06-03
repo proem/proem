@@ -3,7 +3,7 @@
 require_once 'lib/Proem/Autoloader.php';
 
 (new \Proem\Autoloader)
-    ->registerNamespace('Proem', 'lib')
+    ->attachNamespace('Proem', 'lib')
     ->register();
 
 group('proem', function() {
@@ -42,7 +42,7 @@ group('dev', function() {
         $phar->setStub("<?php
         Phar::mapPhar('proem.phar');
         require_once 'phar://proem.phar/Proem/Autoloader.php';
-        (new Proem\Autoloader())->registerNamespaces(['Proem' => 'phar://proem.phar'])->register();
+        (new Proem\Autoloader())->attachNamespaces(['Proem' => 'phar://proem.phar'])->register();
         __HALT_COMPILER();
         ?>");
         rename('proem.phar', '../build/proem.phar');

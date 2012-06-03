@@ -52,7 +52,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return new Bar;
         });
 
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $bar->get());
+        $this->assertInstanceOf('Proem\Service\Asset\Template', $bar());
     }
 
     public function testAssetCanSetParams()
@@ -63,9 +63,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
                 return new Foo($a->getParam('name'));
             });
 
-        $asset = $foo->get();
-
-        $this->assertEquals('Hello trq', $asset->say());
+        $this->assertEquals('Hello trq', $foo()->say());
     }
 
     public function testMagicGetSetParams()
@@ -93,13 +91,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return new Bar;
         });
 
-        $one = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $one);
-
-        $two = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $two);
-
-        $this->assertNotSame($one, $two);
+        $this->assertNotSame($bar(), $bar());
 
     }
 
@@ -110,13 +102,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return new Bar;
         }));
 
-        $one = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $one);
-
-        $two = $bar->get();
-        $this->assertInstanceOf('Proem\Service\Asset\Template', $two);
-
-        $this->assertSame($one, $two);
+        $this->assertSame($bar(), $bar());
 
     }
 

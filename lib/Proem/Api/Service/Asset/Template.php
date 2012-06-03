@@ -92,6 +92,11 @@ interface Template
     public function get(Manager $assetManager = null);
 
     /**
+     * Magic method to proxy through to get().
+     */
+    public function __invoke();
+
+    /**
      * Store an asset in such a way that when it is retrieved it will always return
      * the same instance.
      *

@@ -56,7 +56,7 @@ class Stage
     /**
      * Setup the stage and start the dispatch process
      *
-     * Within this single construct we register listeners
+     * Within this single construct we attach listeners
      * for both the route.macth & route.exhausted events
      *
      * We then start processing the routes. Once the dispatchable
@@ -69,8 +69,8 @@ class Stage
     {
         $this->assets = $assets;
 
-        $this->registerRouteMatchListener();
-        $this->registerRouteExhaustedListener();
+        $this->attachRouteMatchListener();
+        $this->attachRouteExhaustedListener();
 
         if ($this->processRoutes() && $this->dispatchable) {
             $this->dispatch();
@@ -80,7 +80,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.match Event.
      */
-    protected function registerRouteMatchListener()
+    protected function attachRouteMatchListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
@@ -93,7 +93,7 @@ class Stage
     /**
      * Register a callback ready to listen for the route.exhausted Event.
      */
-    protected function registerRouteExhaustedListener()
+    protected function attachRouteExhaustedListener()
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([

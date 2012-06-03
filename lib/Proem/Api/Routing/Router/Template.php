@@ -42,7 +42,7 @@ interface Template
      *
      * @param string $name
      * @param Proem\Api\Routing\Route\Template $route
-     * @todo This method should be renamed to register()
+     * @todo This method should be renamed to attach()
      */
     public function map($name, Route $route);
 

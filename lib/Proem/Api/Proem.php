@@ -82,7 +82,7 @@ class Proem
      *
      * @param Proem\Api\Ext\Template $extension
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
@@ -141,7 +141,7 @@ class Proem
      *
      * @param Proem\Api\Ext\Plugin\Generic
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     public function attachPlugin(Plugin $plugin, $event = 'proem.init', $priority = 0)
@@ -154,7 +154,7 @@ class Proem
      *
      * @param Proem\Api\Proem\Ext\Module\Generic
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     public function attachModule(Module $module, $event = 'proem.init', $priority = 0)

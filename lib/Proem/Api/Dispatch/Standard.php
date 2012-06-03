@@ -126,7 +126,7 @@ class Standard implements Template
      * @param string $map
      * @return Proem\Api\Dispatch\Template
      */
-    public function registerControllerMap($map) {
+    public function attachControllerMap($map) {
         $this->controllerMaps[] = $map;
         return $this;
     }

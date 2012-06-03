@@ -34,7 +34,7 @@ class ExtTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         (new Autoloader)
-            ->registerNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
+            ->attachNamespace('MyApp', dirname(__FILE__) . '/Ext/Fixtures')
             ->register();
     }
 

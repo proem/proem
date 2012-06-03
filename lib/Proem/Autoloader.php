@@ -58,10 +58,10 @@ class Autoloader
      * @param array $namespaces An array of namespaces
      * @return Proem\Api\Autoloader
      */
-    public function registerNamespaces(array $namespaces)
+    public function attachNamespaces(array $namespaces)
     {
         foreach ($namespaces as $namespace => $paths) {
-            $this->registerNamespace($namespace, $paths);
+            $this->attachNamespace($namespace, $paths);
         }
         return $this;
     }
@@ -73,7 +73,7 @@ class Autoloader
      * @param array|string $paths The path to the namespace
      * @return Proem\Api\Autoloader
      */
-    public function registerNamespace($namespace, $paths)
+    public function attachNamespace($namespace, $paths)
     {
         $this->namespaces[$namespace] = (array) $paths;
         return $this;
@@ -85,10 +85,10 @@ class Autoloader
      * @param array $classes
      * @return Proem\Api\Autoloader
      */
-    public function registerPearPrefixes(array $classes)
+    public function attachPearPrefixes(array $classes)
     {
         foreach ($classes as $prefix => $paths) {
-            $this->registerPearPrefix($prefix, $paths);
+            $this->attachPearPrefix($prefix, $paths);
         }
         return $this;
     }
@@ -100,7 +100,7 @@ class Autoloader
      * @param array|string $paths The path
      * @return Proem\Api\Autoloader
      */
-    public function registerPearPrefix($prefix, $paths)
+    public function attachPearPrefix($prefix, $paths)
     {
         $this->pearPrefixes[$prefix] = (array) $paths;
         return $this;

@@ -37,8 +37,8 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     public function testLoad($className, $testClassName, $message)
     {
         (new AutoLoader())
-            ->registerNamespace('Namespaced', __DIR__ . '/Fixtures')
-            ->registerPearPrefix('Pear_', __DIR__ . '/Fixtures')
+            ->attachNamespace('Namespaced', __DIR__ . '/Fixtures')
+            ->attachPearPrefix('Pear_', __DIR__ . '/Fixtures')
             ->load($testClassName);
 
         $this->assertTrue(class_exists($className), $message);
@@ -50,8 +50,8 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     public function testRegister($className, $testClassName, $message)
     {
         (new AutoLoader())
-            ->registerNamespace('Namespaced', __DIR__ . '/Fixtures')
-            ->registerPearPrefix('Pear_', __DIR__ . '/Fixtures')
+            ->attachNamespace('Namespaced', __DIR__ . '/Fixtures')
+            ->attachPearPrefix('Pear_', __DIR__ . '/Fixtures')
             ->register();
 
         $this->assertTrue(class_exists($className), $message);
@@ -70,7 +70,7 @@ class AutoloaderTest extends \PHPUnit_Framework_TestCase
     public function testOverload()
     {
         (new AutoLoader())
-            ->registerNamespace('Namespaced', [
+            ->attachNamespace('Namespaced', [
                 __DIR__ . '/Override',
                 __DIR__ . '/Fixtures'
             ])

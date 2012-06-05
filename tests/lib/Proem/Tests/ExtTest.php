@@ -48,8 +48,8 @@ class ExtTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * The Foo module listens for the pre.in.route signal event,
-     * Loading it now (at post.in.route) will never give it a chance
+     * The Foo module listens for the proem.pre.in.route signal event,
+     * Loading it now (at proem.post.in.route) will never give it a chance
      * to set itself up.
      */
     public function testFooModuleWontLoadWhenAttachedTooLate()
@@ -57,7 +57,7 @@ class ExtTest extends \PHPUnit_Framework_TestCase
         $this->expectOutputString('<h3>404 - Page Not Found</h3>');
 
         (new \Proem\Proem)
-            ->attachModule(new Foo, 'post.in.route')
+            ->attachModule(new Foo, 'proem.post.in.route')
             ->init();
     }
 

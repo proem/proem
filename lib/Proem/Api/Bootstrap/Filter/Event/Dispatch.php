@@ -51,13 +51,13 @@ class Dispatch extends Event
      *
      * @see Proem\Api\Dispatch\Template
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.dispatch
      */
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.dispatch',
+                'name'      => 'proem.pre.in.dispatch',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -101,13 +101,13 @@ class Dispatch extends Event
      *
      * @see Proem\Api\Dispatch\Stage
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.in.dispatch
      */
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.dispatch',
+                'name'      => 'proem.post.in.dispatch',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -123,13 +123,13 @@ class Dispatch extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.out.dispatch
      */
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.dispatch',
+                'name'      => 'proem.pre.out.dispatch',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -153,13 +153,13 @@ class Dispatch extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.out.dispatch
      */
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.dispatch',
+                'name'      => 'proem.post.out.dispatch',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

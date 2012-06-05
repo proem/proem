@@ -51,13 +51,13 @@ class Route extends Event
      * the index of *router*.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.router',
+                'name'      => 'proem.pre.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -150,13 +150,13 @@ class Route extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.router',
+                'name'      => 'proem.post.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -170,13 +170,13 @@ class Route extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.router',
+                'name'      => 'proem.pre.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -200,13 +200,13 @@ class Route extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.router',
+                'name'      => 'proem.post.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

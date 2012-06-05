@@ -8,7 +8,7 @@ class Foo extends \Proem\Ext\Module\Generic
 {
     public function init(Manager $assets, $env = null) {
         $assets->get('events')->attach([
-            'name'      => 'pre.in.router',
+            'name'      => 'proem.pre.in.router',
             'callback'  => [$this, 'loadRoutes']
         ]);
     }

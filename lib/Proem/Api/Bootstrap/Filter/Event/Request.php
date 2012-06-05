@@ -49,13 +49,13 @@ class Request extends Event
      * being placed within the service manager under the *request* index.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.request
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.request
      */
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.request',
+                'name'      => 'proem.pre.in.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -95,13 +95,13 @@ class Request extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.request
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.in.request
      */
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.request',
+                'name'      => 'proem.post.in.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -115,13 +115,13 @@ class Request extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.request
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.out.request
      */
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.request',
+                'name'      => 'proem.pre.out.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -145,13 +145,13 @@ class Request extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.request
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.out.request
      */
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.request',
+                'name'      => 'proem.post.out.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

@@ -84,7 +84,7 @@ class Stage
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
-                'name'      => 'route.match',
+                'name'      => 'proem.route.match',
                 'callback'  => [$this, 'isDispatchable']
             ]);
         }
@@ -97,7 +97,7 @@ class Stage
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
-                'name'      => 'route.exhausted',
+                'name'      => 'proem.route.exhausted',
                 'callback'  => [$this, 'routesExhausted']
             ]);
         }
@@ -124,7 +124,7 @@ class Stage
             $router = $this->assets->get('router');
             while ($payload = $router->route()) {
                 $this->assets->get('events')->trigger([
-                    'name'      => 'route.match',
+                    'name'      => 'proem.route.match',
                     'event'     => (new RouteMatch())->setPayload($payload),
                     'callback'  => function($e) {
                         if ($e) {
@@ -140,7 +140,7 @@ class Stage
 
             // All routess have been exhaasted
             $this->assets->get('events')->trigger([
-                'name'      => 'route.exhausted',
+                'name'      => 'proem.route.exhausted',
                 'event'     => (new RouteExhausted())
             ]);
         }

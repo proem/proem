@@ -34,10 +34,10 @@ use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
 
 /**
- * Proem\Api\Routing\Signal\Event\RouteExhausted
+ * Proem\Api\Routing\Signal\Event\RouteDispatch
  *
- * A custom event used by the router to communicate exhausted routes
+ * The event triggered to dispatch a route.
  */
-class RouteExhausted extends Standard
+class RouteDispatch extends Standard
 {
 }

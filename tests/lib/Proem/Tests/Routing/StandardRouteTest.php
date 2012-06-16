@@ -37,6 +37,20 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Routing\Route\Generic', $r);
     }
 
+    public function testMapViaMethod()
+    {
+        $route = new Standard([
+            'rule'      => '/',
+            'method'    => 'POST',
+        ]);
+
+        $route->process(new Request('/'));
+        $this->assertFalse($route->getPayload()->isPopulated());
+
+        $route->process(new Request('/', 'POST'));
+        $this->assertTrue($route->getPayload()->isPopulated());
+    }
+
     public function testController()
     {
         $route = new Standard([

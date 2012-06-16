@@ -116,6 +116,8 @@ class Standard extends Generic
         $rule               = $this->options->rule;
         $target             = $this->options->targets;
         $custom_filters     = $this->options->filters;
+        $method             = $this->options->method ?: 'GET';
+
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
         $uri                = $request->getRequestUri();
@@ -148,7 +150,7 @@ class Standard extends Generic
             $rule
         ) . '/?';
 
-        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values)) {
+        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values) && $requestMethod == $method) {
             array_shift($values);
 
             foreach ($keys as $index => $value) {

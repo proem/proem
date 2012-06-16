@@ -85,7 +85,7 @@ class Route extends Event
             $assets->set(
                 'router',
                 $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
-                    $router = (new Router($assets->get('request')->getRequestUri()))
+                    $router = (new Router($assets->get('request')))
                         ->attach(
                             'default-module-controller-action-params',
                             new StandardRoute([

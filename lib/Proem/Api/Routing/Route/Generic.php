@@ -34,6 +34,7 @@ use Proem\Routing\Route\Payload,
     Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
     Proem\Util\ArrayHelper,
+    Proem\IO\Request\Template as Request,
     Proem\Routing\Route\Template;
 
 /**
@@ -80,9 +81,10 @@ abstract class Generic implements Template
     public function __construct(array $options)
     {
         $this->options = $this->setOptions([
-            'rule'      => (new Option(''))->type('string'),
+            'rule'      => (new Option)->type('string')->required(),
             'targets'   => (new Option([]))->type('array'),
-            'filters'   => (new Option([]))->type('array')
+            'filters'   => (new Option([]))->type('array'),
+            'method'    => (new Option(null))->type('string')
         ], $options);
     }
 
@@ -128,8 +130,8 @@ abstract class Generic implements Template
      * and the payload needs to be instantiated to contain the relevent
      * matched data.
      *
-     * @param string $uri
+     * @param Proem\IO\Request\Template $request
      */
-    abstract public function process($uri);
+    abstract public function process(Request $request);
 
 }

@@ -26,13 +26,14 @@
 
 namespace Proem\Tests;
 
-use Proem\Routing\Route\Standard;
+use Proem\Routing\Route\Standard,
+    Proem\Api\IO\Request\Http\Fake as Request;
 
 class StandardRouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAsset()
     {
-        $r = new Standard([]);
+        $r = new Standard(['rule' => '/']);
         $this->assertInstanceOf('Proem\Routing\Route\Generic', $r);
     }
 
@@ -41,7 +42,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $route = new Standard([
             'rule'      => '/:controller/:action/:params'
         ]);
-        $route->process('/foo/bar/a/b');
+        $route->process(new Request('/foo/bar/a/b'));
 
         $this->assertTrue($route->getPayload()->isPopulated());
         $this->assertEquals('foo', $route->getPayload()->controller);
@@ -54,7 +55,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
         $route = new Standard([
             'rule'      => '/:module/:controller/:action/:params'
         ]);
-        $route->process('/bob/foo/bar/a/b');
+        $route->process(new Request('/bob/foo/bar/a/b'));
 
         $this->assertTrue($route->getPayload()->isPopulated());
         $this->assertEquals('bob', $route->getPayload()->module);
@@ -74,7 +75,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
             ],
             'filters' => ['id' => ':int']
         ]);
-        $route->process('/foo/bar/12');
+        $route->process(new Request('/foo/bar/12'));
 
         $this->assertTrue($route->getPayload()->isPopulated());
         $this->assertEquals('default', $route->getPayload()->module);
@@ -89,7 +90,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
             'rule'      => '/:data',
             'filters'   => ['data' => ':alpha']
         ]);
-        $route->process('/foo');
+        $route->process(new Request('/foo'));
 
         $this->assertTrue($route->getPayload()->isPopulated());
         $this->assertEquals('foo', $route->getPayload()->data);
@@ -98,7 +99,7 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
             'rule'      => '/:data',
             'filters'   => ['data' => ':alpha']
         ]);
-        $route->process('/123');
+        $route->process(new Request('/123'));
 
         $this->assertFalse($route->getPayload()->isPopulated());
     }

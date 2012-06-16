@@ -27,7 +27,8 @@
 namespace Proem\Tests;
 
 use Proem\Routing\Router\Standard as Router,
-    Proem\Routing\Route\Standard as Route;
+    Proem\Routing\Route\Standard as Route,
+    Proem\Api\IO\Request\Http\Fake as Request;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +40,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testTargetedMapedRoute()
     {
-        $router = new Router('/login');
+        $router = new Router(new Request('/login'));
         $payload = $router->attach(
              'simple',
              new Route([
@@ -69,7 +70,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSeriesOfMappedRoutes($uri, $controller, $action)
     {
-        $router = new Router($uri);
+        $router = new Router(new Request($uri));
         $payload = $router
             ->attach(
                 'home-page',

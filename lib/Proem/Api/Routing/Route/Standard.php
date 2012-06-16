@@ -31,7 +31,8 @@
 namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
-    Proem\Routing\Route\Generic;
+    Proem\Routing\Route\Generic,
+    Proem\IO\Request\Template as Request;
 
 /**
  * Proem's standard route.
@@ -103,10 +104,10 @@ class Standard extends Generic
      * to be added to the Payload object as params (which are in turn transformed
      * into key => value pairs).
      *
-     * @param string $uri
+     * @param Proem\IO\Request\Template $request
      * @return Proem\Api\Routing\Route\Template
      */
-    public function process($uri)
+    public function process(Request $request)
     {
         if (!$this->options->rule) {
             return false;
@@ -117,6 +118,8 @@ class Standard extends Generic
         $custom_filters     = $this->options->filters;
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
+        $uri                = $request->getRequestUri();
+        $requestMethod      = $request->getMethod();
 
         $keys   = [];
         $values = [];
@@ -145,7 +148,7 @@ class Standard extends Generic
             $rule
         ) . '/?';
 
-        if (preg_match('@^' . $regex . '$@', $uri, $values)) {
+        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values)) {
             array_shift($values);
 
             foreach ($keys as $index => $value) {

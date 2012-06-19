@@ -32,6 +32,7 @@ namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic,
+    Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request;
 
 /**
@@ -163,7 +164,6 @@ class Standard extends Generic
                 $params[$key] = $value;
             }
 
-            $this->setMatch();
             foreach ($params as $key => $value) {
                 // If the string within $value looks like a / seperated string,
                 // parse it into an array and send it to setParams() instead
@@ -175,9 +175,20 @@ class Standard extends Generic
                 }
             }
 
+            $this->setMatch();
+            $this->getPayload()->set('request', $request);
             $this->getPayload()->setPopulated();
         }
         return $this;
     }
 
+    /**
+     * Method used to execute a route callback.
+     *
+     * @param Proem\IO\Request\Template $request
+     */
+    public function call(Request $request)
+    {
+        (new Callback($this->options->callback, $request))->call();
+    }
 }

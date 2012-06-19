@@ -32,6 +32,7 @@ namespace Proem\Api\Routing\Router;
 
 use Proem\Routing\Router\Template,
     Proem\Routing\Route\Template as Route,
+    Proem\IO\Request\Template as Request,
     Proem\Signal\Manager\Template as SignalManager,
     Proem\Util\Storage\KeyValStore;
 
@@ -41,11 +42,11 @@ use Proem\Routing\Router\Template,
 class Standard implements Template
 {
     /**
-     * Store the request url
+     * Store the request object
      *
-     * @var string $requestUrl
+     * @var Proem\IO\Request\Template $request
      */
-    protected $requestUrl;
+    protected $request;
 
     /**
      * Store our routes
@@ -57,12 +58,12 @@ class Standard implements Template
     /**
      * Setup
      *
-     * @param string $requestUrl
+     * @param Proem\IO\Request\Template $request
      */
-    public function __construct($requestUrl)
+    public function __construct($request)
     {
-        $this->requestUrl = $requestUrl;
-        $this->routes = new KeyValStore;
+        $this->request = $request;
+        $this->routes  = new KeyValStore;
     }
 
     /**
@@ -95,9 +96,12 @@ class Standard implements Template
     {
         if ($route = $this->routes->current()) {
             $this->routes->next();
-            $route->process($this->requestUrl);
+            $route->process($this->request);
 
             if ($route->isMatch() && $route->getPayload()->isPopulated()) {
+                if ($route->hasCallback()) {
+                    return $route->call($this->request);
+                }
                 return $route->getPayload();
             } else {
                 return $this->route();

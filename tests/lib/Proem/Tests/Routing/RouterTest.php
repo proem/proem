@@ -55,24 +55,24 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('login', $payload->action);
         $this->assertNull($payload->doesntexist);
     }
-/*
+
     public function testRouteCallback()
     {
-        $tmp = false;
+        $tmp = new \StdClass;
         $router = new Router(new Request('/foo'));
         $payload = $router->attach(
              'simple',
              new Route([
                 'rule'      => '/foo',
                 'callback'  => function($request) use ($tmp) {
-                    $tmp = $request->getRequestUri();
+                    $tmp->result = $request->getRequestUri();
                 }
             ])
         )->route();
 
-        $this->assertEquals('/foo', $tmp);
+        $this->assertEquals('/foo', $tmp->result);
     }
- */
+
     public function dataProvider()
     {
         return [

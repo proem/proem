@@ -99,6 +99,9 @@ class Standard implements Template
             $route->process($this->request);
 
             if ($route->isMatch() && $route->getPayload()->isPopulated()) {
+                if ($route->hasCallback()) {
+                    return $route->call($this->request);
+                }
                 return $route->getPayload();
             } else {
                 return $this->route();

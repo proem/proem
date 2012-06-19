@@ -44,4 +44,11 @@ interface Template
      */
     public function process(Request $request);
 
+    /**
+     * Method used to execute a route callback.
+     *
+     * @param Proem\IO\Request\Template $request
+     */
+    public function call(Request $request);
+
 }

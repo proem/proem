@@ -67,6 +67,13 @@ abstract class Generic implements Template
     protected $matched = false;
 
     /**
+     * Store a flag indicating the presence of a callback.
+     *
+     * @var bool
+     */
+    protected $hasCallback = false;
+
+    /**
      * Store matched parameters within a Dispatch\Payload object.
      *
      * @var Proem\Api\Routing\Route\Payload
@@ -84,8 +91,24 @@ abstract class Generic implements Template
             'rule'      => (new Option)->type('string')->required(),
             'targets'   => (new Option([]))->type('array'),
             'filters'   => (new Option([]))->type('array'),
-            'method'    => (new Option(null))->type('string')
+            'method'    => (new Option(null))->type('string'),
+            'callback'  => (new Option)->type('callable')
         ], $options);
+
+        if (is_callable($this->options->callback)) {
+            $this->hasCallback = true;
+        }
+
+    }
+
+    /**
+     * Do we have a callback?
+     *
+     * @return bool
+     */
+    public function hasCallback()
+    {
+        return $this->hasCallback;
     }
 
     /**

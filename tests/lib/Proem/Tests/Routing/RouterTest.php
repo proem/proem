@@ -55,7 +55,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('login', $payload->action);
         $this->assertNull($payload->doesntexist);
     }
-
+/*
     public function testRouteCallback()
     {
         $tmp = false;
@@ -72,7 +72,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('/foo', $tmp);
     }
-
+ */
     public function dataProvider()
     {
         return [

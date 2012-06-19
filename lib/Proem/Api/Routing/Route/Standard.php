@@ -175,6 +175,7 @@ class Standard extends Generic
                 }
             }
 
+            $this->getPayload()->set('request', $request);
             $this->getPayload()->setPopulated();
         }
         return $this;

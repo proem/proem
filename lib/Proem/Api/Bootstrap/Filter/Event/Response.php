@@ -50,13 +50,13 @@ class Response extends Event
      * the index of *response*.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.response
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.response
      */
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.response',
+                'name'      => 'proem.pre.in.response',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -96,13 +96,13 @@ class Response extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.response
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.in.response
      */
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.response',
+                'name'      => 'proem.post.in.response',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -116,13 +116,13 @@ class Response extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.response
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.out.response
      */
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.response',
+                'name'      => 'proem.pre.out.response',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -140,7 +140,7 @@ class Response extends Event
      *
      * @see Proem\Api\IO\Response\Template
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.response
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.response
      */
     public function outBound(Manager $assets)
     {
@@ -153,13 +153,13 @@ class Response extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.response
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.out.response
      */
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.response',
+                'name'      => 'proem.post.out.response',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

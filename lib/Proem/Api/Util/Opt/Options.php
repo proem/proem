@@ -30,6 +30,8 @@
  */
 namespace Proem\Api\Util\Opt;
 
+use Proem\Util\Opt\Payload as Payload;
+
 /**
  * The options trait.
  */

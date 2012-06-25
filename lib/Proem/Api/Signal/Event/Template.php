@@ -54,6 +54,23 @@ interface Template
     public function getParams();
 
     /**
+     * Set the name
+     *
+     * The name of the event that was triggered.
+     *
+     * @param string $name
+     * @return Proem\Api\Signal\Event\Template
+     */
+    public function setName($name);
+
+    /**
+     * Retrieve the event name
+     *
+     * @return string The name of the triggered event.
+     */
+    public function getName();
+
+    /**
      * Set the target.
      *
      * The target should be an instance of whatever object

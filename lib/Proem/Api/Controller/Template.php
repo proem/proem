@@ -37,16 +37,12 @@ use Proem\Service\Manager\Template as ServiceManager;
 interface Template
 {
     /**
-     * Method called prior to any action.
-     *
-     * @todo This could likely be replaced by some event
+     * Method called on instantiation.
      */
-    public function preAction();
+    public function init();
 
     /**
-     * Method called after any action.
-     *
-     * @todo This could likely be replaced by some event
+     * Method called to dispatch an action.
      */
-    public function postAction();
+    public function dispatch($method);
 }

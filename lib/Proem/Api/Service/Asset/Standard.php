@@ -173,6 +173,14 @@ class Standard implements Template
     }
 
     /**
+     * Magic method proxies through to get()
+     */
+    public function __invoke()
+    {
+        return $this->get();
+    }
+
+    /**
      * Validate and retrieve an instantiated asset.
      *
      * Here the closure is passed this asset container and optionally a

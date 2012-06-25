@@ -38,6 +38,15 @@ use Proem\Service\Asset\Template as Asset;
 interface Template
 {
     /**
+     * Magic method to proxy through to set()
+     *
+     * @param string $index The index the asset will be referenced by.
+     * @param Proem\Api\Service\Asset\Template $asset
+     * @return Proem\Api\Service\Manager\Template
+     */
+    public function __set($index, Asset $asset);
+
+    /**
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
@@ -53,6 +62,14 @@ interface Template
      * @return Proem\Api\Service\Asset\Template
      */
     public function getContainer($index);
+
+    /**
+     * Magic method to proxy through to get().
+     *
+     * @param string $index The index the asset is referenced by
+     * @return object The object provided by the asset container
+     */
+    public function __get($index);
 
     /**
      * Retrieve an actual instantiated ssset object from within it's container.

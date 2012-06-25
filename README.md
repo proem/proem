@@ -18,8 +18,11 @@ The main objective here is to create a lightweight, simple & fast MVC implementa
 
 ## INSTALLATION
 
-Installation is simple. Place the root Proem directory wherever you like and insure that the
-lib directory is on php's include_path. That's it !
+http://proemframework.org/docs/installation.html
+
+## DOCUMENTATION
+
+http://proemframework.org/docs
 
 ## CONTRIBUTING
 We have made available a PHP5.4 sandbox for users wishing to contibute to the project. Becuase PHP5.4 is still in release cadidate stages and is as yet not marked stable and probably wont be popular for a little while to come yet, any users wishing to contribute might not be able to get there hands on a PHP5.4 install.
@@ -33,7 +36,7 @@ Also available now is an irc channel (#proem) on freenode. Join if you have any 
 
 #### Committing and Pull Requests
 
-If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](https://proemframework.atlassian.net).
+If you wish to contribute code to Proem please make sure you check out the [Issue Tracker](https://github.com/proem/proem/issues).
 
 Next, [create an account on Github](https://github.com/signup/free) (if you haven't done so already).
 

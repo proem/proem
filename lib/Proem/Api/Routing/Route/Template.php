@@ -30,6 +30,8 @@
  */
 namespace Proem\Api\Routing\Route;
 
+use Proem\IO\Request\Template as Request;
+
 /**
  * Interface that all routes must implement.
  */
@@ -38,8 +40,15 @@ interface Template
     /**
      * Process this route
      *
-     * @param string $uri
+     * @param Proem\IO\Request\Template $request
      */
-    public function process($uri);
+    public function process(Request $request);
+
+    /**
+     * Method used to execute a route callback.
+     *
+     * @param Proem\IO\Request\Template $request
+     */
+    public function call(Request $request);
 
 }

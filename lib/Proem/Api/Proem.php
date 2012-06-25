@@ -52,7 +52,7 @@ class Proem
     /**
      * Store the framework version
      */
-    const VERSION = '0.4.0';
+    const VERSION = '0.5.0';
 
     /**
      * Store events
@@ -60,6 +60,13 @@ class Proem
      * @var Proem\Api\Signal\Manager\Template
      */
     protected $events;
+
+    /**
+     * Store the filter manager
+     *
+     * @var Proem\Api\Filter\Manager\Template
+     */
+    protected $filterManager;
 
     /**
      * Store the service manager
@@ -75,7 +82,7 @@ class Proem
      *
      * @param Proem\Api\Ext\Template $extension
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
@@ -134,7 +141,7 @@ class Proem
      *
      * @param Proem\Api\Ext\Plugin\Generic
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     public function attachPlugin(Plugin $plugin, $event = 'proem.init', $priority = 0)
@@ -147,7 +154,7 @@ class Proem
      *
      * @param Proem\Api\Proem\Ext\Module\Generic
      * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is registered at
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
     public function attachModule(Module $module, $event = 'proem.init', $priority = 0)
@@ -168,12 +175,20 @@ class Proem
 
         $this->events->get()->trigger([
             'name'  => 'proem.init',
-            'event' => (new Bootstrap)
-                ->setServiceManager($this->serviceManager)
-                ->setEnvironment($environment)
+            'event' => (new Bootstrap)->setServiceManager($this->serviceManager)->setEnvironment($environment),
+            'callback'  => function($e) {
+                if ($e instanceof Proem\Filter\Manager\Template) {
+                    $this->filterManager = $e;
+                }
+            }
         ]);
 
-        (new FilterManager($this->serviceManager))
+        if ($this->filterManager === null) {
+            $this->filterManager = new FilterManager;
+        }
+
+        $this->filterManager
+            ->setServiceManager($this->serviceManager)
             ->attachEvent(new Response, FilterManager::RESPONSE_EVENT_PRIORITY)
             ->attachEvent(new Request, FilterManager::REQUEST_EVENT_PRIORITY)
             ->attachEvent(new Route, FilterManager::ROUTE_EVENT_PRIORITY)

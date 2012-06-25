@@ -31,7 +31,9 @@
 namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
-    Proem\Routing\Route\Generic;
+    Proem\Routing\Route\Generic,
+    Proem\Util\Process\Callback,
+    Proem\IO\Request\Template as Request;
 
 /**
  * Proem's standard route.
@@ -103,10 +105,10 @@ class Standard extends Generic
      * to be added to the Payload object as params (which are in turn transformed
      * into key => value pairs).
      *
-     * @param string $uri
+     * @param Proem\IO\Request\Template $request
      * @return Proem\Api\Routing\Route\Template
      */
-    public function process($uri)
+    public function process(Request $request)
     {
         if (!$this->options->rule) {
             return false;
@@ -115,8 +117,12 @@ class Standard extends Generic
         $rule               = $this->options->rule;
         $target             = $this->options->targets;
         $custom_filters     = $this->options->filters;
+        $method             = $this->options->method ?: 'GET';
+
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
+        $uri                = $request->getRequestUri();
+        $requestMethod      = $request->getMethod();
 
         $keys   = [];
         $values = [];
@@ -145,7 +151,7 @@ class Standard extends Generic
             $rule
         ) . '/?';
 
-        if (preg_match('@^' . $regex . '$@', $uri, $values)) {
+        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values) && $requestMethod == $method) {
             array_shift($values);
 
             foreach ($keys as $index => $value) {
@@ -158,7 +164,6 @@ class Standard extends Generic
                 $params[$key] = $value;
             }
 
-            $this->setMatch();
             foreach ($params as $key => $value) {
                 // If the string within $value looks like a / seperated string,
                 // parse it into an array and send it to setParams() instead
@@ -170,9 +175,20 @@ class Standard extends Generic
                 }
             }
 
+            $this->setMatch();
+            $this->getPayload()->set('request', $request);
             $this->getPayload()->setPopulated();
         }
         return $this;
     }
 
+    /**
+     * Method used to execute a route callback.
+     *
+     * @param Proem\IO\Request\Template $request
+     */
+    public function call(Request $request)
+    {
+        (new Callback($this->options->callback, $request))->call();
+    }
 }

@@ -73,7 +73,7 @@ class Standard implements Template
      * Remove event listeners from a particular index.
      *
      * Be aware that removeing listeners from the wildcard '*' will not literally
-     * remove them from *all* events. If they have been registered to a specifically
+     * remove them from *all* events. If they have been attached to a specifically
      * named event that will need to be removed seperately.
      *
      * @param string $name
@@ -97,17 +97,17 @@ class Standard implements Template
      * index of these arrays is the name of the event while the value inserted into the queue
      * is the above metnioned unique md5 hash.
      *
-     * This allows a listener to register itself to be triggered against multiple events
+     * This allows a listener to attach itself to be triggered against multiple events
      * without having multiple copies of the callback being stored.
      *
      * Default priority is 0, the higher the number of the priority the earlier the
      * listener will respond, negative priorities are allowed.
      *
      * The name option can optionally take the form of an array of events for the listener
-     * to register itself with. A wildcard '*' is also provided and will register the
+     * to attach itself with. A wildcard '*' is also provided and will attach the
      * listener to be triggered against all events.
      *
-     * Be aware that registering a listener to the same event multiple times will trigger
+     * Be aware that attaching a listener to the same event multiple times will trigger
      * that listener multiple times. This includes using the wildcard.
      *
      * <code>
@@ -215,6 +215,7 @@ class Standard implements Template
                         $event->setParams($ops->params);
                     }
                 }
+                $event->setName($ops->name);
                 $event->setTarget($ops->target);
                 $event->setMethod($ops->method);
                 if ($return = (new Callback($this->callbacks[$key], $event))->call()) {

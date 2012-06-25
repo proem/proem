@@ -51,13 +51,13 @@ class Route extends Event
      * the index of *router*.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.in.router',
+                'name'      => 'proem.pre.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -85,55 +85,55 @@ class Route extends Event
             $assets->set(
                 'router',
                 $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
-                    $router = (new Router($assets->get('request')->getRequestUri()))
-                        ->map(
+                    $router = (new Router($assets->get('request')))
+                        ->attach(
                             'default-module-controller-action-params',
                             new StandardRoute([
                                 'rule' => '/:module/:controller/:action/:params'
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-controller-action-noparams',
                             new StandardRoute([
                                 'rule' => '/:module/:controller/:action'
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-controller-noaction',
                             new StandardRoute([
                                 'rule'      => '/:module/:controller',
                                 'targets'    => ['action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-nomodule-controller-action',
                             new StandardRoute([
                                 'rule'      => '/:controller/:action',
                                 'targets'    => ['module' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-module-nocontroller',
                             new StandardRoute([
                                 'rule'      => '/:module',
                                 'targets'    => ['controller' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-nomodule-controller',
                             new StandardRoute([
                                 'rule'      => '/:controller',
                                 'targets'    => ['module' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-params',
                             new StandardRoute([
                                 'rule'      => '/:params',
                                 'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
                             ])
                         )
-                        ->map(
+                        ->attach(
                             'default-noparams',
                             new StandardRoute([
                                 'rule'      => '/',
@@ -150,13 +150,13 @@ class Route extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.in.router',
+                'name'      => 'proem.post.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -170,13 +170,13 @@ class Route extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'pre.out.router',
+                'name'      => 'proem.pre.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
@@ -200,13 +200,13 @@ class Route extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template $assets
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.router
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.router
      */
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
-                'name'      => 'post.out.router',
+                'name'      => 'proem.post.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,

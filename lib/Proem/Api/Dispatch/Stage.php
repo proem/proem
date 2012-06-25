@@ -134,13 +134,14 @@ class Stage
     protected function processRoutes()
     {
         if ($this->assets->has('router') && $this->assets->has('events')) {
-            $router = $this->assets->get('router');
+            $assets     = $this->assets;
+            $router     = $assets->get('router');
             $dispatched = false;
             while ($payload = $router->route()) {
-                $this->assets->get('events')->trigger([
+                $assets->get('events')->trigger([
                     'name'      => 'proem.route.match',
                     'event'     => (new RouteMatch())->setPayload($payload),
-                    'callback'  => function($e) use ($assets) {
+                    'callback'  => function($e) use (&$dispatched, &$assets) {
                         if ($e) {
                             $dispatched = true;
                             $assets->get('events')->trigger([
@@ -153,7 +154,7 @@ class Stage
             }
 
             if (!$dispatched) {
-                $this->assets->get('events')->trigger([
+                $assets->get('events')->trigger([
                     'name' => 'proem.route.exhausted',
                     'event' => (new RouteExhausted)
                 ]);

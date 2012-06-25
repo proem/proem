@@ -159,7 +159,7 @@ class Standard implements Template
             if (class_exists($this->class)) {
                 $this->class = new $this->class($this->assets);
                 if ($this->class instanceof \Proem\Controller\Template) {
-                    if (method_exists($this->class, $this->action . 'Action')) {
+                    if (is_callable($this->class, $this->action . 'Action')) {
                         return true;
                     }
                 }

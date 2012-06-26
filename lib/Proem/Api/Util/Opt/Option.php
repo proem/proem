@@ -280,14 +280,18 @@ class Option
         }
 
         if ($this->is_type && $this->value !== __FILE__) {
-            switch ($this->is_type) {
-                case 'array':       $result = is_array($this->value);     break;
-                case 'bool':        $result = is_bool($this->value);      break;
-                case 'float':       $result = is_float($this->value);     break;
-                case 'int':         $result = is_int($this->value);       break;
-                case 'string':      $result = is_string($this->value);    break;
-                case 'callable':    $result = is_callable($this->value);  break;
-                case 'object':      $result = is_object($this->value);    break;
+            if (isset($this->type_validators[$this->is_type])) {
+                $result = (new Callback($this->type_validators[$this->is_type], [$this->value]))->call();
+            } else {
+                switch ($this->is_type) {
+                    case 'array':       $result = is_array($this->value);     break;
+                    case 'bool':        $result = is_bool($this->value);      break;
+                    case 'float':       $result = is_float($this->value);     break;
+                    case 'int':         $result = is_int($this->value);       break;
+                    case 'string':      $result = is_string($this->value);    break;
+                    case 'callable':    $result = is_callable($this->value);  break;
+                    case 'object':      $result = is_object($this->value);    break;
+                }
             }
 
             if (!isset($result)) {

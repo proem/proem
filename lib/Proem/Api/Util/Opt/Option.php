@@ -115,15 +115,6 @@ class Option
      */
     public function __construct($value = __FILE__) {
         $this->value = $value;
-
-        $this
-            ->addTypeValidator('array',     function($value) { return is_array($value); })
-            ->addTypeValidator('bool',      function($value) { return is_bool($value); })
-            ->addTypeValidator('float',     function($value) { return is_float($value); })
-            ->addTypeValidator('int',       function($value) { return is_int($value); })
-            ->addTypeValidator('string',    function($value) { return is_string($value); })
-            ->addTypeValidator('callable',  function($value) { return is_callable($value); })
-            ->addTypeValidator('object',    function($value) { return is_object($value); });
     }
 
     /**
@@ -289,16 +280,24 @@ class Option
         }
 
         if ($this->is_type && $this->value !== __FILE__) {
-            if (isset($this->type_validators[$this->is_type])) {
-                if (!(new Callback($this->type_validators[$this->is_type], [$this->value]))->call()) {
-                    if ($this->throws === null) {
-                        throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
-                    } else {
-                        throw (new Callback($this->throws))->call();
-                    }
-                }
-            } else {
+            switch ($this->is_type) {
+                case 'array':       $result = is_array($this->value);     break;
+                case 'bool':        $result = is_bool($this->value);      break;
+                case 'float':       $result = is_float($this->value);     break;
+                case 'int':         $result = is_int($this->value);       break;
+                case 'string':      $result = is_string($this->value);    break;
+                case 'callable':    $result = is_callable($this->value);  break;
+                case 'object':      $result = is_object($this->value);    break;
+            }
+
+            if (!isset($result)) {
                 throw new \RuntimeException('No validator found for type ' . $this->is_type);
+            } else if (!$result) {
+                if ($this->throws === null) {
+                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
+                } else {
+                    throw (new Callback($this->throws))->call();
+                }
             }
         }
 

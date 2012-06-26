@@ -151,6 +151,9 @@ class Stage
                         }
                     }
                 ]);
+                if ($dispatched) {
+                    break;
+                }
             }
 
             if (!$dispatched) {

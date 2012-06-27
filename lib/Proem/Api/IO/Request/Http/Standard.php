@@ -260,12 +260,12 @@ class Standard implements Template
     }
 
     /**
-     * Retrieve the request uri.
+     * Retrieve the request uri without any querystring parameters.
      *
      * @return string
      */
     public function getRequestUri() {
-        return $this->data['meta']->get('REQUEST_URI');
+        return parse_url($this->data['meta']->get('REQUEST_URI'), PHP_URL_PATH);
     }
 
     /**

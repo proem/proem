@@ -132,14 +132,14 @@ class KeyValStore implements \Iterator
     }
 
     /**
-     * Has storage have index?
+     * Does storage have index?
      *
      * @param string $index
      * @return mixed
      */
     public function has($index)
     {
-        return array_key_exists($index, $this->data);
+        return isset($this->data[$index]);
     }
 
     /**

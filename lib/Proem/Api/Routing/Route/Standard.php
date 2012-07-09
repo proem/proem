@@ -136,13 +136,13 @@ class Standard extends Generic
             function($matches) use ($custom_filters, $default_tokens, $default_filters)
             {
                 $key = str_replace(':', '', $matches[0]);
-                if (array_key_exists($key, $custom_filters)) {
-                    if (array_key_exists($custom_filters[$key], $default_filters)) {
+                if (isset($custom_filters[$key])) {
+                    if (isset($default_filters[$custom_filters[$key]])) {
                         return '(' . $default_filters[$custom_filters[$key]] . ')';
                     } else {
                         return '(' . $custom_filters[$key] . ')';
                     }
-                } else if (array_key_exists($key, $default_tokens)) {
+                } else if (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
                     return $default_filters[':default'];

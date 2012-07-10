@@ -53,6 +53,18 @@ class Autoloader
     protected $pearPrefixes = [];
 
     /**
+     * Store a flag indicating the abilty to load the APC extension
+     */
+    protected $apcEnabled = false;
+
+    public function __construct()
+    {
+        if (extension_loaded('apc')) {
+            $this->apcEnabled = true;
+        }
+    }
+
+    /**
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
@@ -158,7 +170,28 @@ class Autoloader
                 }
             }
         }
+
         return $this;
+    }
+
+    /**
+     * A simple wrapper around locateFile() that first
+     * checks to see if we are using APC caching.
+     *
+     * @param string $class The name of the class
+     * @return string|null The path, if found
+     */
+    private function locate($class)
+    {
+        if ($this->apcEnabled && !$file = apc_fetch($class)) {
+            if ($file = $this->locateFile($class)) {
+                apc_store($class, $file);
+            }
+        } else {
+            $file = $this->locateFile($class);
+        }
+
+        return $file;
     }
 
     /**
@@ -167,7 +200,7 @@ class Autoloader
      * @param string $class The name of the class
      * @return string|null The path, if found
      */
-    private function locate($class)
+    private function locateFile($class)
     {
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);

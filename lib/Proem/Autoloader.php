@@ -57,9 +57,15 @@ class Autoloader
      */
     protected $apcEnabled = false;
 
-    public function __construct()
+    /**
+     * Set up the autoloader
+     *
+     * Optionally set the autoloader to ignore the APC cache. Might be
+     * useful for debugging / optimizing code.
+     */
+    public function __construct($ignore_apc = false)
     {
-        if (extension_loaded('apc')) {
+        if (!$ignore_apc && extension_loaded('apc')) {
             $this->apcEnabled = true;
         }
     }

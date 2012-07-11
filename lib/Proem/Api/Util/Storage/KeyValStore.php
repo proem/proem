@@ -89,19 +89,15 @@ class KeyValStore implements \Iterator
     }
 
     /**
-     * Set multiple values or a single value by index.
+     * Set value by index.
      *
-     * @param string|array $index
+     * @param string $index
      * @param mixed $value
      * @return Proem\Api\Util\Storage\KeyValStore
      */
-    public function set($index, $value = null)
+    public function set($index, $value)
     {
-        if (is_array($index)) {
-            $this->data = array_merge($index, $this->data);
-        } else {
-            $this->data[$index] = $value;
-        }
+        $this->data[$index] = $value;
         return $this;
     }
 

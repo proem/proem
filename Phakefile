@@ -31,6 +31,20 @@ group('dev', function() {
         }
     });
 
+    desc('Run apache benchmark against the url set within the PROEM_URL environment variable');
+    task('ab', function($args) {
+        if ($url = getenv('PROEM_URL')) {
+            if (isset($args['ab-args'])) {
+                $ab_args = $args['ab-args'];
+            } else {
+                $ab_args = '-n 1000 -c 50';
+            }
+            system("ab $ab_args $url");
+        } else {
+            echo "The PROEM_URL environment variable does not appear to exist!\n";
+        }
+    });
+
     desc('Build the Phar archive');
     task('build', 'tests', function($args) {
         if (!is_dir('build')) {

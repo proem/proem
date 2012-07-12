@@ -37,7 +37,7 @@ use Proem\Routing\Route\Template,
 /**
  * Proem's standard route.
  *
- * This rouyte should cover most use cases and is currently the only
+ * This route should cover most use cases and is currently the only
  * route provided within the framework.
  */
 class Standard extends Generic

@@ -32,7 +32,6 @@ namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic,
-    Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request;
 
 /**
@@ -180,15 +179,5 @@ class Standard extends Generic
             $this->getPayload()->setPopulated();
         }
         return $this;
-    }
-
-    /**
-     * Method used to execute a route callback.
-     *
-     * @param Proem\IO\Request\Template $request
-     */
-    public function call(Request $request)
-    {
-        (new Callback($this->options->callback, $request))->call();
     }
 }

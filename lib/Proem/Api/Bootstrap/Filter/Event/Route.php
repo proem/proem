@@ -80,7 +80,7 @@ class Route extends Event
      */
     public function inBound(Manager $assets)
     {
-        if (!$assets->provides('Proem\Routing\Router')) {
+        if (!$assets->provides('Proem\Routing\Router\Template')) {
             $asset = new Asset;
             $assets->set(
                 'router',

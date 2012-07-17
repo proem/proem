@@ -62,9 +62,9 @@ class Dispatch extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Dispatch\Template')) {
-                        $assets->set('dispatch', $e);
+                'callback'  => function($responseAsset) use ($assets) {
+                    if ($responseAsset->provides('Proem\Dispatch\Template')) {
+                        $assets->set('dispatch', $responseAsset);
                     }
                 },
             ]);
@@ -112,7 +112,7 @@ class Dispatch extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
 
@@ -134,7 +134,7 @@ class Dispatch extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -164,7 +164,7 @@ class Dispatch extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }

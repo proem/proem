@@ -60,9 +60,9 @@ class Request extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\IO\Request\Template')) {
-                        $assets->set('request', $e);
+                'callback'  => function($responseAsset) use ($assets) {
+                    if ($responseAsset->provides('Proem\IO\Request\Template')) {
+                        $assets->set('request', $responseAsset);
                     }
                 },
             ]);
@@ -106,7 +106,7 @@ class Request extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -126,7 +126,7 @@ class Request extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -156,7 +156,7 @@ class Request extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }

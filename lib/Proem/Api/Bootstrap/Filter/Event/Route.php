@@ -62,9 +62,9 @@ class Route extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Routing\Router\Template')) {
-                        $assets->set('router', $e);
+                'callback'  => function($responseAsset) use ($assets) {
+                    if ($responseAsset->provides('Proem\Routing\Router\Template')) {
+                        $assets->set('router', $responseAsset);
                     }
                 },
             ]);
@@ -161,7 +161,7 @@ class Route extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -181,7 +181,7 @@ class Route extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -211,7 +211,7 @@ class Route extends Event
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }

@@ -103,7 +103,7 @@ class Proem
     public function __construct()
     {
         $this->events = new Asset;
-        $this->events->set('\Proem\Signal\Manager\Template', $this->events->single(function($asset) {
+        $this->events->set('Proem\Signal\Manager\Template', $this->events->single(function($asset) {
             return new SignalManager;
         }));
 

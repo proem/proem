@@ -32,13 +32,12 @@ namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic,
-    Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request;
 
 /**
  * Proem's standard route.
  *
- * This rouyte should cover most use cases and is currently the only
+ * This route should cover most use cases and is currently the only
  * route provided within the framework.
  */
 class Standard extends Generic
@@ -136,13 +135,13 @@ class Standard extends Generic
             function($matches) use ($custom_filters, $default_tokens, $default_filters)
             {
                 $key = str_replace(':', '', $matches[0]);
-                if (array_key_exists($key, $custom_filters)) {
-                    if (array_key_exists($custom_filters[$key], $default_filters)) {
+                if (isset($custom_filters[$key])) {
+                    if (isset($default_filters[$custom_filters[$key]])) {
                         return '(' . $default_filters[$custom_filters[$key]] . ')';
                     } else {
                         return '(' . $custom_filters[$key] . ')';
                     }
-                } else if (array_key_exists($key, $default_tokens)) {
+                } else if (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
                     return $default_filters[':default'];
@@ -180,15 +179,5 @@ class Standard extends Generic
             $this->getPayload()->setPopulated();
         }
         return $this;
-    }
-
-    /**
-     * Method used to execute a route callback.
-     *
-     * @param Proem\IO\Request\Template $request
-     */
-    public function call(Request $request)
-    {
-        (new Callback($this->options->callback, $request))->call();
     }
 }

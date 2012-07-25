@@ -53,16 +53,16 @@ class Request extends Event
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.in.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\IO\Request\Template')) {
-                        $assets->set('request', $e);
+                'callback'  => function($responseAsset) use ($assets) {
+                    if ($responseAsset->provides('Proem\IO\Request\Template')) {
+                        $assets->set('request', $responseAsset);
                     }
                 },
             ]);
@@ -99,14 +99,14 @@ class Request extends Event
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.in.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -119,14 +119,14 @@ class Request extends Event
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.out.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -149,14 +149,14 @@ class Request extends Event
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.out.request',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }

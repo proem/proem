@@ -55,16 +55,16 @@ class Route extends Event
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Routing\Router\Template')) {
-                        $assets->set('router', $e);
+                'callback'  => function($responseAsset) use ($assets) {
+                    if ($responseAsset->provides('Proem\Routing\Router\Template')) {
+                        $assets->set('router', $responseAsset);
                     }
                 },
             ]);
@@ -80,7 +80,7 @@ class Route extends Event
      */
     public function inBound(Manager $assets)
     {
-        if (!$assets->provides('Proem\Routing\Router')) {
+        if (!$assets->provides('Proem\Routing\Router\Template')) {
             $asset = new Asset;
             $assets->set(
                 'router',
@@ -154,14 +154,14 @@ class Route extends Event
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.in.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -174,14 +174,14 @@ class Route extends Event
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }
@@ -204,14 +204,14 @@ class Route extends Event
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.out.router',
                 'params'    => [],
                 'target'    => $this,
                 'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
+                'callback'  => function($responseAsset) {},
             ]);
         }
     }

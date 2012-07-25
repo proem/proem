@@ -34,6 +34,7 @@ use Proem\Routing\Route\Payload,
     Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
     Proem\Util\ArrayHelper,
+    Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request,
     Proem\Routing\Route\Template;
 
@@ -144,6 +145,16 @@ abstract class Generic implements Template
         }
 
         return $this->payload;
+    }
+
+    /**
+     * Method used to execute a route callback.
+     *
+     * @param Proem\IO\Request\Template $request
+     */
+    public function call(Request $request)
+    {
+        (new Callback($this->options->callback, $request))->call();
     }
 
     /**

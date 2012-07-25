@@ -115,15 +115,6 @@ class Option
      */
     public function __construct($value = __FILE__) {
         $this->value = $value;
-
-        $this
-            ->addTypeValidator('array',     function($value) { return is_array($value); })
-            ->addTypeValidator('bool',      function($value) { return is_bool($value); })
-            ->addTypeValidator('float',     function($value) { return is_float($value); })
-            ->addTypeValidator('int',       function($value) { return is_int($value); })
-            ->addTypeValidator('string',    function($value) { return is_string($value); })
-            ->addTypeValidator('callable',  function($value) { return is_callable($value); })
-            ->addTypeValidator('object',    function($value) { return is_object($value); });
     }
 
     /**
@@ -268,84 +259,30 @@ class Option
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      * @return bool
-     * @todo This method should likely be broken down into smaller chunks
      */
     public function validate($options = []) {
         if ($this->unless) {
-            $keys = array_keys($options);
-            if (!count(array_diff($this->unless, array_keys($options)))) {
-                $this->is_required = false;
-            }
+            $this->doUnlessCheck($options);
         }
 
         if ($this->is_required) {
-            if ($this->value === __FILE__) {
-                if ($this->throws === null) {
-                    throw new \InvalidArgumentException(' is a required option');
-                } else {
-                    throw (new Callback($this->throws))->call();
-                }
-            }
+            $this->doRequiredCheck();
         }
 
         if ($this->is_type && $this->value !== __FILE__) {
-            if (isset($this->type_validators[$this->is_type])) {
-                if (!(new Callback($this->type_validators[$this->is_type], [$this->value]))->call()) {
-                    if ($this->throws === null) {
-                        throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
-                    } else {
-                        throw (new Callback($this->throws))->call();
-                    }
-                }
-            } else {
-                throw new \RuntimeException('No validator found for type ' . $this->is_type);
-            }
+            $this->doTypeCheck();
         }
 
         if ($this->is_asset && $this->value !== __FILE__) {
-            if ($this->value instanceof StandardAsset) {
-                if ($this->value->provides() !== $this->is_asset) {
-                    if ($this->throws === null) {
-                        throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
-                    } else {
-                        throw (new Callback($this->throws))->call();
-                    }
-                }
-            } elseif ($this->value instanceof ServiceManager) {
-                if (!$this->value->provides($this->is_asset)) {
-                    if ($this->throws === null) {
-                        throw new \InvalidArgumentException(' did not pass the "' . (is_array($this->is_asset) ? '[' . implode(', ', $this->is_asset) . ']' : $this->is_asset) . '" Asset validator');
-                    } else {
-                        throw (new Callback($this->throws))->call();
-                    }
-                }
-            } else {
-                if ($this->throws === null) {
-                    throw new \InvalidArgumentException(' is not a valid "Asset" or "Service\Manager"');
-                } else {
-                    throw (new Callback($this->throws))->call();
-                }
-            }
+            $this->doAssetCheck();
         }
 
         if ($this->is_object && $this->value !== __FILE__) {
-            if (!$this->value instanceof $this->is_object) {
-                if ($this->throws === null) {
-                    throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object . ', ' . (is_object($this->value) ? get_class($this->value) : $this->value) . ' provided');
-                } else {
-                    throw (new Callback($this->throws))->call();
-                }
-            }
+            $this->doObjectCheck();
         }
 
         if ($this->is_classof && $this->value !== __FILE__) {
-            if (!$this->value == $this->is_classof && !is_subclass_of($this->is_classof, $this->value)) {
-                if ($this->throws === null) {
-                    throw new \InvalidArgumentException(' is required to be a string representation of the class of type ' . $this->is_classof);
-                } else {
-                    throw (new Callback($this->throws))->call();
-                }
-            }
+            $this->doClassOfCheck();
         }
 
         if ($this->value == __FILE__) {
@@ -353,6 +290,134 @@ class Option
         }
 
         return true;
+    }
+
+    /**
+     * Check to see if this option really is required based on
+     * other options supplied.
+     */
+    protected function doUnlessCheck(array $options)
+    {
+        $keys = array_keys($options);
+        if (!count(array_diff($this->unless, array_keys($options)))) {
+            $this->is_required = false;
+        }
+    }
+
+    /**
+     * Check option is required.
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function doRequiredCheck()
+    {
+        if ($this->value === __FILE__) {
+            if ($this->throws === null) {
+                throw new \InvalidArgumentException(' is a required option');
+            } else {
+                throw (new Callback($this->throws))->call();
+            }
+        }
+    }
+
+    /**
+     * Validate the data type.
+     *
+     * This method also validates against custom supplied
+     * validators.
+     *
+     * @thorws InvalidArgumentException
+     * @thorws RuntimeException
+     */
+    protected function doTypeCheck()
+    {
+        if (isset($this->type_validators[$this->is_type])) {
+            $result = (new Callback($this->type_validators[$this->is_type], [$this->value]))->call();
+        } else {
+            switch ($this->is_type) {
+                case 'array':       $result = is_array($this->value);     break;
+                case 'bool':        $result = is_bool($this->value);      break;
+                case 'float':       $result = is_float($this->value);     break;
+                case 'int':         $result = is_int($this->value);       break;
+                case 'string':      $result = is_string($this->value);    break;
+                case 'callable':    $result = is_callable($this->value);  break;
+                case 'object':      $result = is_object($this->value);    break;
+            }
+        }
+
+        if (!isset($result)) {
+            throw new \RuntimeException('No validator found for type ' . $this->is_type);
+        } else if (!$result) {
+            if ($this->throws === null) {
+                throw new \InvalidArgumentException(' did not pass the "' . $this->is_type . '" validator');
+            } else {
+                throw (new Callback($this->throws))->call();
+            }
+        }
+    }
+
+    /**
+     * Validate option is Asset
+     *
+     * @thorws InvalidArgumentException
+     */
+    protected function doAssetCheck()
+    {
+        if ($this->value instanceof StandardAsset) {
+            if ($this->value->provides() !== $this->is_asset) {
+                if ($this->throws === null) {
+                    throw new \InvalidArgumentException(' did not pass the "' . $this->is_asset . '" Asset validator');
+                } else {
+                    throw (new Callback($this->throws))->call();
+                }
+            }
+        } elseif ($this->value instanceof ServiceManager) {
+            if (!$this->value->provides($this->is_asset)) {
+                if ($this->throws === null) {
+                    throw new \InvalidArgumentException(' did not pass the "' . (is_array($this->is_asset) ? '[' . implode(', ', $this->is_asset) . ']' : $this->is_asset) . '" Asset validator');
+                } else {
+                    throw (new Callback($this->throws))->call();
+                }
+            }
+        } else {
+            if ($this->throws === null) {
+                throw new \InvalidArgumentException(' is not a valid "Asset" or "Service\Manager"');
+            } else {
+                throw (new Callback($this->throws))->call();
+            }
+        }
+    }
+
+    /**
+     * Validate object type.
+     *
+     * @thorws InvalidArgumentException
+     */
+    protected function doObjectCheck()
+    {
+        if (!$this->value instanceof $this->is_object) {
+            if ($this->throws === null) {
+                throw new \InvalidArgumentException(' is required to be an instance of ' . $this->is_object . ', ' . (is_object($this->value) ? get_class($this->value) : $this->value) . ' provided');
+            } else {
+                throw (new Callback($this->throws))->call();
+            }
+        }
+    }
+
+    /**
+     * Validate class of type.
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function doClassOfCheck()
+    {
+        if (!$this->value == $this->is_classof && !is_subclass_of($this->is_classof, $this->value)) {
+            if ($this->throws === null) {
+                throw new \InvalidArgumentException(' is required to be a string representation of the class of type ' . $this->is_classof);
+            } else {
+                throw (new Callback($this->throws))->call();
+            }
+        }
     }
 
 }

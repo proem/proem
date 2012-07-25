@@ -74,6 +74,13 @@ class Standard implements Template
     protected $length;
 
     /**
+     * Store a flag indicating wether or not to send the closed header.
+     *
+     * @var bool
+     */
+    protected $sendClosed;
+
+    /**
      * Hash of status code -> message
      *
      * @var array
@@ -252,7 +259,6 @@ class Standard implements Template
         $string = (string) $string;
         $this->length += strlen($string);
         $this->body .= $string;
-        //$this->headers->set('Content-Length', $this->length);
         return $this;
     }
 
@@ -264,6 +270,26 @@ class Standard implements Template
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Send a connection closed header when output is sent.
+     *
+     * Under certain circumstances this can improve performance.
+     */
+    public function sendClosedHeader()
+    {
+        $this->sendClosed = true;
+    }
+
+    /**
+     * Retrieve the content length.
+     *
+     * @return int
+     */
+    public function getContentLength()
+    {
+        return $this->length;
     }
 
     /**
@@ -283,6 +309,11 @@ class Standard implements Template
 
         foreach ($this->headers->all() as $index => $value) {
             header(sprintf('%s: %s', $index, $value));
+        }
+
+        if ($this->sendClosed) {
+            $this->headers->set('Content-Length', $this->length);
+            header('Connection: close');
         }
 
         flush();

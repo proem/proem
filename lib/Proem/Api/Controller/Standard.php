@@ -30,7 +30,7 @@
 namespace Proem\Api\Controller;
 
 use Proem\Controller\Template as ControllerTemplate,
-    Proem\Api\Bootstrap\Signal\Event\Bootstrap as Bootstrap,
+    Proem\Bootstrap\Signal\Event\Bootstrap as Bootstrap,
     Proem\Service\Manager\Template as ServiceManager;
 
 /**

@@ -110,7 +110,7 @@ class Stage
     {
         if ($this->assets->has('events')) {
             $this->assets->get('events')->attach([
-                'name'      => 'proem.dispatch',
+                'name'      => 'proem.route.dispatch',
                 'callback'  => [$this, 'dispatch']
             ]);
         }
@@ -145,7 +145,7 @@ class Stage
                         if ($e) {
                             $dispatched = true;
                             $assets->get('events')->trigger([
-                                'name' => 'proem.dispatch',
+                                'name' => 'proem.route.dispatch',
                                 'event' => (new RouteDispatch)
                             ]);
                         }

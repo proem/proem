@@ -283,6 +283,16 @@ class Standard implements Template
     }
 
     /**
+     * Retrieve the content length.
+     *
+     * @return int
+     */
+    public function getContentLength()
+    {
+        return $this->length;
+    }
+
+    /**
      * Send the HTTP headers to the client.
      */
     public function sendHeaders()

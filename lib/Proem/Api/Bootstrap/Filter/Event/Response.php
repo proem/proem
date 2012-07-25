@@ -54,7 +54,7 @@ class Response extends Event
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.in.response',
                 'params'    => [],
@@ -100,7 +100,7 @@ class Response extends Event
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.in.response',
                 'params'    => [],
@@ -120,7 +120,7 @@ class Response extends Event
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.pre.out.response',
                 'params'    => [],
@@ -157,7 +157,7 @@ class Response extends Event
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger([
                 'name'      => 'proem.post.out.response',
                 'params'    => [],

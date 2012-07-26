@@ -54,7 +54,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
             'callback'  => function($e) use ($r) {
                 $r->out .= 'Second';
             }
-        ])->trigger(['name' => 'do']);
+        ])->trigger('do');
 
         $this->assertEquals('SecondFirst', $r->out);
     }
@@ -69,8 +69,8 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out .= 'Yes';
             }
         ])
-        ->trigger(['name' => 'do'])
-        ->trigger(['name' => 'do']);
+        ->trigger('do')
+        ->trigger('do');
 
         $this->assertEquals('YesYes', $r->out);
     }
@@ -85,9 +85,9 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out++;
             }
         ])
-        ->trigger(['name' => 'a'])
-        ->trigger(['name' => 'b'])
-        ->trigger(['name' => 'c']);
+        ->trigger('a')
+        ->trigger('b')
+        ->trigger('c');
 
         $this->assertEquals(3, $r->out);
     }
@@ -102,9 +102,9 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out++;
             }
         ])
-        ->trigger(['name' => 'a'])
-        ->trigger(['name' => 'b'])
-        ->trigger(['name' => 'c']);
+        ->trigger('a')
+        ->trigger('b')
+        ->trigger('c');
 
         $this->assertEquals(3, $r->out);
     }
@@ -119,7 +119,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out = $e->getParams()['hello'];
             }
         ])
-        ->trigger(['name' => 'do', 'params' => ['hello' => 'trq']]);
+        ->trigger('do', ['params' => ['hello' => 'trq']]);
         $this->assertEquals('trq', $r->out);
     }
 
@@ -133,8 +133,8 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 return true;
             }
         ])
-        ->trigger([
-            'name' => 'do', 'callback' => function($response) use ($r) {
+        ->trigger('do', [
+            'callback' => function($response) use ($r) {
                 $this->assertTrue($response);
                 $r->out = 'Callback';
             }
@@ -158,7 +158,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
         // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
         // This will need to be documented.
-        ->trigger(['name' => 'do', 'target' => $this, 'method' => __FUNCTION__]);
+        ->trigger('do', ['target' => $this, 'method' => __FUNCTION__]);
 
         $this->assertInstanceOf('\Proem\Tests\SignalTest', $r->target);
         $this->assertEquals('testTargetAndMethod', $r->method);

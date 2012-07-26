@@ -173,8 +173,7 @@ class Proem
     {
         $this->serviceManager->set('events', $this->events);
 
-        $this->events->get()->trigger([
-            'name'  => 'proem.init',
+        $this->events->get()->trigger('proem.init', [
             'event' => (new Bootstrap)->setServiceManager($this->serviceManager)->setEnvironment($environment),
             'callback'  => function($e) {
                 if ($e instanceof Proem\Filter\Manager\Template) {

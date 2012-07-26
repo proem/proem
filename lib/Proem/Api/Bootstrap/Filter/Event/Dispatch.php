@@ -56,11 +56,8 @@ class Dispatch extends Event
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'proem.pre.in.dispatch',
+            $assets->get('events')->trigger('proem.pre.in.dispatch', [
                 'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($responseAsset) use ($assets) {
                     if ($responseAsset->provides('Proem\Dispatch\Template')) {
@@ -106,11 +103,8 @@ class Dispatch extends Event
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'proem.post.in.dispatch',
+            $assets->get('events')->trigger('proem.post.in.dispatch', [
                 'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($responseAsset) {},
             ]);
@@ -128,11 +122,8 @@ class Dispatch extends Event
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'proem.pre.out.dispatch',
+            $assets->get('events')->trigger('proem.pre.out.dispatch', [
                 'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($responseAsset) {},
             ]);
@@ -158,11 +149,8 @@ class Dispatch extends Event
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'proem.post.out.dispatch',
+            $assets->get('events')->trigger('proem.post.out.dispatch', [
                 'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
                 'event'     => (new Bootstrap())->setServiceManager($assets),
                 'callback'  => function($responseAsset) {},
             ]);

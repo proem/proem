@@ -189,7 +189,7 @@ class Standard implements Template
     public function trigger($name, array $options)
     {
 
-        if (isset($name]) || isset($this->queues[self::WILDCARD])) {
+        if (isset($name) || isset($this->queues[self::WILDCARD])) {
             $ops = $this->setOptions([
                 'params'    => (new Option())->type('array'),
                 'callback'  => (new Option())->type('callable'),

@@ -57,6 +57,6 @@ interface Template
      * @param array $options An array of Proem\Api\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
-    public function trigger(array $options);
+    public function trigger($name, array $options);
 
 }

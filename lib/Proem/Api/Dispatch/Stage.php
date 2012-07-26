@@ -138,14 +138,12 @@ class Stage
             $router     = $assets->get('router');
             $dispatched = false;
             while ($payload = $router->route()) {
-                $assets->get('events')->trigger([
-                    'name'      => 'proem.route.match',
+                $assets->get('events')->trigger('proem.route.match', [
                     'event'     => (new RouteMatch())->setPayload($payload),
                     'callback'  => function($e) use (&$dispatched, &$assets) {
                         if ($e) {
                             $dispatched = true;
-                            $assets->get('events')->trigger([
-                                'name' => 'proem.route.dispatch',
+                            $assets->get('events')->trigger('proem.route.dispatch', [
                                 'event' => (new RouteDispatch)
                             ]);
                         }
@@ -157,8 +155,7 @@ class Stage
             }
 
             if (!$dispatched) {
-                $assets->get('events')->trigger([
-                    'name' => 'proem.route.exhausted',
+                $assets->get('events')->trigger('proem.route.exhausted', [
                     'event' => (new RouteExhausted)
                 ]);
             }

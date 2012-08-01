@@ -70,40 +70,4 @@ interface Template
      */
     public function getName();
 
-    /**
-     * Set the target.
-     *
-     * The target should be an instance of whatever object
-     * this event was triggered from.
-     *
-     * @param object $target
-     * @return Proem\Api\Signal\Event\Template
-     */
-    public function setTarget($target);
-
-    /**
-     * Retrieve target.
-     *
-     * @return object
-     */
-    public function getTarget();
-
-    /**
-     * Set the method.
-     *
-     * The method should be a string representing the name of
-     * the method which has triggered this event.
-     *
-     * @param string $method
-     * @return Proem\Api\Signal\Event\Template
-     */
-    public function setMethod($method);
-
-    /**
-     * Retrieve method
-     *
-     * @return object
-     */
-    public function getMethod();
-
 }

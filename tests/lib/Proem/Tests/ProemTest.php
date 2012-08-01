@@ -72,8 +72,6 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $results            = new \StdClass;
         $results->triggered = 0;
         $results->event     = false;
-        $results->target    = false;
-        $results->method    = false;
         $results->init      = false;
         $results->shutdown  = false;
 
@@ -82,8 +80,6 @@ class ProemTest extends \PHPUnit_Framework_TestCase
                 'name'      => 'proem.pre.in.response',
                 'callback'  => function($e) use ($results) {
                     $results->event = $e;
-                    $results->target = $e->getTarget();
-                    $results->method = $e->getMethod();
                     $results->triggered++;
                 }
             ])
@@ -140,8 +136,6 @@ class ProemTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(8, $results->triggered);
         $this->assertInstanceOf('Proem\Bootstrap\Signal\Event\Bootstrap', $results->event);
-        $this->assertInstanceOf('Proem\Api\Bootstrap\Filter\Event\Response', $results->target);
         $this->assertTrue($results->init);
-        $this->assertEquals('preIn', $results->method);
     }
 }

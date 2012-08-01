@@ -177,8 +177,6 @@ class Standard implements Template
      *       'name'      => (new Option())->required(),
      *       'params'    => (new Option())->type('array'),
      *       'callback'  => (new Option())->type('callable'),
-     *       'target'    => (new Option())->type('object'),
-     *       'method'    => (new Option())->type('string'),
      *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
      *   ], $options);
      * </code>
@@ -186,15 +184,13 @@ class Standard implements Template
      * @param array $options An array of Proem\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
-    public function trigger($name, array $options)
+    public function trigger($name, array $options = [])
     {
 
         if (isset($name) || isset($this->queues[self::WILDCARD])) {
             $ops = $this->setOptions([
                 'params'    => (new Option())->type('array'),
                 'callback'  => (new Option())->type('callable'),
-                'target'    => (new Option())->type('object'),
-                'method'    => (new Option())->type('string'),
                 'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
             ], $options);
             if (isset($this->queues[self::WILDCARD])) {
@@ -207,19 +203,20 @@ class Standard implements Template
                     }
                 }
             }
-            foreach ($this->queues[$name] as $key) {
-                $event = $ops->event;
-                if ($event instanceof \Proem\Signal\Event\Template) {
-                    if ($ops->has('params')) {
-                        $event->setParams($ops->params);
+
+            if (isset($this->queues[$name])) {
+                foreach ($this->queues[$name] as $key) {
+                    $event = $ops->event;
+                    if ($event instanceof \Proem\Signal\Event\Template) {
+                        if ($ops->has('params')) {
+                            $event->setParams($ops->params);
+                        }
                     }
-                }
-                $event->setName($name);
-                $event->setTarget($ops->target);
-                $event->setMethod($ops->method);
-                if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
-                    if ($ops->has('callback')) {
-                        (new Callback($ops->callback, $return))->call();
+                    $event->setName($name);
+                    if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
+                        if ($ops->has('callback')) {
+                            (new Callback($ops->callback, $return))->call();
+                        }
                     }
                 }
             }

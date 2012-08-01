@@ -54,7 +54,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
             'callback'  => function($e) use ($r) {
                 $r->out .= 'Second';
             }
-        ])->trigger('do');
+        ])->trigger(new Event('do'));
 
         $this->assertEquals('SecondFirst', $r->out);
     }
@@ -69,8 +69,8 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out .= 'Yes';
             }
         ])
-        ->trigger('do')
-        ->trigger('do');
+        ->trigger(new Event('do'))
+        ->trigger(new Event('do'));
 
         $this->assertEquals('YesYes', $r->out);
     }
@@ -85,9 +85,9 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out++;
             }
         ])
-        ->trigger('a')
-        ->trigger('b')
-        ->trigger('c');
+        ->trigger(new Event('a'))
+        ->trigger(new Event('b'))
+        ->trigger(new Event('c'));
 
         $this->assertEquals(3, $r->out);
     }
@@ -102,9 +102,9 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out++;
             }
         ])
-        ->trigger('a')
-        ->trigger('b')
-        ->trigger('c');
+        ->trigger(new Event('a'))
+        ->trigger(new Event('b'))
+        ->trigger(new Event('c'));
 
         $this->assertEquals(3, $r->out);
     }
@@ -119,7 +119,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 $r->out = $e->getParams()['hello'];
             }
         ])
-        ->trigger('do', ['params' => ['hello' => 'trq']]);
+        ->trigger((new Event('do'))->setParams(['hello' => 'trq']));
         $this->assertEquals('trq', $r->out);
     }
 
@@ -133,12 +133,12 @@ class SignalTest extends \PHPUnit_Framework_TestCase
                 return true;
             }
         ])
-        ->trigger('do', [
-            'callback' => function($response) use ($r) {
+        ->trigger(new Event('do'),
+            function($response) use ($r) {
                 $this->assertTrue($response);
                 $r->out = 'Callback';
             }
-        ]);
+        );
 
         $this->assertEquals('Callback', $r->out);
     }

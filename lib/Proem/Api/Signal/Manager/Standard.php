@@ -184,15 +184,10 @@ class Standard implements Template
      * @param array $options An array of Proem\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
-    public function trigger($name, array $options = [])
+    public function trigger(Event $event, Callable $callback = null)
     {
-
+        $name = $event->getName();
         if (isset($name) || isset($this->queues[self::WILDCARD])) {
-            $ops = $this->setOptions([
-                'params'    => (new Option())->type('array'),
-                'callback'  => (new Option())->type('callable'),
-                'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
-            ], $options);
             if (isset($this->queues[self::WILDCARD])) {
                 foreach ($this->queues[self::WILDCARD] as $listener) {
                     if (isset($this->queues[$name])) {
@@ -206,16 +201,9 @@ class Standard implements Template
 
             if (isset($this->queues[$name])) {
                 foreach ($this->queues[$name] as $key) {
-                    $event = $ops->event;
-                    if ($event instanceof \Proem\Signal\Event\Template) {
-                        if ($ops->has('params')) {
-                            $event->setParams($ops->params);
-                        }
-                    }
-                    $event->setName($name);
                     if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
-                        if ($ops->has('callback')) {
-                            (new Callback($ops->callback, $return))->call();
+                        if ($callback !== null) {
+                            (new Callback($callback, $return))->call();
                         }
                     }
                 }

@@ -40,6 +40,8 @@ use Proem\Util\Opt\Options,
 class Standard implements Template
 {
     /**
+     * TODO: This can likely be removed.
+     *
      * @use Proem\Api\Util\Opt\Options
      */
     use Options;
@@ -57,6 +59,14 @@ class Standard implements Template
      * @var string $name
      */
     protected $name = null;
+
+    /**
+     * Instantiate the event and set it's name.
+     */
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
     /**
      * Set params

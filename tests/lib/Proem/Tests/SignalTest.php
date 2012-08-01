@@ -142,25 +142,4 @@ class SignalTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('Callback', $r->out);
     }
-
-    public function testTargetAndMethod()
-    {
-        $r = new \StdClass;
-        $r->target = '';
-        $r->method = '';
-        (new Manager)->attach([
-            'name'      => 'do',
-            'callback'  => function($e) use ($r) {
-                $r->target = $e->getTarget();
-                $r->method = $e->getMethod();
-            }
-        ])
-        // There is a caveat here with in reference to __FUNCTION__ over __METHOD__
-        // __METHOD__ returns 'Proem\Tests\EventTest::testTargetAndMethod', not what we expect.
-        // This will need to be documented.
-        ->trigger('do', ['target' => $this, 'method' => __FUNCTION__]);
-
-        $this->assertInstanceOf('\Proem\Tests\SignalTest', $r->target);
-        $this->assertEquals('testTargetAndMethod', $r->method);
-    }
 }

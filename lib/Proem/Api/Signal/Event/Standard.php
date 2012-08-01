@@ -59,20 +59,6 @@ class Standard implements Template
     protected $name = null;
 
     /**
-     * Store target
-     *
-     * @var object $target
-     */
-    protected $target = null;
-
-    /**
-     * Store the method
-     *
-     * @var string
-     */
-    protected $method = null;
-
-    /**
      * Set params
      *
      * @param array $params
@@ -116,56 +102,6 @@ class Standard implements Template
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set the target.
-     *
-     * The target should be an instance of whatever object
-     * this event was triggered from.
-     *
-     * @param object $target
-     * @return Proem\Api\Signal\Event\Template
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
-        return $this;
-    }
-
-    /**
-     * Retrieve target.
-     *
-     * @return object
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * Set the method.
-     *
-     * The method should be a string representing the name of
-     * the method which has triggered this event.
-     *
-     * @param string $method
-     * @return Proem\Api\Signal\Event\Template
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-        return $this;
-    }
-
-    /**
-     * Retrieve method
-     *
-     * @return object
-     */
-    public function getMethod()
-    {
-        return $this->method;
     }
 
 }

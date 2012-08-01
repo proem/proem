@@ -55,15 +55,14 @@ class Response extends Event
     public function preIn(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger('proem.pre.in.response', [
-                'params'    => [],
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($responseAsset) use ($assets) {
-                    if ($responseAsset->provides('Proem\IO\Response\Template')) {
-                        $assets->set('response', $responseAsset);
+            $assets->get('events')->trigger(
+                (new Bootstrap('proem.pre.in.response'))->setServiceManager($assets),
+                function($response) use ($assets) {
+                    if ($response->provides('Proem\IO\Response\Template')) {
+                        $assets->set('response', $response);
                     }
-                },
-            ]);
+                }
+            );
         }
     }
 
@@ -98,11 +97,7 @@ class Response extends Event
     public function postIn(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger('proem.post.in.response', [
-                'params'    => [],
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($responseAsset) {},
-            ]);
+            $assets->get('events')->trigger((new Bootstrap('proem.post.in.response'))->setServiceManager($assets));
         }
     }
 
@@ -115,11 +110,7 @@ class Response extends Event
     public function preOut(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger('proem.pre.out.response', [
-                'params'    => [],
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($responseAsset) {},
-            ]);
+            $assets->get('events')->trigger((new Bootstrap('proem.pre.out.response'))->setServiceManager($assets));
         }
     }
 
@@ -149,11 +140,7 @@ class Response extends Event
     public function postOut(Manager $assets)
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger('proem.post.out.response', [
-                'params'    => [],
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($responseAsset) {},
-            ]);
+            $assets->get('events')->trigger((new Bootstrap('proem.post.out.response'))->setServiceManager($assets));
         }
     }
 }

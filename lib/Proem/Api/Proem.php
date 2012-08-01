@@ -173,14 +173,14 @@ class Proem
     {
         $this->serviceManager->set('events', $this->events);
 
-        $this->events->get()->trigger('proem.init', [
-            'event' => (new Bootstrap)->setServiceManager($this->serviceManager)->setEnvironment($environment),
-            'callback'  => function($e) {
-                if ($e instanceof Proem\Filter\Manager\Template) {
-                    $this->filterManager = $e;
+        $this->events->get()->trigger(
+            (new Bootstrap('proem.init'))->setServiceManager($this->serviceManager)->setEnvironment($environment),
+            function($response) {
+                if ($response instanceof Proem\Filter\Manager\Template) {
+                    $this->filterManager = $response;
                 }
             }
-        ]);
+        );
 
         if ($this->filterManager === null) {
             $this->filterManager = new FilterManager;

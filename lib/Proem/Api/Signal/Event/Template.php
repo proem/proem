@@ -39,6 +39,11 @@ use Proem\Util\Opt\Options,
 interface Template
 {
     /**
+     * Instantiate the Event and set it's name.
+     */
+    public function __construct($name);
+
+    /**
      * Set params
      *
      * @param array $params

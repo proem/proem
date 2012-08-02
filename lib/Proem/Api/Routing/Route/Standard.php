@@ -109,14 +109,14 @@ class Standard extends Generic
      */
     public function process(Request $request)
     {
-        if (!$this->options->rule) {
+        if (!isset($this->options['rule'])) {
             return false;
         }
 
-        $rule               = $this->options->rule;
-        $target             = $this->options->targets;
-        $custom_filters     = $this->options->filters;
-        $method             = $this->options->method ?: 'GET';
+        $rule               = $this->options['rule'];
+        $target             = isset($this->options['targets']) ? $this->options['targets'] : [];
+        $custom_filters     = isset($this->options['filters']) ? $this->options['filters'] : [];
+        $method             = isset($this->options['method']) ? $this->options['method'] : 'GET';
 
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;

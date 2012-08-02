@@ -41,18 +41,20 @@ class StaticRoute extends Generic
 {
     public function process(Request $request)
     {
-        if (!$this->options->rule) {
+        if (!isset($this->options['rule'])) {
             return false;
         }
 
-        if (!isset($this->options->targets['module']) || !isset($this->options->targets['controller']) || !isset($this->options->targets['action'])) {
+        $method = isset($this->options['method']) ? $this->options['method'] : 'GET';
+
+        if (!isset($this->options['targets']) || !isset($this->options['targets']['module']) || !isset($this->options['targets']['controller']) || !isset($this->options['targets']['action'])) {
             return false;
         }
 
-        if ($request->getRequestUri() == $this->options->rule && $request->getMethod()  == ($this->options->method ?: 'GET')) {
-            $this->getPayload()->set('module', $this->options->targets['module']);
-            $this->getPayload()->set('controller', $this->options->targets['controller']);
-            $this->getPayload()->set('action', $this->options->targets['action']);
+        if ($request->getRequestUri() == $this->options['rule'] && $request->getMethod() == $method) {
+            $this->getPayload()->set('module', $this->options['targets']['module']);
+            $this->getPayload()->set('controller', $this->options['targets']['controller']);
+            $this->getPayload()->set('action', $this->options['targets']['action']);
 
             $this->setMatch();
             $this->getPayload()->set('request', $request);

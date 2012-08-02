@@ -76,28 +76,6 @@ class Proem
     protected $serviceManager;
 
     /**
-     * Register an extension
-     *
-     * An extension is just a lower level interface that modules and plugins implement
-     *
-     * @param Proem\Api\Ext\Template $extension
-     * @param string $event The event that will trigger this extensions init() method
-     * @param int $priority The priority the Event Listener is attached at
-     * @return Proem\Api\Proem
-     */
-    protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
-    {
-        $this->attachEventListener([
-            'name'      => $event,
-            'priority'  => $priority,
-            'callback'  => function($e) use ($extension) {
-                $extension->init($e->getServiceManager(), $e->getEnvironment());
-            }
-        ]);
-        return $this;
-    }
-
-    /**
      * Setup bootstraping
      */
     public function __construct()
@@ -111,14 +89,36 @@ class Proem
     }
 
     /**
-     * Attach a listener to the signal event manager
+     * Register an extension
      *
-     * @param array $listener
+     * An extension is just a lower level interface that modules and plugins implement
+     *
+     * @param Proem\Api\Ext\Template $extension
+     * @param string $event The event that will trigger this extensions init() method
+     * @param int $priority The priority the Event Listener is attached at
      * @return Proem\Api\Proem
      */
-    public function attachEventListener(array $listener)
+    protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
-        $this->events->get()->attach($listener);
+        $this->attachEventListener($event, function($e) use ($extension) {
+            $extension->init($e->getServiceManager(), $e->getEnvironment());
+        }, $priority);
+
+        return $this;
+    }
+
+    /**
+     * Attach a listener to the signal event manager
+     *
+     * @param string $name The name of the event.
+     * @param callable $callback The callback that will be executed when the event is triggered.
+     * @param int $priority The priority that this listenever will have above other listeners attached to this same event.
+     *
+     * @return Proem\Api\Proem
+     */
+    public function attachEventListener($name, Callable $callback, $priority = 0)
+    {
+        $this->events->get()->attach($name, $callback, $priority);
         return $this;
     }
 
@@ -131,7 +131,7 @@ class Proem
     public function attachEventListeners(array $listeners)
     {
         foreach ($listeners as $listener) {
-            $this->attachEventListener($listener);
+            $this->attachEventListener($listener['name'], $listener['callback']);
         }
         return $this;
     }

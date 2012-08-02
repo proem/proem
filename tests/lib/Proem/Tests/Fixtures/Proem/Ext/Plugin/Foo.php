@@ -40,10 +40,7 @@ class Foo extends \Proem\Ext\Plugin\Generic
 {
     public function init(Manager $serviceManager, $env = null)
     {
-        $serviceManager->get('events')->attach([
-            'name'      => 'proem.pre.in.dispatch',
-            'callback'  => [$this, 'pre']
-        ]);
+        $serviceManager->get('events')->attach('proem.pre.in.dispatch', [$this, 'pre']);
     }
 
     public function pre($e)

@@ -32,8 +32,6 @@ namespace Proem\Api\Signal\Manager;
 
 use Proem\Util\Storage\Queue,
     Proem\Util\Process\Callback,
-    Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option,
     Proem\Signal\Event\Standard as Event,
     Proem\Signal\Manager\Template;
 
@@ -45,11 +43,6 @@ use Proem\Util\Storage\Queue,
  */
 class Standard implements Template
 {
-    /**
-     * @use Proem\Api\Util\Opt\Options
-     */
-    use Options;
-
     /**
      * Wildcard used when listening for all events
      */
@@ -110,58 +103,47 @@ class Standard implements Template
      * Be aware that attaching a listener to the same event multiple times will trigger
      * that listener multiple times. This includes using the wildcard.
      *
-     * <code>
-     *   $ops = $this->setOptions([
-     *       'name'      => (new Option())->required(),                     // The name of the event to listen to
-     *       'callback'  => (new Option())->required()->type('callable'),   // The Callable that will be executed when the event occurs
-     *       'priority'  => 0                                               // The priority at which this listner will be executed
-     *   ], $options);
-     * </code>
+     * @param string|array The name(s) of the event(s) to listen for.
+     * @param callable $callback The callback to execute when the event is triggered.
+     * @param int $priority The priority at which to execute this listener.
      *
-     * @param array $options An array of Proem\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
-    public function attach(array $options)
+    public function attach($name, Callable $callback, $priority = 0)
     {
-        $ops = $this->setOptions([
-            'name'      => (new Option())->required(),
-            'callback'  => (new Option())->required()->type('callable'),
-            'priority'  => 0
-        ], $options);
-
         $key = md5(microtime());
-        $this->callbacks[$key] = $ops->callback;
+        $this->callbacks[$key] = $callback;
 
-        if (is_array($ops->name)) {
-            foreach ($ops->name as $event) {
+        if (is_array($name)) {
+            foreach ($name as $event) {
                 if (isset($this->queues[$event])) {
                     if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                        $this->queues[self::WILDCARD][] = [$key, $priority];
                     } else {
-                        $this->queues[$event]->insert($key, $ops->priority);
+                        $this->queues[$event]->insert($key, $priority);
                     }
                 } else {
                     if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                        $this->queues[self::WILDCARD][] = [$key, $priority];
                     } else {
                         $this->queues[$event] = new Queue;
-                        $this->queues[$event]->insert($key, $ops->priority);
+                        $this->queues[$event]->insert($key, $priority);
                     }
                 }
             }
         } else {
-            if (isset($this->queues[$ops->name])) {
-                if ($ops->name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+            if (isset($this->queues[$name])) {
+                if ($name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $priority];
                 } else {
-                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                    $this->queues[$name]->insert($key, $priority);
                 }
             } else {
-                if ($ops->name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $ops->priority];
+                if ($name == self::WILDCARD) {
+                    $this->queues[self::WILDCARD][] = [$key, $priority];
                 } else {
-                    $this->queues[$ops->name] = new Queue;
-                    $this->queues[$ops->name]->insert($key, $ops->priority);
+                    $this->queues[$name] = new Queue;
+                    $this->queues[$name]->insert($key, $priority);
                 }
             }
         }
@@ -172,16 +154,9 @@ class Standard implements Template
     /**
      * Trigger the execution of all event listeners attached to a named event.
      *
-     * <code>
-     *   $ops = $this->setOptions([
-     *       'name'      => (new Option())->required(),
-     *       'params'    => (new Option())->type('array'),
-     *       'callback'  => (new Option())->type('callable'),
-     *       'event'     => (new Option(new Event))->object('\Proem\Signal\Event\Template')
-     *   ], $options);
-     * </code>
+     * @param Proem\Signal\Event\Standard $event The event being triggered.
+     * @param callable $callback A callback that can be used to respond to any response sent back from a listener.
      *
-     * @param array $options An array of Proem\Util\Opt\Options objects
      * @return Proem\Api\Signal\Manager\Template
      */
     public function trigger(Event $event, Callable $callback = null)

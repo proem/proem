@@ -48,10 +48,12 @@ interface Template
     /**
      * Register a listener attached to a particular named event.
      *
-     * @param array $options An array of Proem\Api\Util\Opt\Options objects
+     * @param string $name The name of the event to attach to.
+     * @param callable $callback The callback that will be executed when the event is triggered.
+     *
      * @return Proem\Api\Signal\Manager\Template
      */
-    public function attach(array $options);
+    public function attach($name, Callable $callback);
 
     /**
      * Trigger the execution of all event listeners attached to a named event.

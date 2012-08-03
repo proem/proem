@@ -43,7 +43,7 @@ class Standard implements Template
      *
      * @var string
      */
-    protected $httpVersion = '1.1';
+    protected $httpVersion = '1.0';
 
     /**
      * Store the HTTP Status code
@@ -289,8 +289,6 @@ class Standard implements Template
         foreach ($this->headers->all() as $index => $value) {
             header(sprintf('%s: %s', $index, $value));
         }
-
-        flush();
     }
 
     /**

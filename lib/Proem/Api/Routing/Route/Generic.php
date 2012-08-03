@@ -31,8 +31,6 @@
 namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Payload,
-    Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option,
     Proem\Util\ArrayHelper,
     Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request,
@@ -43,11 +41,6 @@ use Proem\Routing\Route\Payload,
  */
 abstract class Generic implements Template
 {
-    /**
-     * @uses Proem\Api\Util\Opt\Options
-     */
-    use Options;
-
     /**
      * @uses Proem\Api\Util\ArrayHelper
      */

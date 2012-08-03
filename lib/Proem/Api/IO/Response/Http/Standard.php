@@ -252,7 +252,6 @@ class Standard implements Template
         $string = (string) $string;
         $this->length += strlen($string);
         $this->body .= $string;
-        $this->headers->set('Content-Length', $this->length);
         return $this;
     }
 
@@ -268,11 +267,17 @@ class Standard implements Template
 
     /**
      * Send the HTTP headers to the client.
+     *
+     * @param bool $include_content_length Optionaly disable the Content-Length header.
      */
-    public function sendHeaders()
+    public function sendHeaders($include_content_length = true)
     {
         if (headers_sent()) {
             return;
+        }
+
+        if ($include_content_length) {
+            $this->headers->set('Content-Length', $this->length);
         }
 
         if (in_array($this->httpStatus, [204, 304])) {
@@ -285,8 +290,6 @@ class Standard implements Template
             header(sprintf('%s: %s', $index, $value));
         }
 
-        header('Connection: close');
-
         flush();
     }
 
@@ -294,10 +297,12 @@ class Standard implements Template
      * Send the response to the client.
      *
      * This method will first send any headers and then the request body.
+     *
+     * @param bool $include_content_length Optionaly disable the Content-Length header.
      */
-    public function send()
+    public function send($include_content_length = true)
     {
-        $this->sendHeaders();
+        $this->sendHeaders($include_content_length);
 
         if (( $this->httpStatus < 100 || $this->httpStatus >= 200 ) && $this->httpStatus != 204 && $this->httpStatus != 304) {
             echo $this->body;

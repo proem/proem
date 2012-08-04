@@ -24,31 +24,31 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Tests\Util\Options\Fixtures;
 
-/**
- * @namespace Proem\Ext\Plugin
- */
-namespace Proem\Ext\Plugin;
+use Proem\Util\Opt\Options,
+    Proem\Util\Opt\Option;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Service\Asset\Standard as Asset;
-
-/**
- * Proem\Ext\Plugin\Foo
- */
-class Foo extends \Proem\Ext\Plugin\Generic
+class OptionsFixture3
 {
-    public function init(Manager $serviceManager, $env = null)
+    use Options;
+
+    public function __construct(array $options = [])
     {
-        $serviceManager->get('events')->attach('proem.pre.in.dispatch', [$this, 'pre']);
+        $this->options = $this->setOptions([
+            'foo' => 'this is foo',
+            'bar' => 'this is bar'
+        ], $options);
     }
 
-    public function pre($e)
+    public function getFoo()
     {
-        $a = new Asset;
-        $a->set('\Namespaced\Foo', function($a) {
-            return new \Namespaced\Foo;
-        });
-        $e->getServiceManager()->set('foo', $a);
+        return $this->options->foo;
     }
+
+    public function getBar()
+    {
+        return $this->options->bar;
+    }
+
 }

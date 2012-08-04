@@ -31,8 +31,6 @@
 namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Payload,
-    Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option,
     Proem\Util\ArrayHelper,
     Proem\Util\Process\Callback,
     Proem\IO\Request\Template as Request,
@@ -43,11 +41,6 @@ use Proem\Routing\Route\Payload,
  */
 abstract class Generic implements Template
 {
-    /**
-     * @uses Proem\Api\Util\Opt\Options
-     */
-    use Options;
-
     /**
      * @uses Proem\Api\Util\ArrayHelper
      */
@@ -84,19 +77,15 @@ abstract class Generic implements Template
     /**
      * Instantiate this route
      *
-     * @param array $options An array of Proem\Api\Util\Opt\Option objects
+     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     *
+     * @param array $options
      */
     public function __construct(array $options)
     {
-        $this->options = $this->setOptions([
-            'rule'      => (new Option)->type('string')->required(),
-            'targets'   => (new Option([]))->type('array'),
-            'filters'   => (new Option([]))->type('array'),
-            'method'    => (new Option(null))->type('string'),
-            'callback'  => (new Option)->type('callable')
-        ], $options);
+        $this->options = $options;
 
-        if (is_callable($this->options->callback)) {
+        if (isset($this->options['callback']) && is_callable($this->options['callback'])) {
             $this->hasCallback = true;
         }
 
@@ -154,7 +143,7 @@ abstract class Generic implements Template
      */
     public function call(Request $request)
     {
-        (new Callback($this->options->callback, $request))->call();
+        (new Callback($this->options['callback'], $request))->call();
     }
 
     /**

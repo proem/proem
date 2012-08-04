@@ -28,6 +28,7 @@ namespace Proem\Tests\Util;
 
 use Proem\Tests\Util\Options\Fixtures\OptionsFixture,
     Proem\Tests\Util\Options\Fixtures\OptionsFixture2,
+    Proem\Tests\Util\Options\Fixtures\OptionsFixture3,
     Proem\Proem,
     Proem\Service\Asset\Standard as GenericAsset,
     Proem\Service\Manager\Standard as ServiceManager;
@@ -213,5 +214,29 @@ class OptTest extends \PHPUnit_Framework_TestCase
             'foo' => 100,
             'custom-arg' => 100
         ]);
+    }
+
+    /**
+     * The fowllowing tests test none Option values.
+     *
+     * This is, functions which don't use Option objects to define there defaults.
+     * This in turn allows validation to be skipped all together.
+     */
+
+    public function testDefaultArgs()
+    {
+        $fixture = new OptionsFixture3;
+        $this->assertEquals($fixture->getFoo(), 'this is foo');
+        $this->assertEquals($fixture->getBar(), 'this is bar');
+    }
+
+    public function testCanOverrideDefaultArgs()
+    {
+        $fixture = new OptionsFixture3([
+            'foo' => 'foo',
+            'bar' => 'bar'
+        ]);
+        $this->assertEquals($fixture->getFoo(), 'foo');
+        $this->assertEquals($fixture->getBar(), 'bar');
     }
 }

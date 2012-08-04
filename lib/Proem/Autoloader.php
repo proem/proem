@@ -58,11 +58,13 @@ class Autoloader
     protected $apcEnabled = false;
 
     /**
-     * Set enable APC caching.
+     * Instantiate our Autoloader and check for APC.
      */
-    public function enableAPC()
+    public function __construct()
     {
-        $this->apcEnabled = true;
+        if (extension_loaded('apc')) {
+            $this->apcEnabled = true;
+        }
     }
 
     /**
@@ -188,7 +190,7 @@ class Autoloader
             if ($file = $this->locateFile($class)) {
                 apc_store($class, $file);
             }
-        } else {
+        } else if (!$this->apcEnabled) {
             $file = $this->locateFile($class);
         }
 

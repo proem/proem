@@ -53,14 +53,11 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $r->result  = false;
         $proem      = new Proem;
         $proem
-            ->attachEventListener([
-                'name'      => 'proem.post.in.dispatch',
-                'callback'  => function($e) use ($r) {
-                    if ($e->getServiceManager()->has('foo')) {
-                        $r->result = true;
-                    }
+            ->attachEventListener('proem.post.in.dispatch', function($e) use ($r) {
+                if ($e->getServiceManager()->has('foo')) {
+                    $r->result = true;
                 }
-            ])
+            })
             ->attachPlugin(new \Proem\Ext\Plugin\Foo)
             ->init();
 
@@ -72,63 +69,35 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $results            = new \StdClass;
         $results->triggered = 0;
         $results->event     = false;
-        $results->target    = false;
-        $results->method    = false;
         $results->init      = false;
         $results->shutdown  = false;
 
         (new Proem)
-            ->attachEventListener([
-                'name'      => 'proem.pre.in.response',
-                'callback'  => function($e) use ($results) {
-                    $results->event = $e;
-                    $results->target = $e->getTarget();
-                    $results->method = $e->getMethod();
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.post.in.response',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.pre.in.request',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.post.in.request',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.pre.in.router',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.post.in.router',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.pre.in.dispatch',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])
-            ->attachEventListener([
-                'name'      => 'proem.post.in.dispatch',
-                'callback'  => function($e) use ($results) {
-                    $results->triggered++;
-                }
-            ])->attachEventListeners([
+            ->attachEventListener('proem.pre.in.response', function($e) use ($results) {
+                $results->event = $e;
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.post.in.response', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.pre.in.request', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.post.in.request', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.pre.in.router', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.post.in.router', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.pre.in.dispatch', function($e) use ($results) {
+                $results->triggered++;
+            })
+            ->attachEventListener('proem.post.in.dispatch', function($e) use ($results) {
+                $results->triggered++;
+            })->attachEventListeners([
                 [
                     'name'      => 'proem.init',
                     'callback'  => function($e) use ($results) {
@@ -140,8 +109,6 @@ class ProemTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(8, $results->triggered);
         $this->assertInstanceOf('Proem\Bootstrap\Signal\Event\Bootstrap', $results->event);
-        $this->assertInstanceOf('Proem\Api\Bootstrap\Filter\Event\Response', $results->target);
         $this->assertTrue($results->init);
-        $this->assertEquals('preIn', $results->method);
     }
 }

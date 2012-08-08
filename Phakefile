@@ -25,23 +25,9 @@ group('dev', function() {
             $report = ' --coverage-html tests/coverage ';
         }
         if (isset($args['verbose'])) {
-            system('phpunit' . $report . '--colors --debug --verbose --configuration tests/phpunit.xml');
+            system('vendor/bin/phpunit' . $report . '--colors --debug --verbose --configuration tests/phpunit.xml');
         } else {
-            system('phpunit' . $report . '--colors --configuration tests/phpunit.xml');
-        }
-    });
-
-    desc('Run apache benchmark against the url set within the PROEM_URL environment variable');
-    task('ab', function($args) {
-        if ($url = getenv('PROEM_URL')) {
-            if (isset($args['ab-args'])) {
-                $ab_args = $args['ab-args'];
-            } else {
-                $ab_args = '-n 1000 -c 50';
-            }
-            system("ab $ab_args $url");
-        } else {
-            echo "The PROEM_URL environment variable does not appear to exist!\n";
+            system('vendor/bin/phpunit' . $report . '--colors --configuration tests/phpunit.xml');
         }
     });
 
@@ -62,7 +48,7 @@ group('dev', function() {
         rename('proem.phar', '../build/proem.phar');
         chdir('../');
         if (isset($args['runtests'])) {
-            system('phpunit --colors tests/phar-test.php');
+            system('vendor/bin/phpunit --colors tests/phar-test.php');
         }
     });
 

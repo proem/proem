@@ -16,6 +16,7 @@
     "php": ">=5.4.0"
   },
   "require-dev": {
-    "jaz303/phake": "dev-master"
+    "jaz303/phake": "dev-master",
+    "EHER/PHPUnit": ">=1.6"
   }
 }

@@ -42,9 +42,8 @@ interface Template
      *
      * @param string $name
      * @param Proem\Api\Routing\Route\Template $route
-     * @todo This method should be renamed to register()
      */
-    public function map($name, Route $route);
+    public function attach($name, Route $route);
 
     /**
      * Recurse through the Routes until a match is found.

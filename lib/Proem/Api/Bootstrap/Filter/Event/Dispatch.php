@@ -51,23 +51,19 @@ class Dispatch extends Event
      *
      * @see Proem\Api\Dispatch\Template
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.in.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.in.dispatch
      */
     public function preIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'pre.in.dispatch',
-                'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) use ($assets) {
-                    if ($e->provides('Proem\Dispatch\Template')) {
-                        $assets->set('dispatch', $e);
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
+            $assets->get('events')->trigger(
+                (new Bootstrap('proem.pre.in.dispatch'))->setServiceManager($assets),
+                function($response) use ($assets) {
+                    if ($response->provides('Proem\Dispatch\Template')) {
+                        $assets->set('dispatch', $response);
                     }
-                },
-            ]);
+                }
+            );
         }
     }
 
@@ -101,19 +97,12 @@ class Dispatch extends Event
      *
      * @see Proem\Api\Dispatch\Stage
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.in.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.in.dispatch
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'post.in.dispatch',
-                'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
-            ]);
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
+            $assets->get('events')->trigger((new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets));
         }
 
         (new DispatchStage($assets));
@@ -123,19 +112,12 @@ class Dispatch extends Event
      * Called prior to outBound.
      *
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap pre.out.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.pre.out.dispatch
      */
     public function preOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'pre.out.dispatch',
-                'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
-            ]);
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
+            $assets->get('events')->trigger((new Bootstrap('proem.pre.out.dispatch'))->setServiceManager($assets));
         }
     }
 
@@ -153,19 +135,12 @@ class Dispatch extends Event
      * Called after outBound.
      *
      * @param Proem\Api\Service\Manager\Template
-     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap post.out.dispatch
+     * @triggers Proem\Api\Bootstrap\Signal\Event\Bootstrap proem.post.out.dispatch
      */
     public function postOut(Manager $assets)
     {
-        if ($assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger([
-                'name'      => 'post.out.dispatch',
-                'params'    => [],
-                'target'    => $this,
-                'method'    => __FUNCTION__,
-                'event'     => (new Bootstrap())->setServiceManager($assets),
-                'callback'  => function($e) {},
-            ]);
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
+            $assets->get('events')->trigger((new Bootstrap('proem.post.out.dispatch'))->setServiceManager($assets));
         }
     }
 }

@@ -30,6 +30,8 @@
  */
 namespace Proem\Api\Util\Opt;
 
+use Proem\Util\Opt\Payload as Payload;
+
 /**
  * The options trait.
  */
@@ -50,7 +52,7 @@ trait Options
             if (isset($defaults[$key]) && ($defaults[$key] instanceof Option)) {
                 $defaults[$key]->setValue($value);
             } else {
-                $defaults[$key] = new Option($value);
+                $defaults[$key] = $value;
             }
         }
 
@@ -67,6 +69,8 @@ trait Options
                 } catch (\RuntimeException $e) {
                     throw new \RuntimeException($e->getMessage());
                 }
+            } else {
+                $payload->set($key, $value);
             }
         }
         return $payload;

@@ -3,7 +3,7 @@
 require_once 'lib/Proem/Autoloader.php';
 
 (new \Proem\Autoloader)
-    ->registerNamespace('Proem', 'lib')
+    ->attachNamespace('Proem', 'lib')
     ->register();
 
 group('proem', function() {
@@ -17,10 +17,17 @@ group('dev', function() {
 
     desc('Run the unit tests');
     task('tests', function($args) {
+        $report = ' ';
+        if (isset($args['coverage'])) {
+            if (!is_dir('tests/coverage')) {
+                mkdir('tests/coverage');
+            }
+            $report = ' --coverage-html tests/coverage ';
+        }
         if (isset($args['verbose'])) {
-            system('phpunit --colors --debug --verbose --configuration tests/phpunit.xml');
+            system('vendor/bin/phpunit' . $report . '--colors --debug --verbose --configuration tests/phpunit.xml');
         } else {
-            system('phpunit --colors --configuration tests/phpunit.xml');
+            system('vendor/bin/phpunit' . $report . '--colors --configuration tests/phpunit.xml');
         }
     });
 
@@ -35,13 +42,13 @@ group('dev', function() {
         $phar->setStub("<?php
         Phar::mapPhar('proem.phar');
         require_once 'phar://proem.phar/Proem/Autoloader.php';
-        (new Proem\Autoloader())->registerNamespaces(['Proem' => 'phar://proem.phar'])->register();
+        (new Proem\Autoloader())->attachNamespaces(['Proem' => 'phar://proem.phar'])->register();
         __HALT_COMPILER();
         ?>");
         rename('proem.phar', '../build/proem.phar');
         chdir('../');
         if (isset($args['runtests'])) {
-            system('phpunit --colors tests/phar-test.php');
+            system('vendor/bin/phpunit --colors tests/phar-test.php');
         }
     });
 

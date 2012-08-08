@@ -40,6 +40,8 @@ use Proem\Util\Opt\Options,
 class Standard implements Template
 {
     /**
+     * TODO: This can likely be removed.
+     *
      * @use Proem\Api\Util\Opt\Options
      */
     use Options;
@@ -52,18 +54,19 @@ class Standard implements Template
     protected $params;
 
     /**
-     * Store target
+     * Store the name of the event
      *
-     * @var object $target
+     * @var string $name
      */
-    protected $target = null;
+    protected $name = null;
 
     /**
-     * Store the method
-     *
-     * @var string
+     * Instantiate the event and set it's name.
      */
-    protected $method = null;
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
 
     /**
      * Set params
@@ -88,53 +91,27 @@ class Standard implements Template
     }
 
     /**
-     * Set the target.
+     * Set the name
      *
-     * The target should be an instance of whatever object
-     * this event was triggered from.
+     * Set the name of the event being triggered.
      *
-     * @param object $target
+     * @param string $name
      * @return Proem\Api\Signal\Event\Template
      */
-    public function setTarget($target)
+    public function setName($name)
     {
-        $this->target = $target;
+        $this->name = $name;
         return $this;
     }
 
     /**
-     * Retrieve target.
+     * Retrieve the event name.
      *
-     * @return object
+     * @return string The name of the event triggered.
      */
-    public function getTarget()
+    public function getName()
     {
-        return $this->target;
-    }
-
-    /**
-     * Set the method.
-     *
-     * The method should be a string representing the name of
-     * the method which has triggered this event.
-     *
-     * @param string $method
-     * @return Proem\Api\Signal\Event\Template
-     */
-    public function setMethod($method)
-    {
-        $this->method = $method;
-        return $this;
-    }
-
-    /**
-     * Retrieve method
-     *
-     * @return object
-     */
-    public function getMethod()
-    {
-        return $this->method;
+        return $this->name;
     }
 
 }

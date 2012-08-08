@@ -36,7 +36,7 @@ namespace Proem\Api\IO\Request;
 interface Template
 {
     /**
-     * Return body of response
+     * Return body of request
      *
      * @param bool $raw
      */

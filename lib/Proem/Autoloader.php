@@ -53,15 +53,30 @@ class Autoloader
     protected $pearPrefixes = [];
 
     /**
+     * Store a flag indicating the abilty to load the APC extension
+     */
+    protected $apcEnabled = false;
+
+    /**
+     * Instantiate our Autoloader and check for APC.
+     */
+    public function __construct()
+    {
+        if (extension_loaded('apc')) {
+            $this->apcEnabled = true;
+        }
+    }
+
+    /**
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
      * @return Proem\Api\Autoloader
      */
-    public function registerNamespaces(array $namespaces)
+    public function attachNamespaces(array $namespaces)
     {
         foreach ($namespaces as $namespace => $paths) {
-            $this->registerNamespace($namespace, $paths);
+            $this->attachNamespace($namespace, $paths);
         }
         return $this;
     }
@@ -73,7 +88,7 @@ class Autoloader
      * @param array|string $paths The path to the namespace
      * @return Proem\Api\Autoloader
      */
-    public function registerNamespace($namespace, $paths)
+    public function attachNamespace($namespace, $paths)
     {
         $this->namespaces[$namespace] = (array) $paths;
         return $this;
@@ -85,10 +100,10 @@ class Autoloader
      * @param array $classes
      * @return Proem\Api\Autoloader
      */
-    public function registerPearPrefixes(array $classes)
+    public function attachPearPrefixes(array $classes)
     {
         foreach ($classes as $prefix => $paths) {
-            $this->registerPearPrefix($prefix, $paths);
+            $this->attachPearPrefix($prefix, $paths);
         }
         return $this;
     }
@@ -100,7 +115,7 @@ class Autoloader
      * @param array|string $paths The path
      * @return Proem\Api\Autoloader
      */
-    public function registerPearPrefix($prefix, $paths)
+    public function attachPearPrefix($prefix, $paths)
     {
         $this->pearPrefixes[$prefix] = (array) $paths;
         return $this;
@@ -148,17 +163,38 @@ class Autoloader
         }
 
         if ($file = $this->locate($class)) {
-            include_once $file;
+            include $file;
         } else {
             if (substr($class, 0, 5) == 'Proem') {
                 $api_class = str_replace('Proem\\', 'Proem\\Api\\', $class);
                 if ($file = $this->locate($api_class)) {
-                    include_once $file;
+                    include $file;
                     class_alias($api_class, $class);
                 }
             }
         }
+
         return $this;
+    }
+
+    /**
+     * A simple wrapper around locateFile() that first
+     * checks to see if we are using APC caching.
+     *
+     * @param string $class The name of the class
+     * @return string|null The path, if found
+     */
+    private function locate($class)
+    {
+        if ($this->apcEnabled && !$file = apc_fetch($class)) {
+            if ($file = $this->locateFile($class)) {
+                apc_store($class, $file);
+            }
+        } else if (!$this->apcEnabled) {
+            $file = $this->locateFile($class);
+        }
+
+        return $file;
     }
 
     /**
@@ -167,7 +203,7 @@ class Autoloader
      * @param string $class The name of the class
      * @return string|null The path, if found
      */
-    private function locate($class)
+    private function locateFile($class)
     {
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);

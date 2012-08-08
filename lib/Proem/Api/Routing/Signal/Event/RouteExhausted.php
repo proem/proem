@@ -34,7 +34,7 @@ use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
 
 /**
- * Proem\Api\Bootstrap\Signal\Event\Bootstrap
+ * Proem\Api\Routing\Signal\Event\RouteExhausted
  *
  * A custom event used by the router to communicate exhausted routes
  */

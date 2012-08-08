@@ -62,6 +62,18 @@ class Standard implements Template
     protected $provides = [];
 
     /**
+     * Magic method proxies through to get()
+     *
+     * @param string $index The index the asset will be referenced by.
+     * @param Proem\Api\Service\Asset\Template $asset
+     * @return Proem\Api\Service\Manager\Template
+     */
+    public function __set($index, Asset $asset)
+    {
+        return $this->set($index, $asset);
+    }
+
+    /**
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
@@ -84,6 +96,17 @@ class Standard implements Template
     public function getContainer($index)
     {
         return isset($this->assets[$index]) ? $this->assets[$index] : null;
+    }
+
+    /**
+     * Magic method proxies through to get().
+     *
+     * @param string $index The index the asset is referenced by
+     * @return object The object provided by the asset container
+     */
+    public function __get($index)
+    {
+        return $this->get($index);
     }
 
     /**

@@ -31,12 +31,13 @@
 namespace Proem\Api\Routing\Route;
 
 use Proem\Routing\Route\Template,
-    Proem\Routing\Route\Generic;
+    Proem\Routing\Route\Generic,
+    Proem\IO\Request\Template as Request;
 
 /**
  * Proem's standard route.
  *
- * This rouyte should cover most use cases and is currently the only
+ * This route should cover most use cases and is currently the only
  * route provided within the framework.
  */
 class Standard extends Generic
@@ -103,20 +104,24 @@ class Standard extends Generic
      * to be added to the Payload object as params (which are in turn transformed
      * into key => value pairs).
      *
-     * @param string $uri
+     * @param Proem\IO\Request\Template $request
      * @return Proem\Api\Routing\Route\Template
      */
-    public function process($uri)
+    public function process(Request $request)
     {
-        if (!$this->options->rule) {
+        if (!isset($this->options['rule'])) {
             return false;
         }
 
-        $rule               = $this->options->rule;
-        $target             = $this->options->targets;
-        $custom_filters     = $this->options->filters;
+        $rule               = $this->options['rule'];
+        $target             = isset($this->options['targets']) ? $this->options['targets'] : [];
+        $custom_filters     = isset($this->options['filters']) ? $this->options['filters'] : [];
+        $method             = isset($this->options['method']) ? $this->options['method'] : 'GET';
+
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
+        $uri                = $request->getRequestUri();
+        $requestMethod      = $request->getMethod();
 
         $keys   = [];
         $values = [];
@@ -130,13 +135,13 @@ class Standard extends Generic
             function($matches) use ($custom_filters, $default_tokens, $default_filters)
             {
                 $key = str_replace(':', '', $matches[0]);
-                if (array_key_exists($key, $custom_filters)) {
-                    if (array_key_exists($custom_filters[$key], $default_filters)) {
+                if (isset($custom_filters[$key])) {
+                    if (isset($default_filters[$custom_filters[$key]])) {
                         return '(' . $default_filters[$custom_filters[$key]] . ')';
                     } else {
                         return '(' . $custom_filters[$key] . ')';
                     }
-                } else if (array_key_exists($key, $default_tokens)) {
+                } else if (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
                     return $default_filters[':default'];
@@ -145,7 +150,7 @@ class Standard extends Generic
             $rule
         ) . '/?';
 
-        if (preg_match('@^' . $regex . '$@', $uri, $values)) {
+        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values) && $requestMethod == $method) {
             array_shift($values);
 
             foreach ($keys as $index => $value) {
@@ -158,7 +163,6 @@ class Standard extends Generic
                 $params[$key] = $value;
             }
 
-            $this->setMatch();
             foreach ($params as $key => $value) {
                 // If the string within $value looks like a / seperated string,
                 // parse it into an array and send it to setParams() instead
@@ -170,9 +174,10 @@ class Standard extends Generic
                 }
             }
 
+            $this->setMatch();
+            $this->getPayload()->set('request', $request);
             $this->getPayload()->setPopulated();
         }
         return $this;
     }
-
 }

@@ -50,9 +50,9 @@ class FakeRequestTest extends \PHPUnit_Framework_TestCase
     public function testCanSetGetParams()
     {
         $request = new Fake(null);
-        $request->param->set('foo', 'bar');
-        $this->assertEquals('bar', $request->param->foo);
-        $this->assertEquals('boo', $request->param->get('doesnotexist', 'boo'));
+        $request->setGetData(['foo' => 'bar']);
+        $this->assertEquals('bar', $request->get->foo);
+        $this->assertEquals('boo', $request->get->get('doesnotexist', 'boo'));
     }
 
     public function testCanManipulateMethodAndType()

@@ -62,6 +62,31 @@ class Standard implements Template
     }
 
     /**
+     * Set a param
+     *
+     * @param string $index
+     * @param mixed $value
+     * @return Proem\Api\Signal\Event\Template
+     */
+    public function setParam($index, $value)
+    {
+        $this->params[$index] = $value;
+        return $this;
+    }
+
+    /**
+     * Retrieve a parameter.
+     *
+     * @return mixed
+     */
+    public function getParam($index)
+    {
+        if (isset($this->params[$index])) {
+            return $this->params[$index];
+        }
+    }
+
+    /**
      * Set params
      *
      * @param array $params

@@ -60,7 +60,7 @@ class Standard implements Template
      *
      * @param Proem\IO\Request\Template $request
      */
-    public function __construct($request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
         $this->routes  = new KeyValStore;

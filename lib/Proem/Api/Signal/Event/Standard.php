@@ -40,13 +40,6 @@ use Proem\Util\Opt\Options,
 class Standard implements Template
 {
     /**
-     * TODO: This can likely be removed.
-     *
-     * @use Proem\Api\Util\Opt\Options
-     */
-    use Options;
-
-    /**
      * Store params
      *
      * @var array
@@ -66,6 +59,31 @@ class Standard implements Template
     public function __construct($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Set a param
+     *
+     * @param string $index
+     * @param mixed $value
+     * @return Proem\Api\Signal\Event\Template
+     */
+    public function setParam($index, $value)
+    {
+        $this->params[$index] = $value;
+        return $this;
+    }
+
+    /**
+     * Retrieve a parameter.
+     *
+     * @return mixed
+     */
+    public function getParam($index)
+    {
+        if (isset($this->params[$index])) {
+            return $this->params[$index];
+        }
     }
 
     /**

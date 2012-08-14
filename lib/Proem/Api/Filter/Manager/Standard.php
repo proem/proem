@@ -87,7 +87,7 @@ class Standard implements Template
      * @param int $priority
      * @return Proem\Api\Filter\Manager\Template
      */
-    public function attachEvent(Event $event, $priority = self::RESPONSE_EVENT_PRIORITY)
+    public function attachEvent(Event $event, $priority = self::DISPATCH_EVENT_PRIORITY)
     {
         $this->queue->insert($event, $priority);
         return $this;

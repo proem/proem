@@ -34,7 +34,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAsset()
     {
-        $r = new Router('');
+        $r = new Router(new Request('/'));
         $this->assertInstanceOf('\Proem\Routing\Router\Template', $r);
     }
 

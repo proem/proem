@@ -40,13 +40,6 @@ use Proem\Util\Opt\Options,
 class Standard implements Template
 {
     /**
-     * TODO: This can likely be removed.
-     *
-     * @use Proem\Api\Util\Opt\Options
-     */
-    use Options;
-
-    /**
      * Store params
      *
      * @var array

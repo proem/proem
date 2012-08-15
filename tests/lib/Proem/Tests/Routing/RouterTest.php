@@ -28,7 +28,7 @@ namespace Proem\Tests;
 
 use Proem\Routing\Router\Standard as Router,
     Proem\Routing\Route\Standard as Route,
-    Proem\Api\IO\Request\Http\Fake as Request;
+    Proem\IO\Request\Http\Fake as Request;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {

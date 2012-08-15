@@ -35,12 +35,6 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Proem', new Proem);
     }
 
-    public function testCascadingFilesystem()
-    {
-        $proem = new Proem;
-        $this->assertTrue($proem->somethingNew());
-    }
-
     /**
      * This test injects a Foo object into the main service manager
      * via a plugin (\Proem\Ext\Plugin\Foo - Found in Fixtures) which

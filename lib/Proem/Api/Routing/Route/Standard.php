@@ -144,7 +144,7 @@ class Standard extends Generic
                 } else if (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
-                    return $default_filters[':default'];
+                    return '(' . $default_filters[':default'] . ')';
                 }
             },
             $rule

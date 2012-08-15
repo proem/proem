@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Route
+ * @namespace Proem\Routing\Route
  */
-namespace Proem\Api\Routing\Route;
+namespace Proem\Routing\Route;
 
 use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic,

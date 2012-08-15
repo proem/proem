@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Process
+ * @namespace Proem\Util\Process
  */
-namespace Proem\Api\Util\Process;
+namespace Proem\Util\Process;
 
 /**
  * A simple wrapper around call_user_func_array

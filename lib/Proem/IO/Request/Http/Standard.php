@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\IO\Request\Http
+ * @namespace Proem\IO\Request\Http
  */
-namespace Proem\Api\IO\Request\Http;
+namespace Proem\IO\Request\Http;
 
 use Proem\IO\Request\Template,
     Proem\Util\Storage\KeyValStore;
@@ -153,7 +153,7 @@ class Standard implements Template
      * Set the content type.
      *
      * @param string $type
-     * @return Proem\Api\IO\Request\Template
+     * @return Proem\IO\Request\Template
      */
     public function setContentType($type)
     {
@@ -192,7 +192,7 @@ class Standard implements Template
      * Set the request method.
      *
      * @param string $method
-     * @return Proem\Api\IO\Request\Template
+     * @return Proem\IO\Request\Template
      */
     public function setMethod($method)
     {
@@ -212,7 +212,7 @@ class Standard implements Template
      * Set param data from a Router Payload.
      *
      * @param Proem\Util\Storage\KeyValStore
-     * @return Proem\Api\IO\Request\Template
+     * @return Proem\IO\Request\Template
      */
     public function injectPayload(KeyValStore $payload)
     {

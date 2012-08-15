@@ -26,15 +26,15 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Signal\Event
+ * @namespace Proem\Routing\Signal\Event
  */
-namespace Proem\Api\Routing\Signal\Event;
+namespace Proem\Routing\Signal\Event;
 
 use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
 
 /**
- * Proem\Api\Routing\Signal\Event\RouteDispatch
+ * Proem\Routing\Signal\Event\RouteDispatch
  *
  * The event triggered to dispatch a route.
  */

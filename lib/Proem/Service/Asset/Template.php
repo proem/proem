@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Service\Asset
+ * @namespace Proem\Service\Asset
  */
-namespace Proem\Api\Service\Asset;
+namespace Proem\Service\Asset;
 
 use Proem\Service\Manager\Template as Manager;
 
@@ -49,7 +49,7 @@ interface Template
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Api\Service\Asset\Template
+     * @return Proem\Service\Asset\Template
      */
     public function setParam($index, $value);
 
@@ -57,7 +57,7 @@ interface Template
      * Set multiple parameters use a key => value array.
      *
      * @param array $params
-     * @return Proem\Api\Service\Asset\Template
+     * @return Proem\Service\Asset\Template
      */
     public function setParams(array $params);
 
@@ -80,14 +80,14 @@ interface Template
      *
      * @param string The object this asset provides
      * @param Closure $closure
-     * @return Proem\Api\Service\Asset\Template
+     * @return Proem\Service\Asset\Template
      */
     public function set($provides, \Closure $closure);
 
     /**
      * Validate and retrieve an instantiated asset.
      *
-     * @param Proem\Api\Service\Manager\Template $assetManager
+     * @param Proem\Service\Manager\Template $assetManager
      */
     public function get(Manager $assetManager = null);
 

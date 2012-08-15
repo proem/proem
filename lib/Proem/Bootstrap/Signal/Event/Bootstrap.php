@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Bootstrap\Signal\Event\Bootstrap
+ * @namespace Proem\Bootstrap\Signal\Event\Bootstrap
  */
-namespace Proem\Api\Bootstrap\Signal\Event;
+namespace Proem\Bootstrap\Signal\Event;
 
 use Proem\Service\Manager\Template as Manager,
     Proem\Signal\Event\Standard as StandardEvent;
@@ -41,7 +41,7 @@ class Bootstrap extends StandardEvent
     /**
      * Store the service manager.
      *
-     * @var Proem\Api\Service\Manager\Template
+     * @var Proem\Service\Manager\Template
      */
     protected $serviceManager;
 
@@ -55,8 +55,8 @@ class Bootstrap extends StandardEvent
     /**
      * Set the service manager
      *
-     * @param Proem\Api\Service\Manager $serviceManager
-     * @return Proem\Api\Bootstrap\Signal\Event\Bootstrap
+     * @param Proem\Service\Manager $serviceManager
+     * @return Proem\Bootstrap\Signal\Event\Bootstrap
      */
     public function setServiceManager(Manager $serviceManager)
     {
@@ -67,7 +67,7 @@ class Bootstrap extends StandardEvent
     /**
      * Retrieve the service manager
      *
-     * @return Proem\Api\Service\Manager
+     * @return Proem\Service\Manager
      */
     public function getServiceManager()
     {
@@ -78,7 +78,7 @@ class Bootstrap extends StandardEvent
      * Set the environment
      *
      * @param string $environment
-     * @return Proem\Api\Bootstrap\Signal\Event\Bootstrap
+     * @return Proem\Bootstrap\Signal\Event\Bootstrap
      */
     public function setEnvironment($environment)
     {

@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Filter\Manager
+ * @namespace Proem\Filter\Manager
  */
-namespace Proem\Api\Filter\Manager;
+namespace Proem\Filter\Manager;
 
 use Proem\Filter\Event\Template as Event,
     Proem\Util\Storage\Queue,
@@ -51,14 +51,14 @@ class Standard implements Template
     /**
      * Store the priority queue.
      *
-     * @var Proem\Api\Util\Storage\Queue $queue
+     * @var Proem\Util\Storage\Queue $queue
      */
     protected $queue;
 
     /**
      * Store the service manager.
      *
-     * @var Proem\Api\Service\Manager
+     * @var Proem\Service\Manager
      */
     protected $serviceManager;
 
@@ -67,7 +67,7 @@ class Standard implements Template
      *
      * This sets up the queues and service manager.
      *
-     * @param Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Manager\Template
      */
     public function __construct()
     {
@@ -83,9 +83,9 @@ class Standard implements Template
     /**
      * Insert an event into the queue
      *
-     * @param Proem\Api\Filter\Event\Template $event
+     * @param Proem\Filter\Event\Template $event
      * @param int $priority
-     * @return Proem\Api\Filter\Manager\Template
+     * @return Proem\Filter\Manager\Template
      */
     public function attachEvent(Event $event, $priority = self::DISPATCH_EVENT_PRIORITY)
     {
@@ -96,7 +96,7 @@ class Standard implements Template
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Api\Filter\Event\Template
+     * @return Proem\Filter\Event\Template
      */
     public function getInitialEvent()
     {
@@ -106,7 +106,7 @@ class Standard implements Template
     /**
      * Retrieve the next event in the filter
      *
-     * @return Proem\Api\Filter\Event\Template
+     * @return Proem\Filter\Event\Template
      */
     public function getNextEvent()
     {
@@ -117,7 +117,7 @@ class Standard implements Template
     /**
      * Retrieve the Service Manager
      *
-     * @return Proem\Api\Service\Manager\Template
+     * @return Proem\Service\Manager\Template
      */
     public function getServiceManager()
     {
@@ -137,7 +137,7 @@ class Standard implements Template
     /**
      * Get the first event in the filter and execute it's init() method
      *
-     * @return Proem\Api\Filter\Event\Template
+     * @return Proem\Filter\Event\Template
      */
     public function init()
     {

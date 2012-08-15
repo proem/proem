@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\IO\Response
+ * @namespace Proem\IO\Response
  */
-namespace Proem\Api\IO\Response;
+namespace Proem\IO\Response;
 
 /**
  * Interface that all Response objects must implement.
@@ -43,7 +43,7 @@ interface Template
      * property should be incremented accordingly.
      *
      * @param string $string
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function appendToBody($string);
 

@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Signal\Event
+ * @namespace Proem\Signal\Event
  */
-namespace Proem\Api\Signal\Event;
+namespace Proem\Signal\Event;
 
 use Proem\Util\Opt\Options,
     Proem\Util\Opt\Option;
@@ -47,7 +47,7 @@ interface Template
      * Set params
      *
      * @param array $params
-     * @return Proem\Api\Signal\Event\Template
+     * @return Proem\Signal\Event\Template
      */
     public function setParams(array $params);
 
@@ -64,7 +64,7 @@ interface Template
      * The name of the event that was triggered.
      *
      * @param string $name
-     * @return Proem\Api\Signal\Event\Template
+     * @return Proem\Signal\Event\Template
      */
     public function setName($name);
 

@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Route
+ * @namespace Proem\Routing\Route
  */
-namespace Proem\Api\Routing\Route;
+namespace Proem\Routing\Route;
 
 use Proem\IO\Request\Template as Request;
 

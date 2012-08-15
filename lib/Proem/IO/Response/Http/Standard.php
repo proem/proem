@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\IO\Response\Http
+ * @namespace Proem\IO\Response\Http
  */
-namespace Proem\Api\IO\Response\Http;
+namespace Proem\IO\Response\Http;
 
 use Proem\IO\Response\Template,
     Proem\Util\Storage\KeyValStore;
@@ -62,7 +62,7 @@ class Standard implements Template
     /**
      * Store headers
      *
-     * @var Proem\Api\Util\Storage\KeyValStore
+     * @var Proem\Util\Storage\KeyValStore
      */
     protected $headers;
 
@@ -139,7 +139,7 @@ class Standard implements Template
      * not remove it all together as PHP itself can produce this
      * same heeader.
      *
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function silence()
     {
@@ -151,7 +151,7 @@ class Standard implements Template
      * Set the HTTP version.
      *
      * @param float $version
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function setHttpVersion($version)
     {
@@ -173,7 +173,7 @@ class Standard implements Template
      * Set the HTTP status.
      *
      * @param int $status
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function setHttpStatus($status)
     {
@@ -207,7 +207,7 @@ class Standard implements Template
      *
      * @param string $index
      * @param string $value
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function setHeader($index, $value)
     {
@@ -231,7 +231,7 @@ class Standard implements Template
     /**
      * Retrieve HTTP headers.
      *
-     * @return Proem\Api\Util\Storage\KeyValStore
+     * @return Proem\Util\Storage\KeyValStore
      */
     public function getHeaders()
     {
@@ -245,7 +245,7 @@ class Standard implements Template
      * property is incremented accordingly.
      *
      * @param string $string
-     * @return Proem\Api\IO\Response\Template;
+     * @return Proem\IO\Response\Template;
      */
     public function appendToBody($string)
     {

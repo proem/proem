@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Route
+ * @namespace Proem\Routing\Route
  */
-namespace Proem\Api\Routing\Route;
+namespace Proem\Routing\Route;
 
 use Proem\Routing\Route\Template,
     Proem\Routing\Route\Generic,
@@ -105,7 +105,7 @@ class Standard extends Generic
      * into key => value pairs).
      *
      * @param Proem\IO\Request\Template $request
-     * @return Proem\Api\Routing\Route\Template
+     * @return Proem\Routing\Route\Template
      */
     public function process(Request $request)
     {

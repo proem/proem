@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Router
+ * @namespace Proem\Routing\Router
  */
-namespace Proem\Api\Routing\Router;
+namespace Proem\Routing\Router;
 
 use Proem\Routing\Router\Template,
     Proem\Routing\Route\Template as Route,
@@ -51,7 +51,7 @@ class Standard implements Template
     /**
      * Store our routes
      *
-     * @var Proem\Api\Util\Storage\KeyValStore
+     * @var Proem\Util\Storage\KeyValStore
      */
     protected $routes;
 
@@ -70,8 +70,8 @@ class Standard implements Template
      * Store route objects.
      *
      * @param string $name
-     * @param Proem\Api\Routing\Route\Template $route
-     * @return Proem\Api\Signal\Manager\Template
+     * @param Proem\Routing\Route\Template $route
+     * @return Proem\Signal\Manager\Template
      */
     public function attach($name, Route $route)
     {
@@ -90,7 +90,7 @@ class Standard implements Template
      * internal pointer is reset so the Router can be used
      * again.
      *
-     * @return bool|Proem\Api\Routing\Route\Payload
+     * @return bool|Proem\Routing\Route\Payload
      */
     public function route()
     {

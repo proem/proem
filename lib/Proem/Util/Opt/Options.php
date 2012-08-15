@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Opt
+ * @namespace Proem\Util\Opt
  */
-namespace Proem\Api\Util\Opt;
+namespace Proem\Util\Opt;
 
 use Proem\Util\Opt\Payload as Payload;
 
@@ -42,7 +42,7 @@ trait Options
      *
      * @param array $defaults Default Options
      * @param array $options User supplied Options
-     * @return Proem\Api\Util\Opt\Payload End result of merging default options with validated user options
+     * @return Proem\Util\Opt\Payload End result of merging default options with validated user options
      */
     public function setOptions($defaults, $options)
     {

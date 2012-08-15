@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Service\Manager
+ * @namespace Proem\Service\Manager
  */
-namespace Proem\Api\Service\Manager;
+namespace Proem\Service\Manager;
 
 use Proem\Service\Manager\Template,
     Proem\Service\Asset\Template as Asset;
@@ -42,7 +42,7 @@ use Proem\Service\Manager\Template,
  * These containers contain the parameters required to instantiate an asset as
  * well as a closure capable of returning a configured and instantiated asset.
  *
- * @see Proem\Api\Service\Asset\Standard
+ * @see Proem\Service\Asset\Standard
  */
 class Standard implements Template
 {
@@ -65,8 +65,8 @@ class Standard implements Template
      * Magic method proxies through to get()
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Service\Asset\Template $asset
-     * @return Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Asset\Template $asset
+     * @return Proem\Service\Manager\Template
      */
     public function __set($index, Asset $asset)
     {
@@ -77,8 +77,8 @@ class Standard implements Template
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Service\Asset\Template $asset
-     * @return Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Asset\Template $asset
+     * @return Proem\Service\Manager\Template
      */
     public function set($index, Asset $asset)
     {
@@ -91,7 +91,7 @@ class Standard implements Template
      * Retrieve an asset container by named index.
      *
      * @param string $index The index the asset is referenced by.
-     * @return Proem\Api\Service\Asset\Template
+     * @return Proem\Service\Asset\Template
      */
     public function getContainer($index)
     {

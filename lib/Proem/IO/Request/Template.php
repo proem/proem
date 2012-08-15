@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\IO\Request
+ * @namespace Proem\IO\Request
  */
-namespace Proem\Api\IO\Request;
+namespace Proem\IO\Request;
 
 /**
  * Interface that all request object must implement.

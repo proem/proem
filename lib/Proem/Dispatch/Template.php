@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem\Api\Dispatch
+ * @namespace Proem\Dispatch
  */
-namespace Proem\Api\Dispatch;
+namespace Proem\Dispatch;
 
 use Proem\Service\Manager\Template as Manager,
     Proem\Routing\Route\Payload as Payload;
@@ -40,15 +40,15 @@ interface Template
     /**
      * Setup the dispatcher
      *
-     * @param Proem\Api\Service\Manager\Template $assets
+     * @param Proem\Service\Manager\Template $assets
      */
     public function __construct(Manager $assets);
 
     /**
      * Set the payload object
      *
-     * @param Proem\Api\Routing\Route\Payload $payload
-     * @return Proem\Api\Dispatch\Template
+     * @param Proem\Routing\Route\Payload $payload
+     * @return Proem\Dispatch\Template
      */
     public function setPayload(Payload $payload);
 
@@ -62,7 +62,7 @@ interface Template
     /**
      * Dispatch the current controller/action
      *
-     * @return Proem\Api\Dispatch\Template
+     * @return Proem\Dispatch\Template
      */
     public function dispatch();
 }

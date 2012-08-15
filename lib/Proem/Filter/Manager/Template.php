@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Filter\Manager
+ * @namespace Proem\Filter\Manager
  */
-namespace Proem\Api\Filter\Manager;
+namespace Proem\Filter\Manager;
 
 use Proem\Filter\Event\Template as Event,
     Proem\Util\Storage\Queue,
@@ -44,23 +44,23 @@ interface Template
     /**
      * Insert an event into the queue
      *
-     * @param Proem\Api\Filter\Event\Template $event
+     * @param Proem\Filter\Event\Template $event
      * @param int $priority
-     * @return Proem\Api\Filter\Manager\Template
+     * @return Proem\Filter\Manager\Template
      */
     public function attachEvent(Event $event, $priority);
 
     /**
      * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Api\Filter\Event\Template
+     * @return Proem\Filter\Event\Template
      */
     public function getInitialEvent();
 
     /**
      * Retrieve the next event in the filter
      *
-     * @return Proem\Api\Filter\Event\Generic
+     * @return Proem\Filter\Event\Generic
      */
     public function getNextEvent();
 
@@ -74,7 +74,7 @@ interface Template
     /**
      * Get the first event in the filter and execute it's init() method
      *
-     * @return Proem\Api\Filter\Event\Template
+     * @return Proem\Filter\Event\Template
      */
     public function init();
 }

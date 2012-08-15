@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Opt
+ * @namespace Proem\Util\Opt
  */
-namespace Proem\Api\Util\Opt;
+namespace Proem\Util\Opt;
 
 use Proem\Util\Storage\KeyValStore;
 

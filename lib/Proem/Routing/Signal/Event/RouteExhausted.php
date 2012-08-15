@@ -26,15 +26,15 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Signal\Event
+ * @namespace Proem\Routing\Signal\Event
  */
-namespace Proem\Api\Routing\Signal\Event;
+namespace Proem\Routing\Signal\Event;
 
 use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
 
 /**
- * Proem\Api\Routing\Signal\Event\RouteExhausted
+ * Proem\Routing\Signal\Event\RouteExhausted
  *
  * A custom event used by the router to communicate exhausted routes
  */

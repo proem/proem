@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Signal\Manager
+ * @namespace Proem\Signal\Manager
  */
-namespace Proem\Api\Signal\Manager;
+namespace Proem\Signal\Manager;
 
 use Proem\Util\Storage\Queue,
     Proem\Util\Process\Callback,
@@ -70,7 +70,7 @@ class Standard implements Template
      * named event that will need to be removed seperately.
      *
      * @param string $name
-     * @return Proem\Api\Signal\Manager\Template
+     * @return Proem\Signal\Manager\Template
      */
     public function remove($name)
     {
@@ -107,7 +107,7 @@ class Standard implements Template
      * @param callable $callback The callback to execute when the event is triggered.
      * @param int $priority The priority at which to execute this listener.
      *
-     * @return Proem\Api\Signal\Manager\Template
+     * @return Proem\Signal\Manager\Template
      */
     public function attach($name, Callable $callback, $priority = 0)
     {
@@ -157,7 +157,7 @@ class Standard implements Template
      * @param Proem\Signal\Event\Standard $event The event being triggered.
      * @param callable $callback A callback that can be used to respond to any response sent back from a listener.
      *
-     * @return Proem\Api\Signal\Manager\Template
+     * @return Proem\Signal\Manager\Template
      */
     public function trigger(Event $event, Callable $callback = null)
     {

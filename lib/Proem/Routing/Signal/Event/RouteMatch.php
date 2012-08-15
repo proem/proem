@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Signal\Event
+ * @namespace Proem\Routing\Signal\Event
  */
-namespace Proem\Api\Routing\Signal\Event;
+namespace Proem\Routing\Signal\Event;
 
 use Proem\Signal\Event\Standard,
     Proem\Routing\Route\Payload;
@@ -41,14 +41,14 @@ class RouteMatch extends Standard
     /**
      * Store the routes payload
      *
-     * @var Proem\Api\Dispatch\Payload $payload
+     * @var Proem\Dispatch\Payload $payload
      */
     protected $payload;
 
     /**
      * Set the payload
      *
-     * @param Proem\Api\Dispatch\Payload $payload
+     * @param Proem\Dispatch\Payload $payload
      */
     public function setPayload(Payload $payload)
     {
@@ -59,7 +59,7 @@ class RouteMatch extends Standard
     /**
      * Retrieve the payload
      *
-     * @return Proem\Api\Dispatch\Payload $payload
+     * @return Proem\Dispatch\Payload $payload
      */
     public function getPayload()
     {

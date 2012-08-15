@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Storage
+ * @namespace Proem\Util\Storage
  */
-namespace Proem\Api\Util\Storage;
+namespace Proem\Util\Storage;
 
 /**
  * A simple, generic key => value storage mechanism
@@ -93,7 +93,7 @@ class KeyValStore implements \Iterator
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Api\Util\Storage\KeyValStore
+     * @return Proem\Util\Storage\KeyValStore
      */
     public function set($index, $value)
     {
@@ -117,7 +117,7 @@ class KeyValStore implements \Iterator
      * Remove an item by index
      *
      * @param string $index
-     * @return Proem\Api\Util\Storage\KeyValStore
+     * @return Proem\Util\Storage\KeyValStore
      */
     public function remove($index)
     {

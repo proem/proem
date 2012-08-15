@@ -31,9 +31,9 @@
  */
 
 /**
- * @namespace Proem\Api\IO\Request\Http
+ * @namespace Proem\IO\Request\Http
  */
-namespace Proem\Api\IO\Request\Http;
+namespace Proem\IO\Request\Http;
 
 use Proem\IO\Request\Template,
     Proem\Util\Storage\KeyValStore;

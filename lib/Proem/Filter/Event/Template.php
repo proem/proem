@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Filter\Event
+ * @namespace Proem\Filter\Event
  */
-namespace Proem\Api\Filter\Event;
+namespace Proem\Filter\Event;
 
 use Proem\Service\Manager\Template as ServiceManager;
 
@@ -40,14 +40,14 @@ interface Template
     /**
      * Define the method to be called on the way into the filter.
      *
-     * @param Proem\Api\Service\Manager\Template $assets
+     * @param Proem\Service\Manager\Template $assets
      */
     public function inBound(ServiceManager $assets);
 
     /**
      * Define the method to be called on the way out of the filter.
      *
-     * @param Proem\Api\Service\Manager\Template $assets
+     * @param Proem\Service\Manager\Template $assets
      */
     public function outBound(ServiceManager $assets);
 }

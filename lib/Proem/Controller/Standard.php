@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem\Api\Controller
+ * @namespace Proem\Controller
  */
-namespace Proem\Api\Controller;
+namespace Proem\Controller;
 
 use Proem\Controller\Template as ControllerTemplate,
     Proem\Bootstrap\Signal\Event\Bootstrap as Bootstrap,
@@ -41,7 +41,7 @@ class Standard implements ControllerTemplate
     /**
      * Store the service manager.
      *
-     * @var Proem\Api\Service\Manager\Template
+     * @var Proem\Service\Manager\Template
      */
     protected $assets;
 
@@ -51,7 +51,7 @@ class Standard implements ControllerTemplate
      * This construct has been marked final so that it can not
      * be overriden by child implementations.
      *
-     * @param Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Manager\Template
      */
     public final function __construct(ServiceManager $assets)
     {

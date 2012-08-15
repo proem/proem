@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util
+ * @namespace Proem\Util
  */
-namespace Proem\Api\Util;
+namespace Proem\Util;
 
 /**
  * A utitlity providing array helpers.

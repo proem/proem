@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Route
+ * @namespace Proem\Routing\Route
  */
-namespace Proem\Api\Routing\Route;
+namespace Proem\Routing\Route;
 
 use Proem\Util\Storage\KeyValStore;
 
@@ -57,7 +57,7 @@ class Payload extends KeyValStore
     /**
      * Set the populated flag
      *
-     * @return Proem\Api\Routing\Route\Payload
+     * @return Proem\Routing\Route\Payload
      */
     public function setPopulated()
     {
@@ -71,7 +71,7 @@ class Payload extends KeyValStore
      * Merges the params array into indivual properties if they don't already exist.
      * Removes the Request object which is only needed by Routes that are dispatching a callback.
      *
-     * @return Proem\Api\Routing\Route\Payload
+     * @return Proem\Routing\Route\Payload
      */
     public function prepare()
     {

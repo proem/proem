@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Route
+ * @namespace Proem\Routing\Route
  */
-namespace Proem\Api\Routing\Route;
+namespace Proem\Routing\Route;
 
 use Proem\Routing\Route\Payload,
     Proem\Util\ArrayHelper,
@@ -42,7 +42,7 @@ use Proem\Routing\Route\Payload,
 abstract class Generic implements Template
 {
     /**
-     * @uses Proem\Api\Util\ArrayHelper
+     * @uses Proem\Util\ArrayHelper
      */
     use ArrayHelper;
 
@@ -70,7 +70,7 @@ abstract class Generic implements Template
     /**
      * Store matched parameters within a Dispatch\Payload object.
      *
-     * @var Proem\Api\Routing\Route\Payload
+     * @var Proem\Routing\Route\Payload
      */
     protected $payload = null;
 
@@ -114,7 +114,7 @@ abstract class Generic implements Template
     /**
      * Set matched flag.
      *
-     * @return Proem\Api\Routing\Route\Template
+     * @return Proem\Routing\Route\Template
      */
     public function setMatch()
     {
@@ -125,7 +125,7 @@ abstract class Generic implements Template
     /**
      * Retrieve the Payload.
      *
-     * @return Proem\Api\Routing\Route\Payload
+     * @return Proem\Routing\Route\Payload
      */
     public function getPayload()
     {

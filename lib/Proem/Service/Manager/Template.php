@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Service\Manager
+ * @namespace Proem\Service\Manager
  */
-namespace Proem\Api\Service\Manager;
+namespace Proem\Service\Manager;
 
 use Proem\Service\Asset\Template as Asset;
 
@@ -41,8 +41,8 @@ interface Template
      * Magic method to proxy through to set()
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Service\Asset\Template $asset
-     * @return Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Asset\Template $asset
+     * @return Proem\Service\Manager\Template
      */
     public function __set($index, Asset $asset);
 
@@ -50,8 +50,8 @@ interface Template
      * Store an Asset container by named index.
      *
      * @param string $index The index the asset will be referenced by.
-     * @param Proem\Api\Service\Asset\Template $asset
-     * @return Proem\Api\Service\Manager\Template
+     * @param Proem\Service\Asset\Template $asset
+     * @return Proem\Service\Manager\Template
      */
     public function set($index, Asset $asset);
 
@@ -59,7 +59,7 @@ interface Template
      * Retrieve an asset container by named index.
      *
      * @param string $index The index the asset is referenced by.
-     * @return Proem\Api\Service\Asset\Template
+     * @return Proem\Service\Asset\Template
      */
     public function getContainer($index);
 

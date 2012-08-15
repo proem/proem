@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Ext\Module
+ * @namespace Proem\Ext\Module
  */
-namespace Proem\Api\Ext\Module;
+namespace Proem\Ext\Module;
 
 use Proem\Ext\Template,
     Proem\Service\Manager\Template as Manager;
@@ -41,7 +41,7 @@ abstract class Generic implements Template
     /**
      * Called on initialisation
      *
-     * @param Proem\Api\Service\Manager\Template $assets
+     * @param Proem\Service\Manager\Template $assets
      * @param string $environment
      */
     public abstract function init(Manager $assets, $environment = null);

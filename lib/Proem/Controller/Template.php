@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem\Api\Controller
+ * @namespace Proem\Controller
  */
-namespace Proem\Api\Controller;
+namespace Proem\Controller;
 
 use Proem\Service\Manager\Template as ServiceManager;
 

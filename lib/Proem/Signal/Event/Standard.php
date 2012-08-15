@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Signal\Event
+ * @namespace Proem\Signal\Event
  */
-namespace Proem\Api\Signal\Event;
+namespace Proem\Signal\Event;
 
 use Proem\Util\Opt\Options,
     Proem\Util\Opt\Option,
@@ -66,7 +66,7 @@ class Standard implements Template
      *
      * @param string $index
      * @param mixed $value
-     * @return Proem\Api\Signal\Event\Template
+     * @return Proem\Signal\Event\Template
      */
     public function setParam($index, $value)
     {
@@ -90,7 +90,7 @@ class Standard implements Template
      * Set params
      *
      * @param array $params
-     * @return Proem\Api\Signal\Event\Template
+     * @return Proem\Signal\Event\Template
      */
     public function setParams(array $params)
     {
@@ -114,7 +114,7 @@ class Standard implements Template
      * Set the name of the event being triggered.
      *
      * @param string $name
-     * @return Proem\Api\Signal\Event\Template
+     * @return Proem\Signal\Event\Template
      */
     public function setName($name)
     {

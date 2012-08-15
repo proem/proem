@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Util\Storage
+ * @namespace Proem\Util\Storage
  */
-namespace Proem\Api\Util\Storage;
+namespace Proem\Util\Storage;
 
 /**
  * Priority queue implementation.
@@ -82,7 +82,7 @@ class Queue implements \IteratorAggregate, \Countable
      *
      * @param mixed $data
      * @param int $priority
-     * @return Proem\Api\Util\Storage\Queue
+     * @return Proem\Util\Storage\Queue
      */
     public function insert($data, $priority = 0)
     {

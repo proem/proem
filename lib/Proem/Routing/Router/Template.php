@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Api\Routing\Router
+ * @namespace Proem\Routing\Router
  */
-namespace Proem\Api\Routing\Router;
+namespace Proem\Routing\Router;
 
 use Proem\Routing\Route\Template as Route;
 
@@ -41,7 +41,7 @@ interface Template
      * Register a route with the router.
      *
      * @param string $name
-     * @param Proem\Api\Routing\Route\Template $route
+     * @param Proem\Routing\Route\Template $route
      */
     public function attach($name, Route $route);
 

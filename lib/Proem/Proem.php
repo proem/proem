@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem\Api
+ * @namespace Proem
  */
-namespace Proem\Api;
+namespace Proem;
 
 use Proem\Service\Manager\Standard as ServiceManager,
     Proem\Signal\Manager\Standard as SignalManager,
@@ -57,21 +57,21 @@ class Proem
     /**
      * Store events
      *
-     * @var Proem\Api\Signal\Manager\Template
+     * @var Proem\Signal\Manager\Template
      */
     protected $events;
 
     /**
      * Store the filter manager
      *
-     * @var Proem\Api\Filter\Manager\Template
+     * @var Proem\Filter\Manager\Template
      */
     protected $filterManager;
 
     /**
      * Store the service manager
      *
-     * @var Proem\Api\Service\Manager\Template
+     * @var Proem\Service\Manager\Template
      */
     protected $serviceManager;
 
@@ -93,10 +93,10 @@ class Proem
      *
      * An extension is just a lower level interface that modules and plugins implement
      *
-     * @param Proem\Api\Ext\Template $extension
+     * @param Proem\Ext\Template $extension
      * @param string $event The event that will trigger this extensions init() method
      * @param int $priority The priority the Event Listener is attached at
-     * @return Proem\Api\Proem
+     * @return Proem\Proem
      */
     protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
@@ -114,7 +114,7 @@ class Proem
      * @param callable $callback The callback that will be executed when the event is triggered.
      * @param int $priority The priority that this listenever will have above other listeners attached to this same event.
      *
-     * @return Proem\Api\Proem
+     * @return Proem\Proem
      */
     public function attachEventListener($name, Callable $callback, $priority = 0)
     {
@@ -126,7 +126,7 @@ class Proem
      * Attach a series of events to the signal event manager
      *
      * @param array $listeners
-     * @return Proem\Api\Proem
+     * @return Proem\Proem
      */
     public function attachEventListeners(array $listeners)
     {
@@ -139,10 +139,10 @@ class Proem
     /**
      * Register a plugin
      *
-     * @param Proem\Api\Ext\Plugin\Generic
+     * @param Proem\Ext\Plugin\Generic
      * @param string $event The event that will trigger this extensions init() method
      * @param int $priority The priority the Event Listener is attached at
-     * @return Proem\Api\Proem
+     * @return Proem\Proem
      */
     public function attachPlugin(Plugin $plugin, $event = 'proem.init', $priority = 0)
     {
@@ -152,10 +152,10 @@ class Proem
     /**
      * Register a module
      *
-     * @param Proem\Api\Proem\Ext\Module\Generic
+     * @param Proem\Proem\Ext\Module\Generic
      * @param string $event The event that will trigger this extensions init() method
      * @param int $priority The priority the Event Listener is attached at
-     * @return Proem\Api\Proem
+     * @return Proem\Proem
      */
     public function attachModule(Module $module, $event = 'proem.init', $priority = 0)
     {

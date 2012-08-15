@@ -164,14 +164,6 @@ class Autoloader
 
         if ($file = $this->locate($class)) {
             include $file;
-        } else {
-            if (substr($class, 0, 5) == 'Proem') {
-                $api_class = str_replace('Proem\\', 'Proem\\Api\\', $class);
-                if ($file = $this->locate($api_class)) {
-                    include $file;
-                    class_alias($api_class, $class);
-                }
-            }
         }
 
         return $this;

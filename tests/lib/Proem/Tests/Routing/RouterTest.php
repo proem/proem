@@ -28,13 +28,13 @@ namespace Proem\Tests;
 
 use Proem\Routing\Router\Standard as Router,
     Proem\Routing\Route\Standard as Route,
-    Proem\Api\IO\Request\Http\Fake as Request;
+    Proem\IO\Request\Http\Fake as Request;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAsset()
     {
-        $r = new Router('');
+        $r = new Router(new Request('/'));
         $this->assertInstanceOf('\Proem\Routing\Router\Template', $r);
     }
 

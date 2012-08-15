@@ -71,7 +71,7 @@ class Autoloader
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function attachNamespaces(array $namespaces)
     {
@@ -86,7 +86,7 @@ class Autoloader
      *
      * @param string $namespace The namespace
      * @param array|string $paths The path to the namespace
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function attachNamespace($namespace, $paths)
     {
@@ -98,7 +98,7 @@ class Autoloader
      * Registers an array of classes using the Pear naming convention
      *
      * @param array $classes
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function attachPearPrefixes(array $classes)
     {
@@ -113,7 +113,7 @@ class Autoloader
      *
      * @param string $prefix The prefix
      * @param array|string $paths The path
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function attachPearPrefix($prefix, $paths)
     {
@@ -124,7 +124,7 @@ class Autoloader
     /**
      * Register the autoloader.
      *
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function register()
     {
@@ -135,7 +135,7 @@ class Autoloader
     /**
      * Unregister the autoloader.
      *
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function unregister()
     {
@@ -149,12 +149,12 @@ class Autoloader
      * This load mechanism is not only responsible for locating and including the
      * file where a class is defined, but is also responsible for implementing Proem's
      * cascading file system. This is achieved by suffixing \Api onto the Proem part
-     * of any namespace starting with Proem, including the class from within the Proem\Api
+     * of any namespace starting with Proem, including the class from within the Proem
      * namespace, and then aliasing that class back to Proem (without the \Api suffix)
      *
      * @link http://proemframework.org/docs/cascading-namespace.html
      * @param string $class The absolute (including namespace) name of the class
-     * @return Proem\Api\Autoloader
+     * @return Proem\Autoloader
      */
     public function load($class)
     {
@@ -164,14 +164,6 @@ class Autoloader
 
         if ($file = $this->locate($class)) {
             include $file;
-        } else {
-            if (substr($class, 0, 5) == 'Proem') {
-                $api_class = str_replace('Proem\\', 'Proem\\Api\\', $class);
-                if ($file = $this->locate($api_class)) {
-                    include $file;
-                    class_alias($api_class, $class);
-                }
-            }
         }
 
         return $this;

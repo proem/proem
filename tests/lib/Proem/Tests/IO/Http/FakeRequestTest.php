@@ -26,7 +26,8 @@
 
 namespace Proem\Tests\IO\Http;
 
-use Proem\IO\Request\Http\Fake;
+use Proem\IO\Request\Http\Fake,
+    Proem\Routing\Route\Payload;
 
 class FakeRequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -49,10 +50,13 @@ class FakeRequestTest extends \PHPUnit_Framework_TestCase
 
     public function testCanSetGetParams()
     {
+        $payload = new Payload(['foo' => 'bar']);
+        $payload->set('controller', 'index');
         $request = new Fake(null);
-        $request->param->set('foo', 'bar');
-        $this->assertEquals('bar', $request->param->foo);
-        $this->assertEquals('boo', $request->param->get('doesnotexist', 'boo'));
+        $request->injectPayload($payload);
+        $this->assertEquals('bar', $request->payload->foo);
+        $this->assertEquals('index', $request->payload->controller);
+        $this->assertEquals('boo', $request->payload->get('doesnotexist', 'boo'));
     }
 
     public function testCanManipulateMethodAndType()

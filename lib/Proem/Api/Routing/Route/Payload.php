@@ -57,7 +57,7 @@ class Payload extends KeyValStore
     /**
      * Set the populated flag
      *
-     * @return Proem\Api\Routing\Route\Template
+     * @return Proem\Api\Routing\Route\Payload
      */
     public function setPopulated()
     {
@@ -65,4 +65,27 @@ class Payload extends KeyValStore
         return $this;
     }
 
+    /**
+     * Prepare this Payload for injection into the Request object.
+     *
+     * Merges the params array into indivual properties if they don't already exist.
+     * Removes the Request object which is only needed by Routes that are dispatching a callback.
+     *
+     * @return Proem\Api\Routing\Route\Payload
+     */
+    public function prepare()
+    {
+        if ($this->has('params')) {
+            foreach ($this->get('params') as $key => $value) {
+                if (!$this->has($key)) {
+                    $this->set($key, $value);
+                }
+            }
+            $this->remove('params');
+        }
+
+        $this->remove('request');
+
+        return $this;
+    }
 }

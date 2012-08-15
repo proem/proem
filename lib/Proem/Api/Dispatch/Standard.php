@@ -173,9 +173,9 @@ class Standard implements Template
      * Dispatch the current controller stored within
      * the $class property.
      *
-     * Prior to dispatch this method will add any params
-     * present in the payload to the *request* object stored
-     * within the service manager.
+     * Prior to dispatch this method will send the Payload to the Request
+     * object stored within the Service Manager. At this point we also call
+     * the Payload's prepare method, which prepares the Payload for the Request.
      *
      * It will then execute the controllers preAction method, the action
      * method provided by the payload, then postAction.
@@ -184,9 +184,8 @@ class Standard implements Template
      */
     public function dispatch()
     {
-        if ($this->assets->has('request') && $this->payload->get('params') && is_array($this->payload->get('params'))) {
-            $this->assets->get('request')
-                ->setGetData($this->payload->get('params'));
+        if ($this->assets->has('request')) {
+            $this->assets->get('request')->injectPayload($this->payload->prepare());
         }
         $this->class->dispatch($this->action);
         return $this;

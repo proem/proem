@@ -142,7 +142,7 @@ class Fake extends Standard
         $this->body = $body;
 
         $this->data = [
-            'param'     => new KeyValStore($param),
+            'payload'   => new KeyValStore($param),
             'get'       => new KeyValStore($get),
             'post'      => new KeyValStore($post),
             'cookie'    => new KeyValStore($cookie),

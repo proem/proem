@@ -80,11 +80,11 @@ class Standard implements Template
     /**
      * Instantiate the request using data supplied by the super globals.
      *
-     * @param array $param
+     * @param Proem\Util\Storage\KeyValStore
      */
-    public function __construct(array $param = []) {
+    public function __construct(KeyValStore $payload = null) {
         $this->data = [
-            'param'     => new KeyValStore($param),
+            'payload'   => $payload,
             'get'       => new KeyValStore($_GET),
             'post'      => new KeyValStore($_POST),
             'cookie'    => new KeyValStore($_COOKIE),
@@ -209,14 +209,14 @@ class Standard implements Template
     }
 
     /**
-     * Set GET data.
+     * Set param data from a Router Payload.
      *
-     * @param array $data
+     * @param Proem\Util\Storage\KeyValStore
      * @return Proem\Api\IO\Request\Template
      */
-    public function setGetData(array $data)
+    public function injectPayload(KeyValStore $payload)
     {
-        $this->data['get']->set($data);
+        $this->data['payload'] = $payload;
         return $this;
     }
 

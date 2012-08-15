@@ -130,13 +130,6 @@ class Route extends Event
                             ])
                         )
                         ->attach(
-                            'default-params',
-                            new StandardRoute([
-                                'rule'      => '/:params',
-                                'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
-                            ])
-                        )
-                        ->attach(
                             'default-noparams',
                             new StandardRoute([
                                 'rule'      => '/',

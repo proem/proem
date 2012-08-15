@@ -51,11 +51,14 @@ trait ArrayHelper
      */
     public function createAssocArray($params)
     {
-        $tmp = array();
+        $tmp = [];
         for ($i = 0; $i <= count($params); $i = $i+2) {
             if (isset($params[$i+1])) {
-                $tmp[(string) $params[$i]] = (string) $params[$i+1];
+                $tmp[$params[$i]] = $params[$i+1];
             } else {
+                if (isset($params[$i])) {
+                    $tmp[$params[$i]] = null;
+                }
                 break;
             }
         }

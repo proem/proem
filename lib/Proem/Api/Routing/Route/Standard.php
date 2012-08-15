@@ -144,7 +144,7 @@ class Standard extends Generic
                 } else if (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
-                    return $default_filters[':default'];
+                    return '(' . $default_filters[':default'] . ')';
                 }
             },
             $rule
@@ -167,7 +167,7 @@ class Standard extends Generic
                 // If the string within $value looks like a / seperated string,
                 // parse it into an array and send it to setParams() instead
                 // of the singular setParam.
-                if ($key == 'params' && strpos($value, '/') !== false) {
+                if ($key == 'params') {
                     $this->getPayload()->set('params', $this->createAssocArray(explode('/', trim($value, '/'))));
                 } else {
                     $this->getPayload()->set($key, $value);

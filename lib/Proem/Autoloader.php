@@ -65,6 +65,8 @@ class Autoloader
         if (extension_loaded('apc')) {
             $this->apcEnabled = true;
         }
+
+        $this->attachNamespace('Proem', realpath(__FILE__) . '/../lib');
     }
 
     /**

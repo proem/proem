@@ -116,12 +116,17 @@ class Standard extends Generic
         $rule               = $this->options['rule'];
         $target             = isset($this->options['targets']) ? $this->options['targets'] : [];
         $custom_filters     = isset($this->options['filters']) ? $this->options['filters'] : [];
-        $method             = isset($this->options['method']) ? $this->options['method'] : 'GET';
+        $method             = isset($this->options['method']) ? $this->options['method'] : false;
+
+        $requestMethod      = $request->getMethod();
+
+        if ($method && (strtoupper($method) !== strtoupper($requestMethod))) {
+            return false;
+        }
 
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
         $uri                = $request->getRequestUri();
-        $requestMethod      = $request->getMethod();
 
         $keys   = [];
         $values = [];
@@ -150,7 +155,7 @@ class Standard extends Generic
             $rule
         ) . '/?';
 
-        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values) && $requestMethod == $method) {
+        if (preg_match('@^' . $regex . '$@', $request->getRequestUri(), $values)) {
             array_shift($values);
 
             foreach ($keys as $index => $value) {

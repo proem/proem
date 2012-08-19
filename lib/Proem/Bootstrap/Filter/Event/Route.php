@@ -81,62 +81,7 @@ class Route extends Event
             $assets->set(
                 'router',
                 $asset->set('Proem\Routing\Router\Template', $asset->single(function() use ($assets) {
-                    $router = (new Router($assets->get('request')))
-                        ->attach(
-                            'default-module-controller-action-params',
-                            new StandardRoute([
-                                'rule' => '/:module/:controller/:action/:params'
-                            ])
-                        )
-                        ->attach(
-                            'default-module-controller-action-noparams',
-                            new StandardRoute([
-                                'rule' => '/:module/:controller/:action'
-                            ])
-                        )
-                        ->attach(
-                            'default-module-controller-noaction',
-                            new StandardRoute([
-                                'rule'      => '/:module/:controller',
-                                'targets'    => ['action' => 'index']
-                            ])
-                        )
-                        ->attach(
-                            'default-nomodule-controller-action',
-                            new StandardRoute([
-                                'rule'      => '/:controller/:action',
-                                'targets'    => ['module' => 'index']
-                            ])
-                        )
-                        ->attach(
-                            'default-module-nocontroller',
-                            new StandardRoute([
-                                'rule'      => '/:module',
-                                'targets'    => ['controller' => 'index', 'action' => 'index']
-                            ])
-                        )
-                        ->attach(
-                            'default-nomodule-controller',
-                            new StandardRoute([
-                                'rule'      => '/:controller',
-                                'targets'    => ['module' => 'index', 'action' => 'index']
-                            ])
-                        )
-                        ->attach(
-                            'default-nomodule-nocontroller',
-                            new StandardRoute([
-                                'rule'      => '/:action',
-                                'targets'    => ['module' => 'index', 'controller' => 'index']
-                            ])
-                        )
-                        ->attach(
-                            'default-noparams',
-                            new StandardRoute([
-                                'rule'      => '/',
-                                'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
-                            ])
-                        );
-                        return $router;
+                    return new Router($assets->get('request'));
                 }))
             );
         }
@@ -152,6 +97,63 @@ class Route extends Event
     {
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger((new Bootstrap('proem.post.in.router'))->setServiceManager($assets));
+        }
+
+        if ($assets->provides('router', 'Proem\Routing\Router\Template')) {
+            $assets->get('router')->attach(
+                'default-module-controller-action-params',
+                new StandardRoute([
+                    'rule' => '/:module/:controller/:action/:params'
+                ])
+            )
+            ->attach(
+                'default-module-controller-action-noparams',
+                new StandardRoute([
+                    'rule' => '/:module/:controller/:action'
+                ])
+            )
+            ->attach(
+                'default-module-controller-noaction',
+                new StandardRoute([
+                    'rule'      => '/:module/:controller',
+                    'targets'    => ['action' => 'index']
+                ])
+            )
+            ->attach(
+                'default-nomodule-controller-action',
+                new StandardRoute([
+                    'rule'      => '/:controller/:action',
+                    'targets'    => ['module' => 'index']
+                ])
+            )
+            ->attach(
+                'default-module-nocontroller',
+                new StandardRoute([
+                    'rule'      => '/:module',
+                    'targets'    => ['controller' => 'index', 'action' => 'index']
+                ])
+            )
+            ->attach(
+                'default-nomodule-controller',
+                new StandardRoute([
+                    'rule'      => '/:controller',
+                    'targets'    => ['module' => 'index', 'action' => 'index']
+                ])
+            )
+            ->attach(
+                'default-nomodule-nocontroller',
+                new StandardRoute([
+                    'rule'      => '/:action',
+                    'targets'    => ['module' => 'index', 'controller' => 'index']
+                ])
+            )
+            ->attach(
+                'default-noparams',
+                new StandardRoute([
+                    'rule'      => '/',
+                    'targets'    => ['module' => 'index', 'controller' => 'index', 'action' => 'index']
+                ])
+            );
         }
     }
 

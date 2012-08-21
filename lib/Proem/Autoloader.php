@@ -99,7 +99,16 @@ class Autoloader
      */
     public function attachNamespace($namespace, $paths)
     {
-        $this->namespaces[$namespace] = (array) $paths;
+        if (isset($this->namespaces[$namespace])) {
+            if (is_array($paths)) {
+                $this->namespaces[$namespace] = array_merge($this->namespaces[$namespace], $paths);
+            } else {
+                $this->namespaces[$namespace][] = $paths;
+            }
+        } else {
+            $this->namespaces[$namespace] = (array) $paths;
+        }
+
         return $this;
     }
 

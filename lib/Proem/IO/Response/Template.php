@@ -37,6 +37,14 @@ namespace Proem\IO\Response;
 interface Template
 {
     /**
+     * Set the HTTP body.
+     *
+     * @param string $string
+     * @return Proem\IO\Response\Template;
+     */
+    public function setBody($string);
+
+    /**
      * Append to the HTTP body.
      *
      * As data is appended to the body the $length

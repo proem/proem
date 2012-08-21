@@ -239,6 +239,20 @@ class Standard implements Template
     }
 
     /**
+     * Set the HTTP body.
+     *
+     * @param string $string
+     * @return Proem\IO\Response\Template;
+     */
+    public function setBody($string)
+    {
+        $string = (string) $string;
+        $this->length   = strlen($string);
+        $this->body     = $string;
+        return $this;
+    }
+
+    /**
      * Append to the HTTP body.
      *
      * As data is appended to the body the $length

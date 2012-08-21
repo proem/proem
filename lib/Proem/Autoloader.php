@@ -39,6 +39,11 @@ namespace Proem;
 class Autoloader
 {
     /**
+     * Flag wether or not to attach the Proem namespace.
+     */
+    protected $loadProem;
+
+    /**
      * Store namespaces
      *
      * @var array $namespaces
@@ -60,10 +65,14 @@ class Autoloader
     /**
      * Instantiate our Autoloader and check for APC.
      */
-    public function __construct()
+    public function __construct($loadProem = true)
     {
         if (extension_loaded('apc')) {
             $this->apcEnabled = true;
+        }
+
+        if ($loadProem) {
+            $this->attachNamespace('Proem', realpath(__FILE__) . '/../lib');
         }
     }
 
@@ -90,7 +99,16 @@ class Autoloader
      */
     public function attachNamespace($namespace, $paths)
     {
-        $this->namespaces[$namespace] = (array) $paths;
+        if (isset($this->namespaces[$namespace])) {
+            if (is_array($paths)) {
+                $this->namespaces[$namespace] = array_merge($this->namespaces[$namespace], $paths);
+            } else {
+                $this->namespaces[$namespace][] = $paths;
+            }
+        } else {
+            $this->namespaces[$namespace] = (array) $paths;
+        }
+
         return $this;
     }
 

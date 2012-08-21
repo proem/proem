@@ -39,6 +39,11 @@ namespace Proem;
 class Autoloader
 {
     /**
+     * Flag wether or not to attach the Proem namespace.
+     */
+    protected $loadProem;
+
+    /**
      * Store namespaces
      *
      * @var array $namespaces
@@ -60,13 +65,15 @@ class Autoloader
     /**
      * Instantiate our Autoloader and check for APC.
      */
-    public function __construct()
+    public function __construct($loadProem = true)
     {
         if (extension_loaded('apc')) {
             $this->apcEnabled = true;
         }
 
-        $this->attachNamespace('Proem', realpath(__FILE__) . '/../lib');
+        if ($loadProem) {
+            $this->attachNamespace('Proem', realpath(__FILE__) . '/../lib');
+        }
     }
 
     /**

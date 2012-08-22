@@ -52,7 +52,7 @@ class Proem
     /**
      * Store the framework version
      */
-    const VERSION = '0.6.4';
+    const VERSION = '0.6.5';
 
     /**
      * Store events

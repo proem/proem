@@ -72,7 +72,7 @@ class Autoloader
         }
 
         if ($loadProem) {
-            $this->attachNamespace('Proem', realpath(__FILE__) . '/../lib');
+            $this->attachNamespace('Proem', realpath(__DIR__) . '/..');
         }
     }
 

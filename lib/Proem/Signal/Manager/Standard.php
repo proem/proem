@@ -46,7 +46,7 @@ class Standard implements Template
     /**
      * Wildcard used when listening for all events
      */
-    const WILDCARD = '*';
+    const WILDCARD = '.*';
 
     /**
      * Stores listeners in a hash of priority queues.
@@ -63,6 +63,11 @@ class Standard implements Template
     protected $callbacks = [];
 
     /**
+     * Store a flag regarding searching for wildcards
+     */
+    protected $wildcardSearching = false;
+
+    /**
      * Remove event listeners from a particular index.
      *
      * Be aware that removeing listeners from the wildcard '*' will not literally
@@ -77,6 +82,18 @@ class Standard implements Template
         if (isset($this->queues[$name])) {
             unset($this->queues[$name]);
         }
+        return $this;
+    }
+
+    /**
+     * Enable wildcard searching.
+     *
+     * Wildcard searching is a rather expensive
+     * process, so we make it an optional.
+     */
+    public function enableWildcards()
+    {
+        $this->wildcardSearching = true;
         return $this;
     }
 
@@ -116,15 +133,16 @@ class Standard implements Template
 
         if (is_array($name)) {
             foreach ($name as $event) {
+                $end = substr($event, -2);
                 if (isset($this->queues[$event])) {
-                    if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $priority];
+                    if ($end == self::WILDCARD) {
+                        $this->queues[$name][] = [$key, $priority];
                     } else {
                         $this->queues[$event]->insert($key, $priority);
                     }
                 } else {
-                    if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $priority];
+                    if ($end == self::WILDCARD) {
+                        $this->queues[$event][] = [$key, $priority];
                     } else {
                         $this->queues[$event] = new Queue;
                         $this->queues[$event]->insert($key, $priority);
@@ -132,15 +150,16 @@ class Standard implements Template
                 }
             }
         } else {
+            $end = substr($name, -2);
             if (isset($this->queues[$name])) {
-                if ($name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $priority];
+                if ($end == self::WILDCARD) {
+                    $this->queues[$name][] = [$key, $priority];
                 } else {
                     $this->queues[$name]->insert($key, $priority);
                 }
             } else {
-                if ($name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $priority];
+                if ($end == self::WILDCARD) {
+                    $this->queues[$name][] = [$key, $priority];
                 } else {
                     $this->queues[$name] = new Queue;
                     $this->queues[$name]->insert($key, $priority);
@@ -161,25 +180,47 @@ class Standard implements Template
      */
     public function trigger(Event $event, Callable $callback = null)
     {
+        $listenerMatched = false;
         $name = $event->getName();
-        if (isset($name) || isset($this->queues[self::WILDCARD])) {
-            if (isset($this->queues[self::WILDCARD])) {
-                foreach ($this->queues[self::WILDCARD] as $listener) {
-                    if (isset($this->queues[$name])) {
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
-                    } else {
-                        $this->queues[$name] = new Queue;
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
+
+        /**
+         * Do we have an exact match?
+         */
+        if (isset($this->queues[$name])) {
+            $listenerMatched = true;
+        }
+
+        /**
+         * Optionally search for wildcard matches.
+         */
+        if ($this->wildcardSearching) {
+            $parts = explode('.', $name);
+            while (count($parts)) {
+                array_pop($parts);
+                $part = implode('.', $parts) . self::WILDCARD;
+
+                if (isset($this->queues[$part])) {
+                    $listenerMatched = true;
+                    /**
+                     * Add to currently named queue
+                     */
+                    foreach ($this->queues[$part] as $listener) {
+                        if (isset($this->queues[$name])) {
+                            $this->queues[$name]->insert($listener[0], $listener[1]);
+                        } else {
+                            $this->queues[$name] = new Queue;
+                            $this->queues[$name]->insert($listener[0], $listener[1]);
+                        }
                     }
                 }
             }
+        }
 
-            if (isset($this->queues[$name])) {
-                foreach ($this->queues[$name] as $key) {
-                    if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
-                        if ($callback !== null) {
-                            (new Callback($callback, $return))->call();
-                        }
+        if ($listenerMatched) {
+            foreach ($this->queues[$name] as $key) {
+                if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
+                    if ($callback !== null) {
+                        (new Callback($callback, $return))->call();
                     }
                 }
             }

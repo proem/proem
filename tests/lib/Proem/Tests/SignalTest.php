@@ -84,12 +84,32 @@ class SignalTest extends \PHPUnit_Framework_TestCase
     {
         $r = new \StdClass;
         $r->out = 0;
-        (new Manager)->attach('*', function($e) use ($r) {
+        (new Manager)->enableWildcards()->attach('.*', function($e) use ($r) {
             $r->out++;
         })
         ->trigger(new Event('a'))
         ->trigger(new Event('b'))
         ->trigger(new Event('c'));
+
+        $this->assertEquals(3, $r->out);
+    }
+
+    public function testNamespaces()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+
+        (new Manager)->enableWildcards()
+        ->attach('.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->attach('this.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->attach('this.is.some.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->trigger(new Event('this.is.some.event'));
 
         $this->assertEquals(3, $r->out);
     }

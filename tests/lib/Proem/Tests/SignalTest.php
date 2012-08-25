@@ -84,7 +84,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
     {
         $r = new \StdClass;
         $r->out = 0;
-        (new Manager)->enableWildcards()->attach('.*', function($e) use ($r) {
+        (new Manager)->attach('.*', function($e) use ($r) {
             $r->out++;
         })
         ->trigger(new Event('a'))
@@ -99,8 +99,7 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $r = new \StdClass;
         $r->out = 0;
 
-        (new Manager)->enableWildcards()
-        ->attach('.*', function($e) use ($r) {
+        (new Manager)->attach('.*', function($e) use ($r) {
             $r->out++;
         })
         ->attach('this.*', function($e) use ($r) {

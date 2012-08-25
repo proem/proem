@@ -86,18 +86,6 @@ class Standard implements Template
     }
 
     /**
-     * Enable wildcard searching.
-     *
-     * Wildcard searching is a rather expensive
-     * process, so we make it an optional.
-     */
-    public function enableWildcards()
-    {
-        $this->wildcardSearching = true;
-        return $this;
-    }
-
-    /**
      * Register a listener attached to a particular named event.
      *
      * All listeners have there callbacks firstly stored within an associative array
@@ -136,12 +124,14 @@ class Standard implements Template
                 $end = substr($event, -2);
                 if (isset($this->queues[$event])) {
                     if ($end == self::WILDCARD) {
+                        $this->wildcardSearching = true;
                         $this->queues[$name][] = [$key, $priority];
                     } else {
                         $this->queues[$event]->insert($key, $priority);
                     }
                 } else {
                     if ($end == self::WILDCARD) {
+                        $this->wildcardSearching = true;
                         $this->queues[$event][] = [$key, $priority];
                     } else {
                         $this->queues[$event] = new Queue;
@@ -153,12 +143,14 @@ class Standard implements Template
             $end = substr($name, -2);
             if (isset($this->queues[$name])) {
                 if ($end == self::WILDCARD) {
+                    $this->wildcardSearching = true;
                     $this->queues[$name][] = [$key, $priority];
                 } else {
                     $this->queues[$name]->insert($key, $priority);
                 }
             } else {
                 if ($end == self::WILDCARD) {
+                    $this->wildcardSearching = true;
                     $this->queues[$name][] = [$key, $priority];
                 } else {
                     $this->queues[$name] = new Queue;

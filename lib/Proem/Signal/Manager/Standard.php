@@ -162,7 +162,7 @@ class Standard implements Template
     public function trigger(Event $event, Callable $callback = null)
     {
         $name = $event->getName();
-        if (isset($name) || isset($this->queues[self::WILDCARD])) {
+        if (isset($this->queues[$name]) || isset($this->queues[self::WILDCARD])) {
             if (isset($this->queues[self::WILDCARD])) {
                 foreach ($this->queues[self::WILDCARD] as $listener) {
                     if (isset($this->queues[$name])) {
@@ -174,12 +174,10 @@ class Standard implements Template
                 }
             }
 
-            if (isset($this->queues[$name])) {
-                foreach ($this->queues[$name] as $key) {
-                    if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
-                        if ($callback !== null) {
-                            (new Callback($callback, $return))->call();
-                        }
+            foreach ($this->queues[$name] as $key) {
+                if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
+                    if ($callback !== null) {
+                        (new Callback($callback, $return))->call();
                     }
                 }
             }

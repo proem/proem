@@ -65,11 +65,11 @@ class Standard extends Generic
         parent::__construct($options);
 
         $this->default_filters = [
-            ':default'  => '[a-zA-Z0-9_\+\-%]+',
-            ':gobble'   => '[a-zA-Z0-9_\+\-%\/]+',
-            ':int'      => '[0-9]+',
+            ':default'  => '[\w\+\-%]+',
+            ':gobble'   => '[\w\+\-%\/]+',
+            ':int'      => '[\d]+',
             ':alpha'    => '[a-zA-Z]+',
-            ':slug'     => '[a-zA-Z0-9_-]+'
+            ':slug'     => '[\w-]+'
         ];
 
         $this->default_tokens = [

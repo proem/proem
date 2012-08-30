@@ -156,13 +156,16 @@ class Standard implements Template
                 $map
             );
 
-            if (class_exists($this->class)) {
-                $this->class = new $this->class($this->assets);
-                if ($this->class instanceof \Proem\Controller\Template) {
-                    if (is_callable([$this->class, $this->action . 'Action'])) {
+            try {
+                $class = new \ReflectionClass($this->class);
+                if ($class->implementsInterface('\Proem\Controller\Template')) {
+                    $method = $class->getMethod($this->action . 'Action');
+                    if ($method->isPublic()) {
                         return true;
                     }
                 }
+            } catch (\ReflectionException $e) {
+                return false;
             }
         }
 
@@ -187,6 +190,8 @@ class Standard implements Template
         if ($this->assets->has('request')) {
             $this->assets->get('request')->injectPayload($this->payload->prepare());
         }
+
+        $this->class = new $this->class($this->assets);
         $this->class->dispatch($this->action);
         return $this;
     }

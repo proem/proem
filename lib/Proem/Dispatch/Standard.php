@@ -149,6 +149,10 @@ class Standard implements Template
         $this->controller = $this->payload->has('controller')       ? ucfirst(strtolower($this->payload->get('controller')))  : '';
         $this->action     = $this->payload->has('action')           ? $this->payload->get('action') : '';
 
+        if ($this->assets->has('request')) {
+            $this->assets->get('request')->injectPayload($this->payload->prepare());
+        }
+
         foreach ($this->controllerMaps as $map) {
             $this->class = str_replace(
                 [':module', ':controller'],
@@ -184,9 +188,6 @@ class Standard implements Template
      */
     public function dispatch()
     {
-        if ($this->assets->has('request')) {
-            $this->assets->get('request')->injectPayload($this->payload->prepare());
-        }
         $this->class->dispatch($this->action);
         return $this;
     }

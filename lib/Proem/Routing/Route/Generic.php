@@ -137,6 +137,23 @@ abstract class Generic implements Template
     }
 
     /**
+     * A generic testMethod function used to test a route
+     * against a request type.
+     *
+     * This should be called within any process() method
+     */
+    public function testRequestMethod(Request $request)
+    {
+        $method = isset($this->options['method']) ? $this->options['method'] : false;
+        $requestMethod = $request->getMethod();
+        if ($method && (strtoupper($method) !== strtoupper($requestMethod))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Method used to execute a route callback.
      *
      * @param Proem\IO\Request\Template $request

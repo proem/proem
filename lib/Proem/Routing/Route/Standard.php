@@ -113,16 +113,13 @@ class Standard extends Generic
             return false;
         }
 
+        if (!$this->testRequestMethod($request)) {
+            return false;
+        }
+
         $rule               = $this->options['rule'];
         $target             = isset($this->options['targets']) ? $this->options['targets'] : [];
         $custom_filters     = isset($this->options['filters']) ? $this->options['filters'] : [];
-        $method             = isset($this->options['method']) ? $this->options['method'] : false;
-
-        $requestMethod      = $request->getMethod();
-
-        if ($method && (strtoupper($method) !== strtoupper($requestMethod))) {
-            return false;
-        }
 
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;

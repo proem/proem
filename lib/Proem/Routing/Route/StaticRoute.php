@@ -45,7 +45,9 @@ class StaticRoute extends Generic
             return false;
         }
 
-        $method = isset($this->options['method']) ? $this->options['method'] : 'GET';
+        if (!$this->testRequestMethod($request)) {
+            return false;
+        }
 
         if (!isset($this->options['targets']) || !isset($this->options['targets']['module']) || !isset($this->options['targets']['controller']) || !isset($this->options['targets']['action'])) {
             return false;

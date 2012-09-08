@@ -53,7 +53,7 @@ class StaticRoute extends Generic
             return false;
         }
 
-        if ($request->getRequestUri() == $this->options['rule'] && $request->getMethod() == $method) {
+        if ($request->getRequestUri() == $this->options['rule']) {
             $this->getPayload()->set('module', $this->options['targets']['module']);
             $this->getPayload()->set('controller', $this->options['targets']['controller']);
             $this->getPayload()->set('action', $this->options['targets']['action']);

@@ -72,7 +72,7 @@ class Autoloader
         }
 
         if ($loadProem) {
-            $this->attachNamespace('Proem', realpath(__DIR__) . '/..');
+            $this->attachNamespace('Proem', __DIR__);
         }
     }
 
@@ -219,6 +219,7 @@ class Autoloader
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);
             $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+
             foreach ($this->namespaces as $space => $paths) {
                 if (strpos($namespace, $space) !== 0) {
                     continue;
@@ -227,6 +228,12 @@ class Autoloader
                 foreach ($paths as $path) {
                     $file = $path . DIRECTORY_SEPARATOR . $normalized;
 
+                    if (is_file($file)) {
+                        return $file;
+                    }
+
+                    // Attempt to handle paths that end with the *vendor* name.
+                    $file = $path . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $normalized;
                     if (is_file($file)) {
                         return $file;
                     }

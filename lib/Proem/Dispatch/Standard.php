@@ -149,7 +149,7 @@ class Standard implements Template
         $this->controller = $this->payload->has('controller')       ? ucfirst(strtolower($this->payload->get('controller')))  : '';
         $this->action     = $this->payload->has('action')           ? $this->payload->get('action') : '';
 
-        foreach ($this->controllerMaps as $map) {
+        foreach (array_reverse($this->controllerMaps) as $map) {
             $this->class = str_replace(
                 [':module', ':controller'],
                 [$this->module, $this->controller],

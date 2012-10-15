@@ -31,6 +31,12 @@ group('dev', function() {
         }
     });
 
+    desc('Sniff code for PSR-1/2');
+    task('sniff', function ($args) {
+        chdir(realpath(__DIR__));
+        system('phpcs -a --standard=PSR2 lib/');
+    });
+
     desc('Build the Phar archive');
     task('build', 'tests', function($args) {
         if (!is_dir('build')) {

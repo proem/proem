@@ -109,7 +109,7 @@ class Fake extends Standard
             case 'PUT':
             case 'DELETE':
                 $defaults['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
-                break;
+                // Allow this condition to fall through.
             case 'PATCH':
                 $post   = $param;
                 $get    = [];

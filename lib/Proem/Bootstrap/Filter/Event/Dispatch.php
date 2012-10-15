@@ -30,12 +30,12 @@
  */
 namespace Proem\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Service\Asset\Standard as Asset,
-    Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Event\Generic as Event,
-    Proem\Dispatch\Standard as DispatchStandard,
-    Proem\Dispatch\Stage as DispatchStage;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Service\Asset\Standard as Asset;
+use Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Filter\Event\Generic as Event;
+use Proem\Dispatch\Standard as DispatchStandard;
+use Proem\Dispatch\Stage as DispatchStage;
 
 /**
  * The default "Dispatch" filter event.
@@ -58,7 +58,7 @@ class Dispatch extends Event
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.dispatch'))->setServiceManager($assets),
-                function($response) use ($assets) {
+                function ($response) use ($assets) {
                     if ($response->provides('Proem\Dispatch\Template')) {
                         $assets->set('dispatch', $response);
                     }
@@ -83,9 +83,14 @@ class Dispatch extends Event
             $asset = new Asset;
             $assets->set(
                 'dispatch',
-                $asset->set('Proem\Dispatch\Template', $asset->single(function() use ($assets) {
-                    return new DispatchStandard($assets);
-                }))
+                $asset->set(
+                    'Proem\Dispatch\Template',
+                    $asset->single(
+                        function () use ($assets) {
+                            return new DispatchStandard($assets);
+                        }
+                    )
+                )
             );
         }
     }

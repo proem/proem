@@ -30,9 +30,7 @@
  */
 namespace Proem\Signal\Event;
 
-use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option,
-    Proem\Signal\Event\Template;
+use Proem\Signal\Event\Template;
 
 /**
  * The standard event implementation
@@ -131,5 +129,4 @@ class Standard implements Template
     {
         return $this->name;
     }
-
 }

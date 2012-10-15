@@ -103,5 +103,4 @@ interface Template
      * @param closure $closure
      */
     public function single(\Closure $closure);
-
 }

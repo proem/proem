@@ -70,5 +70,4 @@ class Callback
     {
         return call_user_func_array($this->callback, $this->params);
     }
-
 }

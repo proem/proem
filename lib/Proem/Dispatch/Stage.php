@@ -29,10 +29,10 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Routing\Signal\Event\RouteMatch,
-    Proem\Routing\Signal\Event\RouteDispatch,
-    Proem\Routing\Signal\Event\RouteExhausted;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Signal\Event\RouteMatch;
+use Proem\Routing\Signal\Event\RouteDispatch;
+use Proem\Routing\Signal\Event\RouteExhausted;
 
 /**
  * The dispatch stage.
@@ -131,7 +131,7 @@ class Stage
             while ($payload = $router->route()) {
                 $assets->get('events')->trigger(
                     (new RouteMatch('proem.route.match'))->setPayload($payload),
-                    function($e) use (&$dispatched, &$assets) {
+                    function ($e) use (&$dispatched, &$assets) {
                         if ($e) {
                             $dispatched = true;
                             $assets->get('events')->trigger(new RouteDispatch('proem.route.dispatch'));

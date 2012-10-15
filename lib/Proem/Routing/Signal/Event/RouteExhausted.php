@@ -30,8 +30,8 @@
  */
 namespace Proem\Routing\Signal\Event;
 
-use Proem\Signal\Event\Standard,
-    Proem\Routing\Route\Payload;
+use Proem\Signal\Event\Standard;
+use Proem\Routing\Route\Payload;
 
 /**
  * Proem\Routing\Signal\Event\RouteExhausted

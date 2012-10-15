@@ -29,9 +29,9 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Dispatch\Template as Template,
-    Proem\Service\Manager\Template as Manager,
-    Proem\Routing\Route\Payload as Payload;
+use Proem\Dispatch\Template as Template;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Route\Payload as Payload;
 
 /**
  * Proem\Dispatch\Standard
@@ -99,6 +99,11 @@ class Standard implements Template
         $this->controllerMaps = ['Module\:module\Controller\:controller'];
     }
 
+    protected function prepare($str)
+    {
+        return ucfirst(strtolower($str));
+    }
+
     /**
      * Set the payload object
      *
@@ -126,7 +131,8 @@ class Standard implements Template
      * @param string $map
      * @return Proem\Dispatch\Template
      */
-    public function attachControllerMap($map) {
+    public function attachControllerMap($map)
+    {
         $this->controllerMaps[] = $map;
         return $this;
     }
@@ -145,9 +151,9 @@ class Standard implements Template
      */
     public function isDispatchable()
     {
-        $this->module     = $this->payload->has('module')           ? ucfirst(strtolower($this->payload->get('module')))      : '';
-        $this->controller = $this->payload->has('controller')       ? ucfirst(strtolower($this->payload->get('controller')))  : '';
-        $this->action     = $this->payload->has('action')           ? $this->payload->get('action') : '';
+        $this->module     = $this->payload->has('module')     ? $this->prepare($this->payload->get('module')      : '';
+        $this->controller = $this->payload->has('controller') ? $this->prepare($this->payload->get('controller')  : '';
+        $this->action     = $this->payload->has('action')     ? $this->payload->get('action') : '';
 
         foreach (array_reverse($this->controllerMaps) as $map) {
             $this->class = str_replace(

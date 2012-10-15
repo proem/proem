@@ -62,5 +62,4 @@ interface Template
      * @return Proem\Signal\Manager\Template
      */
     public function trigger(Event $event, Callable $callback = null);
-
 }

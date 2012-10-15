@@ -30,8 +30,8 @@
  */
 namespace Proem\Bootstrap\Signal\Event;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Signal\Event\Standard as StandardEvent;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Signal\Event\Standard as StandardEvent;
 
 /**
  * A custom event used by the bootstrap triggered events.
@@ -95,5 +95,4 @@ class Bootstrap extends StandardEvent
     {
         return $this->environment;
     }
-
 }

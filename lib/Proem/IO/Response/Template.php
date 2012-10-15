@@ -68,5 +68,4 @@ interface Template
      * This method should first send any headers and then the request body.
      */
     public function send();
-
 }

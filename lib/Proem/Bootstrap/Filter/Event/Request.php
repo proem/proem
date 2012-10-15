@@ -30,11 +30,11 @@
  */
 namespace Proem\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\IO\Request\Http\Standard as HTTPRequest,
-    Proem\Service\Asset\Standard as Asset,
-    Proem\Filter\Event\Generic as Event;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\IO\Request\Http\Standard as HTTPRequest;
+use Proem\Service\Asset\Standard as Asset;
+use Proem\Filter\Event\Generic as Event;
 
 /**
  * The default "Request" filter event.
@@ -56,7 +56,7 @@ class Request extends Event
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.request'))->setServiceManager($assets),
-                function($response) use ($assets) {
+                function ($response) use ($assets) {
                     if ($response->provides('Proem\IO\Request\Template')) {
                         $assets->set('request', $response);
                     }
@@ -80,9 +80,14 @@ class Request extends Event
             $asset = new Asset;
             $assets->set(
                 'request',
-                $asset->set('Proem\IO\Request\Template', $asset->single(function() {
-                    return new HTTPRequest;
-                }))
+                $asset->set(
+                    'Proem\IO\Request\Template',
+                    $asset->single(
+                        function () {
+                            return new HTTPRequest;
+                        }
+                    )
+                )
             );
         }
     }

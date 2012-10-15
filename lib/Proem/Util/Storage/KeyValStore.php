@@ -143,7 +143,8 @@ class KeyValStore implements \Iterator
      *
      * @return mixed
      */
-    public function rewind() {
+    public function rewind()
+    {
         return reset($this->data);
     }
 
@@ -152,7 +153,8 @@ class KeyValStore implements \Iterator
      *
      * @return mixed
      */
-    public function current() {
+    public function current()
+    {
         return current($this->data);
     }
 
@@ -161,7 +163,8 @@ class KeyValStore implements \Iterator
      *
      * @return mixed
      */
-    public function key() {
+    public function key()
+    {
         return key($this->data);
     }
 
@@ -170,7 +173,8 @@ class KeyValStore implements \Iterator
      *
      * @return mixed
      */
-    public function next() {
+    public function next()
+    {
         return next($this->data);
     }
 
@@ -179,8 +183,8 @@ class KeyValStore implements \Iterator
      *
      * @return mixed
      */
-    public function valid() {
+    public function valid()
+    {
         return $this->current();
     }
-
 }

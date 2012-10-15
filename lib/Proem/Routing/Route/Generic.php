@@ -30,11 +30,11 @@
  */
 namespace Proem\Routing\Route;
 
-use Proem\Routing\Route\Payload,
-    Proem\Util\ArrayHelper,
-    Proem\Util\Process\Callback,
-    Proem\IO\Request\Template as Request,
-    Proem\Routing\Route\Template;
+use Proem\Routing\Route\Payload;
+use Proem\Util\ArrayHelper;
+use Proem\Util\Process\Callback;
+use Proem\IO\Request\Template as Request;
+use Proem\Routing\Route\Template;
 
 /**
  * Generic route abstract.
@@ -173,5 +173,4 @@ abstract class Generic implements Template
      * @param Proem\IO\Request\Template $request
      */
     abstract public function process(Request $request);
-
 }

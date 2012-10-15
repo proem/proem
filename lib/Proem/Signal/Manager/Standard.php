@@ -30,10 +30,10 @@
  */
 namespace Proem\Signal\Manager;
 
-use Proem\Util\Storage\Queue,
-    Proem\Util\Process\Callback,
-    Proem\Signal\Event\Standard as Event,
-    Proem\Signal\Manager\Template;
+use Proem\Util\Storage\Queue;
+use Proem\Util\Process\Callback;
+use Proem\Signal\Event\Standard as Event;
+use Proem\Signal\Manager\Template;
 
 /**
  * Standard event manager implementation.
@@ -220,5 +220,4 @@ class Standard implements Template
 
         return $this;
     }
-
 }

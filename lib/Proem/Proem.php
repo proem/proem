@@ -29,18 +29,18 @@
  */
 namespace Proem;
 
-use Proem\Service\Manager\Standard as ServiceManager,
-    Proem\Signal\Manager\Standard as SignalManager,
-    Proem\Filter\Manager\Standard as FilterManager,
-    Proem\Service\Asset\Standard as Asset,
-    Proem\Bootstrap\Filter\Event\Dispatch,
-    Proem\Bootstrap\Filter\Event\Response,
-    Proem\Bootstrap\Filter\Event\Request,
-    Proem\Bootstrap\Filter\Event\Route,
-    Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Ext\Template as Extension,
-    Proem\Ext\Module\Generic as Module,
-    Proem\Ext\Plugin\Generic as Plugin;
+use Proem\Service\Manager\Standard as ServiceManager;
+use Proem\Signal\Manager\Standard as SignalManager;
+use Proem\Filter\Manager\Standard as FilterManager;
+use Proem\Service\Asset\Standard as Asset;
+use Proem\Bootstrap\Filter\Event\Dispatch;
+use Proem\Bootstrap\Filter\Event\Response;
+use Proem\Bootstrap\Filter\Event\Request;
+use Proem\Bootstrap\Filter\Event\Route;
+use Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Ext\Template as Extension;
+use Proem\Ext\Module\Generic as Module;
+use Proem\Ext\Plugin\Generic as Plugin;
 
 /**
  * The Proem boostrap wrapper
@@ -81,9 +81,14 @@ class Proem
     public function __construct()
     {
         $this->events = new Asset;
-        $this->events->set('Proem\Signal\Manager\Template', $this->events->single(function($asset) {
-            return new SignalManager;
-        }));
+        $this->events->set(
+            'Proem\Signal\Manager\Template',
+            $this->events->single(
+                function ($asset) {
+                    return new SignalManager;
+                }
+            )
+        );
 
         $this->serviceManager = new ServiceManager;
     }
@@ -100,10 +105,13 @@ class Proem
      */
     protected function attachExtension(Extension $extension, $event = 'proem.init', $priority = 0)
     {
-        $this->attachEventListener($event, function($e) use ($extension) {
-            $extension->init($e->getServiceManager(), $e->getEnvironment());
-        }, $priority);
-
+        $this->attachEventListener(
+            $event,
+            function ($e) use ($extension) {
+                $extension->init($e->getServiceManager(), $e->getEnvironment());
+            },
+            $priority
+        );
         return $this;
     }
 
@@ -112,7 +120,7 @@ class Proem
      *
      * @param string $name The name of the event.
      * @param callable $callback The callback that will be executed when the event is triggered.
-     * @param int $priority The priority that this listenever will have above other listeners attached to this same event.
+     * @param int $priority The priority that this listenever will have above other listeners attached to this event.
      *
      * @return Proem\Proem
      */
@@ -175,7 +183,7 @@ class Proem
 
         $this->events->get()->trigger(
             (new Bootstrap('proem.init'))->setServiceManager($this->serviceManager)->setEnvironment($environment),
-            function($response) {
+            function ($response) {
                 if ($response instanceof Proem\Filter\Manager\Template) {
                     $this->filterManager = $response;
                 }

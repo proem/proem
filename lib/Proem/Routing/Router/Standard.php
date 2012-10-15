@@ -30,11 +30,11 @@
  */
 namespace Proem\Routing\Router;
 
-use Proem\Routing\Router\Template,
-    Proem\Routing\Route\Template as Route,
-    Proem\IO\Request\Template as Request,
-    Proem\Signal\Manager\Template as SignalManager,
-    Proem\Util\Storage\KeyValStore;
+use Proem\Routing\Router\Template;
+use Proem\Routing\Route\Template as Route;
+use Proem\IO\Request\Template as Request;
+use Proem\Signal\Manager\Template as SignalManager;
+use Proem\Util\Storage\KeyValStore;
 
 /**
  * The standard router.
@@ -110,5 +110,4 @@ class Standard implements Template
         $this->routes->rewind();
         return false;
     }
-
 }

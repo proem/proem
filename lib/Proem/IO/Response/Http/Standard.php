@@ -30,8 +30,8 @@
  */
 namespace Proem\IO\Response\Http;
 
-use Proem\IO\Response\Template,
-    Proem\Util\Storage\KeyValStore;
+use Proem\IO\Response\Template;
+use Proem\Util\Storage\KeyValStore;
 
 /**
  * A standard http response implementation.
@@ -127,7 +127,7 @@ class Standard implements Template
     public function __construct()
     {
         $this->headers = new KeyValStore;
-        $this->headers->set('X-Powered-By','Proem Framework ' . \Proem\Proem::VERSION);
+        $this->headers->set('X-Powered-By', 'Proem Framework ' . \Proem\Proem::VERSION);
     }
 
     /**
@@ -155,7 +155,7 @@ class Standard implements Template
      */
     public function setHttpVersion($version)
     {
-        if (in_array($version, [1.0,1.1])) {
+        if (in_array($version, [1.0, 1.1])) {
             $this->httpVersion = $version;
         }
         return $this;
@@ -326,9 +326,8 @@ class Standard implements Template
     {
         $this->sendHeaders($include_content_length);
 
-        if (( $this->httpStatus < 100 || $this->httpStatus >= 200 ) && $this->httpStatus != 204 && $this->httpStatus != 304) {
+        if (($this->httpStatus < 100 || $this->httpStatus >= 200) && !in_array($this->httpStatus, [204, 304])) {
             echo $this->body;
         }
     }
-
 }

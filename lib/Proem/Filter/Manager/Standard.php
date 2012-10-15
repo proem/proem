@@ -30,10 +30,10 @@
  */
 namespace Proem\Filter\Manager;
 
-use Proem\Filter\Event\Template as Event,
-    Proem\Util\Storage\Queue,
-    Proem\Service\Manager\Template as ServiceManager,
-    Proem\Filter\Manager\Template;
+use Proem\Filter\Event\Template as Event;
+use Proem\Util\Storage\Queue;
+use Proem\Service\Manager\Template as ServiceManager;
+use Proem\Filter\Manager\Template;
 
 /**
  * The standard filter manager.
@@ -143,5 +143,4 @@ class Standard implements Template
     {
         return $this->getInitialEvent()->init($this);
     }
-
 }

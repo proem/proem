@@ -30,9 +30,6 @@
  */
 namespace Proem\Signal\Event;
 
-use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
-
 /**
  * Interface that all events must implement.
  */
@@ -74,5 +71,4 @@ interface Template
      * @return string The name of the triggered event.
      */
     public function getName();
-
 }

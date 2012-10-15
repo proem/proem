@@ -200,7 +200,7 @@ class Autoloader
             if ($file = $this->locateFile($class)) {
                 apc_store($class, $file);
             }
-        } else if (!$this->apcEnabled) {
+        } elseif (!$this->apcEnabled) {
             $file = $this->locateFile($class);
         }
 
@@ -218,7 +218,10 @@ class Autoloader
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);
-            $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+            $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
+                DIRECTORY_SEPARATOR .
+                str_replace('_', DIRECTORY_SEPARATOR, $className) .
+                '.php';
 
             foreach ($this->namespaces as $space => $paths) {
                 if (strpos($namespace, $space) !== 0) {

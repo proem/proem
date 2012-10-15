@@ -30,8 +30,8 @@
  */
 namespace Proem\Service\Asset;
 
-use Proem\Service\Asset\Template,
-    Proem\Service\Manager\Template as Manager;
+use Proem\Service\Asset\Template;
+use Proem\Service\Manager\Template as Manager;
 
 /**
  * Standard asset container.
@@ -80,7 +80,13 @@ class Standard implements Template
             return $object;
         }
 
-        throw new \DomainException(sprintf("The Asset providing %s actually provides a %s object", $this->provides, get_class($object)));
+        throw new \DomainException(
+            sprintf(
+                "The Asset providing %s actually provides a %s object",
+                $this->provides,
+                get_class($object)
+            )
+        );
     }
 
     /**
@@ -113,7 +119,8 @@ class Standard implements Template
      * @param mixed $value
      * @return Proem\Service\Asset\Template
      */
-    public function __set($index, $value) {
+    public function __set($index, $value)
+    {
         return $this->setParam($index, $value);
     }
 
@@ -144,7 +151,8 @@ class Standard implements Template
      *
      * @param string $index
      */
-    public function __get($index) {
+    public function __get($index)
+    {
         return $this->getParam($index);
     }
 
@@ -224,5 +232,4 @@ class Standard implements Template
             return $obj;
         };
     }
-
 }

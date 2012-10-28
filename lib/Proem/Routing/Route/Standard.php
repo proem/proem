@@ -141,7 +141,13 @@ class Standard extends Generic
                     if (isset($default_filters[$custom_filters[$key]])) {
                         return '(' . $default_filters[$custom_filters[$key]] . ')';
                     } else {
-                        return '(' . $custom_filters[$key] . ')';
+                        if ($custom_filters[$key]{0} == ':') {
+                            throw new \RuntimeException(
+                                "The custom filter named \"{$key}\" references a non-existent builtin filter named \"{$custom_filters[$key]}\"."
+                            );
+                        } else {
+                            return '(' . $custom_filters[$key] . ')';
+                        }
                     }
                 } elseif (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';

@@ -15,6 +15,9 @@ group('proem', function() {
 
 group('dev', function() {
 
+    desc('Default tasks to execute before commit');
+    task('pre-commit', 'tests', 'sniff', function() {});
+
     desc('Run the unit tests');
     task('tests', function($args) {
         $report = ' ';
@@ -86,4 +89,4 @@ group('dev', function() {
     });
 });
 
-task('default', 'dev:tests');
+task('default', 'dev:pre-commit');

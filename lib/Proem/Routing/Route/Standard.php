@@ -143,7 +143,8 @@ class Standard extends Generic
                     } else {
                         if ($custom_filters[$key]{0} == ':') {
                             throw new \RuntimeException(
-                                "The custom filter named \"{$key}\" references a non-existent builtin filter named \"{$custom_filters[$key]}\"."
+                                "The custom filter named \"{$key}\" references a
+                                non-existent builtin filter named \"{$custom_filters[$key]}\"."
                             );
                         } else {
                             return '(' . $custom_filters[$key] . ')';

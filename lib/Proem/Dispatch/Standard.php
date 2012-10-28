@@ -99,6 +99,9 @@ class Standard implements Template
         $this->controllerMaps = ['Module\:module\Controller\:controller'];
     }
 
+    /**
+     * Insure that method and controller names follow PSR-1/2
+     */
     protected function prepare($str)
     {
         return ucfirst(strtolower($str));

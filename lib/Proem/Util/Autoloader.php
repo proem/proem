@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem
+ * @namespace Proem\Util
  */
-namespace Proem;
+namespace Proem\Util;
 
 /**
  * The Proem Autoloader
@@ -80,7 +80,7 @@ class Autoloader
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Autoloader
+     * @return Proem\util\Autoloader
      */
     public function attachNamespaces(array $namespaces)
     {
@@ -95,7 +95,7 @@ class Autoloader
      *
      * @param string $namespace The namespace
      * @param array|string $paths The path to the namespace
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachNamespace($namespace, $paths)
     {
@@ -116,7 +116,7 @@ class Autoloader
      * Registers an array of classes using the Pear naming convention
      *
      * @param array $classes
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachPearPrefixes(array $classes)
     {
@@ -131,7 +131,7 @@ class Autoloader
      *
      * @param string $prefix The prefix
      * @param array|string $paths The path
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachPearPrefix($prefix, $paths)
     {
@@ -142,7 +142,7 @@ class Autoloader
     /**
      * Register the autoloader.
      *
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function register()
     {
@@ -153,7 +153,7 @@ class Autoloader
     /**
      * Unregister the autoloader.
      *
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function unregister()
     {
@@ -172,7 +172,7 @@ class Autoloader
      *
      * @link http://proemframework.org/docs/cascading-namespace.html
      * @param string $class The absolute (including namespace) name of the class
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function load($class)
     {

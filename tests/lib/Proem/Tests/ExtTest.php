@@ -26,7 +26,7 @@
 
 namespace Proem\Tests;
 
-use Proem\Autoloader,
+use Proem\Util\Autoloader,
     MyApp\Module\Foo;
 
 class ExtTest extends \PHPUnit_Framework_TestCase

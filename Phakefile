@@ -1,8 +1,8 @@
 <?php
 
-require_once 'lib/Proem/Autoloader.php';
+require_once 'lib/Proem/Util/Autoloader.php';
 
-(new \Proem\Autoloader)
+(new \Proem\Util\Autoloader)
     ->attachNamespace('Proem', 'lib')
     ->register();
 

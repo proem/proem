@@ -1,8 +1,8 @@
 <?php
 
-require_once 'lib/Proem/Autoloader.php';
+require_once 'lib/Proem/Util/Autoloader.php';
 
-use Proem\Autoloader;
+use Proem\Util\Autoloader;
 
 $loader = new AutoLoader();
 $loader->attachNamespaces([

@@ -91,16 +91,45 @@ class Standard implements Template
                  */
                 foreach ($this->queues[$part] as $listener) {
                     if (isset($this->queues[$name])) {
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
+                        $this->queues[$name]->insert($listener['key'], $listener['priority']);
                     } else {
                         $this->queues[$name] = new Queue;
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
+                        $this->queues[$name]->insert($listener['key'], $listener['priority']);
                     }
                 }
             }
         }
 
         return $listenerMatched;
+    }
+
+    /**
+     * Store a callback's key and priority in a queue indexed
+     * by the event they are attached to.
+     *
+     * @param $event The name of the event this callback is being attached to
+     * @param string $key The key the callback is stored under
+     * @priority The priority this callback has within this queue
+     */
+    protected function pushToQueue($event, $key, $priority)
+    {
+        $end = substr($event, -2);
+        if (isset($this->queues[$event])) {
+            if ($end == self::WILDCARD) {
+                $this->wildcardSearching = true;
+                $this->queues[$event][] = ['key' => $key, 'priority' => $priority];
+            } else {
+                $this->queues[$event]->insert($key, $priority);
+            }
+        } else {
+            if ($end == self::WILDCARD) {
+                $this->wildcardSearching = true;
+                $this->queues[$event][] = ['key' => $key, 'priority' => $priority];
+            } else {
+                $this->queues[$event] = new Queue;
+                $this->queues[$event]->insert($key, $priority);
+            }
+        }
     }
 
     /**
@@ -193,42 +222,10 @@ class Standard implements Template
 
         if (is_array($name)) {
             foreach ($name as $event) {
-                $end = substr($event, -2);
-                if (isset($this->queues[$event])) {
-                    if ($end == self::WILDCARD) {
-                        $this->wildcardSearching = true;
-                        $this->queues[$name][] = [$key, $priority];
-                    } else {
-                        $this->queues[$event]->insert($key, $priority);
-                    }
-                } else {
-                    if ($end == self::WILDCARD) {
-                        $this->wildcardSearching = true;
-                        $this->queues[$event][] = [$key, $priority];
-                    } else {
-                        $this->queues[$event] = new Queue;
-                        $this->queues[$event]->insert($key, $priority);
-                    }
-                }
+                $this->pushToQueue($event, $key, $priority);
             }
         } else {
-            $end = substr($name, -2);
-            if (isset($this->queues[$name])) {
-                if ($end == self::WILDCARD) {
-                    $this->wildcardSearching = true;
-                    $this->queues[$name][] = [$key, $priority];
-                } else {
-                    $this->queues[$name]->insert($key, $priority);
-                }
-            } else {
-                if ($end == self::WILDCARD) {
-                    $this->wildcardSearching = true;
-                    $this->queues[$name][] = [$key, $priority];
-                } else {
-                    $this->queues[$name] = new Queue;
-                    $this->queues[$name]->insert($key, $priority);
-                }
-            }
+            $this->pushToQueue($name, $key, $priority);
         }
 
         return $this;

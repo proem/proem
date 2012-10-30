@@ -68,6 +68,42 @@ class Standard implements Template
     protected $wildcardSearching = false;
 
     /**
+     * Given an event name, this method searches for all possible
+     * wildcard matches in the queues. When/If a match is found
+     * it will then copy it's key and priority from the wildcards
+     * queue into the named event's queue.
+     *
+     * @param $name The event name
+     * @return bool True if match is found
+     */
+    protected function populateQueueFromWildSearch($name)
+    {
+        $listenerMatched = false;
+        $parts = explode('.', $name);
+        while (count($parts)) {
+            array_pop($parts);
+            $part = implode('.', $parts) . self::WILDCARD;
+
+            if (isset($this->queues[$part])) {
+                $listenerMatched = true;
+                /**
+                 * Add to currently named queue
+                 */
+                foreach ($this->queues[$part] as $listener) {
+                    if (isset($this->queues[$name])) {
+                        $this->queues[$name]->insert($listener[0], $listener[1]);
+                    } else {
+                        $this->queues[$name] = new Queue;
+                        $this->queues[$name]->insert($listener[0], $listener[1]);
+                    }
+                }
+            }
+        }
+
+        return $listenerMatched;
+    }
+
+    /**
      * Remove event listeners from a particular index.
      *
      * Be aware that removeing listeners from the wildcard '*' will not literally
@@ -106,25 +142,8 @@ class Standard implements Template
          * Optionally search for wildcard matches.
          */
         if ($this->wildcardSearching) {
-            $parts = explode('.', $name);
-            while (count($parts)) {
-                array_pop($parts);
-                $part = implode('.', $parts) . self::WILDCARD;
-
-                if (isset($this->queues[$part])) {
-                    $listenerMatched = true;
-                    /**
-                     * Add to currently named queue
-                     */
-                    foreach ($this->queues[$part] as $listener) {
-                        if (isset($this->queues[$name])) {
-                            $this->queues[$name]->insert($listener[0], $listener[1]);
-                        } else {
-                            $this->queues[$name] = new Queue;
-                            $this->queues[$name]->insert($listener[0], $listener[1]);
-                        }
-                    }
-                }
+            if ($this->populateQueueFromWildSearch($name)) {
+                $listenerMatched = true;
             }
         }
 

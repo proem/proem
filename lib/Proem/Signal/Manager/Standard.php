@@ -86,6 +86,59 @@ class Standard implements Template
     }
 
     /**
+     * Retrieve listeners by name
+     *
+     * @param string $name
+     * @return array $listeners
+     */
+    public function getListeners($name)
+    {
+        $listenerMatched = false;
+
+        /**
+         * Do we have an exact match?
+         */
+        if (isset($this->queues[$name])) {
+            $listenerMatched = true;
+        }
+
+        /**
+         * Optionally search for wildcard matches.
+         */
+        if ($this->wildcardSearching) {
+            $parts = explode('.', $name);
+            while (count($parts)) {
+                array_pop($parts);
+                $part = implode('.', $parts) . self::WILDCARD;
+
+                if (isset($this->queues[$part])) {
+                    $listenerMatched = true;
+                    /**
+                     * Add to currently named queue
+                     */
+                    foreach ($this->queues[$part] as $listener) {
+                        if (isset($this->queues[$name])) {
+                            $this->queues[$name]->insert($listener[0], $listener[1]);
+                        } else {
+                            $this->queues[$name] = new Queue;
+                            $this->queues[$name]->insert($listener[0], $listener[1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        $listeners = [];
+        if ($listenerMatched) {
+            foreach ($this->queues[$name] as $key) {
+                $listeners[] = $this->callbacks[$key];
+            }
+        }
+
+        return $listeners;
+    }
+
+    /**
      * Register a listener attached to a particular named event.
      *
      * All listeners have there callbacks firstly stored within an associative array
@@ -172,47 +225,11 @@ class Standard implements Template
      */
     public function trigger(Event $event, Callable $callback = null)
     {
-        $listenerMatched = false;
-        $name = $event->getName();
-
-        /**
-         * Do we have an exact match?
-         */
-        if (isset($this->queues[$name])) {
-            $listenerMatched = true;
-        }
-
-        /**
-         * Optionally search for wildcard matches.
-         */
-        if ($this->wildcardSearching) {
-            $parts = explode('.', $name);
-            while (count($parts)) {
-                array_pop($parts);
-                $part = implode('.', $parts) . self::WILDCARD;
-
-                if (isset($this->queues[$part])) {
-                    $listenerMatched = true;
-                    /**
-                     * Add to currently named queue
-                     */
-                    foreach ($this->queues[$part] as $listener) {
-                        if (isset($this->queues[$name])) {
-                            $this->queues[$name]->insert($listener[0], $listener[1]);
-                        } else {
-                            $this->queues[$name] = new Queue;
-                            $this->queues[$name]->insert($listener[0], $listener[1]);
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($listenerMatched) {
-            foreach ($this->queues[$name] as $key) {
-                if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
+        if ($listeners = $this->getListeners($event->getName())) {
+            foreach ($listeners as $listener) {
+                if ($result = (new Callback($listener, $event))->call()) {
                     if ($callback !== null) {
-                        (new Callback($callback, $return))->call();
+                        (new Callback($callback, $result))->call();
                     }
                 }
             }

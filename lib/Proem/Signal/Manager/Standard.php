@@ -104,6 +104,19 @@ class Standard implements Template
     }
 
     /**
+     * Store a callback index by a generated key
+     *
+     * @param callable $callback
+     * @return string $key
+     */
+    protected function storeCallback(Callable $callback)
+    {
+        $key = md5(microtime());
+        $this->callbacks[$key] = $callback;
+        return $key;
+    }
+
+    /**
      * Store a callback's key and priority in a queue indexed
      * by the event they are attached to.
      *
@@ -217,8 +230,7 @@ class Standard implements Template
      */
     public function attach($name, Callable $callback, $priority = 0)
     {
-        $key = md5(microtime());
-        $this->callbacks[$key] = $callback;
+        $key = $this->storeCallback($callback);
 
         if (is_array($name)) {
             foreach ($name as $event) {

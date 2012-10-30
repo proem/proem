@@ -106,11 +106,20 @@ class Dispatch extends Event
      */
     public function postIn(Manager $assets)
     {
+        $skipDispatch = false;
+
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger((new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets));
+            $assets->get('events')->trigger(
+                (new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets),
+                function ($response) use (&$skipDispatch) {
+                    $skipDispatch = true;
+                }
+            );
         }
 
-        (new DispatchStage($assets));
+        if (!$skipDispatch) {
+            (new DispatchStage($assets));
+        }
     }
 
     /**

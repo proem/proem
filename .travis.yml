@@ -10,7 +10,8 @@ notifications:
   irc:
     on_success: change
     on_failure: always
-    - "irc.freenode.net#proem"
+    channels:
+      - "irc.freenode.net#proem"
 
 branches:
   only:

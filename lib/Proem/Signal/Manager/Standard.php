@@ -257,13 +257,24 @@ class Standard implements Template
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
                 if ($result = (new EventCallback($listener, $event))->call()) {
-                    if ($result instanceof EventInterface && $callback !== null) {
-                        (new EventCallback($callback, $result))->call();
-                    }
+                    if ($result instanceof EventInterface) {
+                        // Was the queue halted early ?
+                        if ($result->isQueueHaltedEarly()) {
+                            return $this;
+                        }
 
-                    // Halt the queue ?
-                    if ($result->isQueueHalted()) {
-                        return;
+                        if ($callback !== null) {
+                            (new EventCallback($callback, $result))->call();
+                        }
+
+                        // Was the queue halted ?
+                        if ($result->isQueueHalted()) {
+                            return $this;
+                        }
+                    } else {
+                        throw new \RuntimeException(
+                            'Value returned from an Event Callback must be of type Proem\Signal\Event\Template'
+                        );
                     }
                 }
             }

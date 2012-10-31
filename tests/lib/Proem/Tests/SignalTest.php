@@ -97,6 +97,26 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $r->out);
     }
 
+    public function testCanHaltQueueNow()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+        (new Manager)
+            ->attach('a', function($e) {
+                return $e; // make sure the callback is triggered.
+            })
+            ->attach('a', function($e) {
+                // halt the queue before the trigger's callback can be called for a second time.
+                return $e->haltQueue(true);
+            })
+
+        ->trigger(new Event('a'), function ($event) use ($r) {
+            $r->out++;
+        });
+
+        $this->assertEquals(1, $r->out);
+    }
+
     public function testListenerCanListenToAllEvents()
     {
         $r = new \StdClass;

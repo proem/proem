@@ -42,11 +42,18 @@ interface Template
 
     /**
      * Set the halt queue flag to true
+     *
+     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
      */
-    public function haltQueue();
+    public function haltQueue($early);
 
     /**
-     * Check to see if the haltQueue flag is true
+     * Check to see if the haltedQueueEarly flag is true
+     */
+    public function isQueueHaltedEarly();
+
+    /**
+     * Check to see if the haltedQueue flag is true
      */
     public function isQueueHalted();
 

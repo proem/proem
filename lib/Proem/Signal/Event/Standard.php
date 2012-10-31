@@ -101,11 +101,13 @@ class Standard implements Template
      *
      * @return mixed
      */
-    public function getParam($index)
+    public function getParam($index, $default = null)
     {
         if (isset($this->params[$index])) {
             return $this->params[$index];
         }
+
+        return $default;
     }
 
     /**

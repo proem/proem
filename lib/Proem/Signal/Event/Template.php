@@ -60,12 +60,13 @@ interface Template
     public function setParam($key, $param);
 
     /**
-     * Retrieve a parameter by key
+     * Retrieve a parameter (or some default value) by key
      *
      * @param string $key
+     * @param mixed $default Default value returned if $key does not exist
      * @return mixed
      */
-    public function getParam($key);
+    public function getParam($key, $default);
 
     /**
      * Set params

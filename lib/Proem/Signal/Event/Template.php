@@ -41,6 +41,41 @@ interface Template
     public function __construct($name);
 
     /**
+     * Set the halt queue flag to true
+     *
+     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
+     */
+    public function haltQueue($early);
+
+    /**
+     * Check to see if the haltedQueueEarly flag is true
+     */
+    public function isQueueHaltedEarly();
+
+    /**
+     * Check to see if the haltedQueue flag is true
+     */
+    public function isQueueHalted();
+
+    /**
+     * Set a param
+     *
+     * @param string $key
+     * @param mixed $param
+     * @return Proem\Signal\Event\Template
+     */
+    public function setParam($key, $param);
+
+    /**
+     * Retrieve a parameter (or some default value) by key
+     *
+     * @param string $key
+     * @param mixed $default Default value returned if $key does not exist
+     * @return mixed
+     */
+    public function getParam($key, $default);
+
+    /**
      * Set params
      *
      * @param array $params

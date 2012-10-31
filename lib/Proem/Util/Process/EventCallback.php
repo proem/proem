@@ -26,40 +26,50 @@
 
 
 /**
- * @namespace Proem\Signal\Manager
+ * @namespace Proem\Util\Process
  */
-namespace Proem\Signal\Manager;
+namespace Proem\Util\Process;
 
 use Proem\Signal\Event\Template as EventInterface;
 
 /**
- * Interface that all signal managers must implement.
+ * A simple wrapper around call_user_func_array
  */
-interface Template
+class EventCallback
 {
     /**
-     * Remove event listeners from a particular index.
+     * Store the callback
      *
-     * @param string $name
-     * @return Proem\Signal\Manager\Template
+     * @var callable
      */
-    public function remove($name);
+    protected $callback;
 
     /**
-     * Register a listener attached to a particular named event.
+     * Store event
      *
-     * @param string $name The name of the event to attach to.
-     * @param callable $callback The callback that will be executed when the event is triggered.
-     *
-     * @return Proem\Signal\Manager\Template
+     * Proem\Signal\Event\Template
      */
-    public function attach($name, Callable $callback);
+    protected $event;
 
     /**
-     * Trigger the execution of all event listeners attached to a named event.
+     * Instantiate the Callback object
      *
-     * @param array $options An array of Proem\Util\Opt\Options objects
-     * @return Proem\Signal\Manager\Template
+     * @param callable $callback A valid callback
+     * @param Proem\Signal\Event\Template $event
      */
-    public function trigger(EventInterface $event, Callable $callback = null);
+    public function __construct(callable $callback, EventInterface $event)
+    {
+        $this->callback = $callback;
+        $this->event    = $event;
+    }
+
+    /**
+     * Execute the callback and return it's results.
+     *
+     * @return mixed
+     */
+    public function call()
+    {
+        return call_user_func($this->callback, $this->event);
+    }
 }

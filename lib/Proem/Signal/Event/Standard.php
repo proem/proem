@@ -38,6 +38,20 @@ use Proem\Signal\Event\Template;
 class Standard implements Template
 {
     /**
+     * Halted queue flag
+     *
+     * @var bool
+     */
+    protected $haltedQueue = false;
+
+    /**
+     * Halt the queue *early* flag.
+     *
+     * @var bool
+     */
+    protected $haltedQueueEarly = false;
+
+    /**
      * Store params
      *
      * @var array
@@ -60,6 +74,37 @@ class Standard implements Template
     }
 
     /**
+     * Set the halt queue flag to true
+     *
+     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
+     */
+    public function haltQueue($early = false)
+    {
+        if ($early) {
+            $this->haltedQueueEarly = true;
+        }
+
+        $this->haltedQueue = true;
+        return $this;
+    }
+
+    /**
+     * Check to see if the haltedQueueEarly flag is true
+     */
+    public function isQueueHaltedEarly()
+    {
+        return $this->haltedQueueEarly;
+    }
+
+    /**
+     * Check to see if the haltedQueue flag is true
+     */
+    public function isQueueHalted()
+    {
+        return $this->haltedQueue;
+    }
+
+    /**
      * Set a param
      *
      * @param string $index
@@ -77,11 +122,13 @@ class Standard implements Template
      *
      * @return mixed
      */
-    public function getParam($index)
+    public function getParam($index, $default = null)
     {
         if (isset($this->params[$index])) {
             return $this->params[$index];
         }
+
+        return $default;
     }
 
     /**

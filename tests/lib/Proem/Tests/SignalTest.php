@@ -80,6 +80,23 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $r->out);
     }
 
+    public function testCanHaltQueue()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+        (new Manager)
+            ->attach('a', function($e) use ($r) {
+                $r->out++;
+                return $e->haltQueue();
+            })
+            ->attach('a', function($e) use ($r) {
+                $r->out++;
+            })
+        ->trigger(new Event('a'));
+
+        $this->assertEquals(1, $r->out);
+    }
+
     public function testListenerCanListenToAllEvents()
     {
         $r = new \StdClass;

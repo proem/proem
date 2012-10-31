@@ -41,6 +41,16 @@ interface Template
     public function __construct($name);
 
     /**
+     * Set the halt queue flag to true
+     */
+    public function haltQueue();
+
+    /**
+     * Check to see if the haltQueue flag is true
+     */
+    public function isQueueHalted();
+
+    /**
      * Set a param
      *
      * @param string $key

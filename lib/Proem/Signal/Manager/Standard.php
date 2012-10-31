@@ -260,6 +260,11 @@ class Standard implements Template
                     if ($result instanceof EventInterface && $callback !== null) {
                         (new EventCallback($callback, $result))->call();
                     }
+
+                    // Halt the queue ?
+                    if ($result->isQueueHalted()) {
+                        return;
+                    }
                 }
             }
         }

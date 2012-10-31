@@ -38,6 +38,13 @@ use Proem\Signal\Event\Template;
 class Standard implements Template
 {
     /**
+     * Halted queue flag
+     *
+     * @var bool
+     */
+    protected $haltedQueue = false;
+
+    /**
      * Store params
      *
      * @var array
@@ -57,6 +64,23 @@ class Standard implements Template
     public function __construct($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Set the halt queue flag to true
+     */
+    public function haltQueue()
+    {
+        $this->haltedQueue = true;
+        return $this;
+    }
+
+    /**
+     * Check to see if the haltQueue flag is true
+     */
+    public function isQueueHalted()
+    {
+        return $this->haltedQueue;
     }
 
     /**

@@ -41,6 +41,23 @@ interface Template
     public function __construct($name);
 
     /**
+     * Set a param
+     *
+     * @param string $key
+     * @param mixed $param
+     * @return Proem\Signal\Event\Template
+     */
+    public function setParam($key, $param);
+
+    /**
+     * Retrieve a parameter by key
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getParam($key);
+
+    /**
      * Set params
      *
      * @param array $params

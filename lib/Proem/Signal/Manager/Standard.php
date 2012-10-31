@@ -32,7 +32,8 @@ namespace Proem\Signal\Manager;
 
 use Proem\Util\Storage\Queue;
 use Proem\Util\Process\Callback;
-use Proem\Signal\Event\Standard as Event;
+use Proem\Util\Process\EventCallback;
+use Proem\Signal\Event\Template as EventInterface;
 use Proem\Signal\Manager\Template;
 
 /**
@@ -109,7 +110,7 @@ class Standard implements Template
      * @param callable $callback
      * @return string $key
      */
-    protected function storeCallback(Callable $callback)
+    protected function storeCallback(callable $callback)
     {
         $key = md5(microtime());
         $this->callbacks[$key] = $callback;
@@ -228,7 +229,7 @@ class Standard implements Template
      *
      * @return Proem\Signal\Manager\Template
      */
-    public function attach($name, Callable $callback, $priority = 0)
+    public function attach($name, callable $callback, $priority = 0)
     {
         $key = $this->storeCallback($callback);
 
@@ -251,13 +252,13 @@ class Standard implements Template
      *
      * @return Proem\Signal\Manager\Template
      */
-    public function trigger(Event $event, Callable $callback = null)
+    public function trigger(EventInterface $event, Callable $callback = null)
     {
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
-                if ($result = (new Callback($listener, $event))->call()) {
-                    if ($callback !== null) {
-                        (new Callback($callback, $result))->call();
+                if ($result = (new EventCallback($listener, $event))->call()) {
+                    if ($result instanceof EventInterface && $callback !== null) {
+                        (new EventCallback($callback, $result))->call();
                     }
                 }
             }

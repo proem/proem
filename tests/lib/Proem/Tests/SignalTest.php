@@ -129,11 +129,11 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $r = new \StdClass;
         $r->out = '';
         (new Manager)->attach('do', function($e) {
-            return true;
+            return $e;
         })
         ->trigger(new Event('do'),
             function($response) use ($r) {
-                $this->assertTrue($response);
+                $this->assertInstanceOf('Proem\Signal\Event\Template', $response);
                 $r->out = 'Callback';
             }
         );

@@ -132,6 +132,16 @@ class Standard implements Template
     }
 
     /**
+     * Check for the existance of a parameter.
+     *
+     * @return bool
+     */
+    public function has($index)
+    {
+        return isset($this->params[$index]);
+    }
+
+    /**
      * Set params
      *
      * @param array $params

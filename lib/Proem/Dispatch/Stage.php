@@ -131,8 +131,8 @@ class Stage
             while ($payload = $router->route()) {
                 $assets->get('events')->trigger(
                     (new RouteMatch('proem.route.match'))->setPayload($payload),
-                    function ($e) use (&$dispatched, &$assets) {
-                        if ($e) {
+                    function ($response) use (&$dispatched, &$assets) {
+                        if ($response->has('isDispatchable') && $response->getParam('isDispatchable')) {
                             $dispatched = true;
                             $assets->get('events')->trigger(new RouteDispatch('proem.route.dispatch'));
                         }
@@ -168,12 +168,13 @@ class Stage
      * @param Proem\Routing\Signal\Event\RouteMatch $e
      * @return bool
      */
-    public function testRoute($e)
+    public function testRoute($event)
     {
         if ($this->assets->has('dispatch')) {
-            return $this->assets->get('dispatch')
-                ->setPayload($e->getPayload())
-                ->isDispatchable();
+            return $event->setParam(
+                'isDispatchable',
+                $this->assets->get('dispatch')->setPayload($event->getPayload())->isDispatchable()
+            );
         }
     }
 

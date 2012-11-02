@@ -45,9 +45,9 @@ class Route extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object implementing the
-     * Proem\Routing\Router\Template interface, will result in that
-     * object being placed within the main service manager under
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\Routing\Router\Template interface, will result in
+     * that implementation being placed within the main service manager under
      * the index of *router*.
      *
      * @param Proem\Service\Manager\Template $assets
@@ -59,8 +59,11 @@ class Route extends Event
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.router'))->setServiceManager($assets),
                 function ($response) use ($assets) {
-                    if ($response->provides('Proem\Routing\Router\Template')) {
-                        $assets->set('router', $response);
+                    if (
+                        $response->has('router.asset') &&
+                        $response->getParam('router.asset')->provides('Proem\Routing\Router\Template')
+                    ) {
+                        $assets->set('router', $response->getParam('router.asset'));
                     }
                 }
             );

@@ -44,9 +44,9 @@ class Response extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object implementing the
-     * Proem\IO\Response\Template interface, will result in that
-     * object being placed within the main service manager under
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\IO\Response\Template interface, will result in
+     * that implementation being placed within the main service manager under
      * the index of *response*.
      *
      * @param Proem\Service\Manager\Template $assets
@@ -58,8 +58,11 @@ class Response extends Event
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.response'))->setServiceManager($assets),
                 function ($response) use ($assets) {
-                    if ($response->provides('Proem\IO\Response\Template')) {
-                        $assets->set('response', $response);
+                    if (
+                        $response->has('response.asset') &&
+                        $response->getParam('response.asset')->provides('Proem\IO\Response\Template')
+                    ) {
+                        $assets->set('response', $response->getParam('response.asset'));
                     }
                 }
             );

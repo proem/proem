@@ -76,6 +76,13 @@ interface Template
     public function getParam($key, $default);
 
     /**
+     * Check for the existance of a parameter.
+     *
+     * @return bool
+     */
+    public function has($index);
+
+    /**
      * Set params
      *
      * @param array $params

@@ -294,14 +294,14 @@ class Standard implements Template
      *
      * @param bool $include_content_length Optionaly disable the Content-Length header.
      */
-    public function sendHeaders($include_content_length = true)
+    public function sendHeaders($include_content_length = false)
     {
         if (headers_sent()) {
             return;
         }
 
         if ($include_content_length) {
-            $this->headers->set('Content-Length', $this->length);
+            //$this->headers->set('Content-Length', $this->length);
         }
 
         if (in_array($this->httpStatus, [204, 304])) {

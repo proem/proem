@@ -44,9 +44,10 @@ class Request extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object that implements the
-     * Proem\IO\Request\Template interface will result in that object
-     * being placed within the service manager under the *request* index.
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\IO\Request\Template interface, will result in
+     * that implementation being placed within the main service manager under
+     * the index of *request*.
      *
      * @param Proem\Service\Manager\Template $assets
      * @triggers Proem\Bootstrap\Signal\Event\Bootstrap proem.pre.in.request
@@ -57,8 +58,11 @@ class Request extends Event
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.request'))->setServiceManager($assets),
                 function ($response) use ($assets) {
-                    if ($response->provides('Proem\IO\Request\Template')) {
-                        $assets->set('request', $response);
+                    if (
+                        $response->has('request.asset') &&
+                        $response->getParam('request.asset')->provides('Proem\IO\Request\Template')
+                    ) {
+                        $assets->set('request', $response->getParam('request.asset'));
                     }
                 }
             );

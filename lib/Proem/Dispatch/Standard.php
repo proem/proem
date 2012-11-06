@@ -154,8 +154,8 @@ class Standard implements Template
      */
     public function isDispatchable()
     {
-        $this->module     = $this->payload->has('module')     ? $this->prepare($this->payload->get('module')      : '';
-        $this->controller = $this->payload->has('controller') ? $this->prepare($this->payload->get('controller')  : '';
+        $this->module     = $this->payload->has('module')     ? $this->prepare($this->payload->get('module'))      : '';
+        $this->controller = $this->payload->has('controller') ? $this->prepare($this->payload->get('controller'))  : '';
         $this->action     = $this->payload->has('action')     ? $this->payload->get('action') : '';
 
         foreach (array_reverse($this->controllerMaps) as $map) {

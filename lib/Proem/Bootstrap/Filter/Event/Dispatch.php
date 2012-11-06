@@ -45,9 +45,10 @@ class Dispatch extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object implementing the
-     * Proem\Dispatch\Template interface, will result in that object being
-     * placed within the main service manager under the index of *dispatch*.
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\Dispatch\Template interface, will result in
+     * that implementation being placed within the main service manager under
+     * the index of *dispatch*.
      *
      * @see Proem\Dispatch\Template
      * @param Proem\Service\Manager\Template
@@ -59,8 +60,11 @@ class Dispatch extends Event
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.dispatch'))->setServiceManager($assets),
                 function ($response) use ($assets) {
-                    if ($response->provides('Proem\Dispatch\Template')) {
-                        $assets->set('dispatch', $response);
+                    if (
+                        $response->has('dispatch.asset') &&
+                        $response->getParam('dispatch.asset')->provides('Proem\Dispatch\Template')
+                    ) {
+                        $assets->set('dispatch', $response->getParam('dispatch.asset'));
                     }
                 }
             );
@@ -112,7 +116,9 @@ class Dispatch extends Event
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets),
                 function ($response) use (&$skipDispatch) {
-                    $skipDispatch = true;
+                    if ($response->has('skip.dispatch') && $response->getParam('skip.dispatch')) {
+                        $skipDispatch = true;
+                    }
                 }
             );
         }

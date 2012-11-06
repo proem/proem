@@ -184,8 +184,11 @@ class Proem
         $this->events->get()->trigger(
             (new Bootstrap('proem.init'))->setServiceManager($this->serviceManager)->setEnvironment($environment),
             function ($response) {
-                if ($response instanceof Proem\Filter\Manager\Template) {
-                    $this->filterManager = $response;
+                if (
+                    $response->has('filterManager.asset') &&
+                    $response->getParam('filterManager.asset')->provides('Proem\Filter\Manager\Template')
+                ) {
+                    $this->filterManager = $response->getParam('filterManager.asset');
                 }
             }
         );

@@ -20,6 +20,7 @@
   },
   "require-dev": {
     "jaz303/phake": "dev-master",
-    "EHER/PHPUnit": ">=1.6"
+    "EHER/PHPUnit": ">=1.6",
+    "squizlabs/php_codesniffer": "dev-master"
   }
 }

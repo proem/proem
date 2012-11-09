@@ -12,6 +12,10 @@
       "homepage": "http://thorpesystems.com"
     }
   ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
   "require": {
     "php": ">=5.4.0"
   },

@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "jaz303/phake": "dev-master",
-    "EHER/PHPUnit": ">=1.6",
+    "phpunit/phpunit": "3.7.*",
     "squizlabs/php_codesniffer": "dev-master"
   }
 }

@@ -40,12 +40,6 @@ group('dev', function() {
         system('vendor/bin/phpcs -a --standard=PSR2 lib/');
     });
 
-    desc('Lines of code?');
-    task('loc', function ($args) {
-        chdir(realpath(__DIR__));
-        system('vendor/bin/phploc lib/');
-    });
-
     desc('Build the Phar archive');
     task('build', 'tests', function($args) {
         if (!is_dir('build')) {

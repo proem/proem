@@ -32,12 +32,18 @@ namespace Proem\Dispatch;
 use Proem\Dispatch\Template as Template;
 use Proem\Service\Manager\Template as Manager;
 use Proem\Routing\Route\Payload as Payload;
+use Proem\Util\Storage\Queue;
 
 /**
  * Proem\Dispatch\Standard
  */
 class Standard implements Template
 {
+    /**
+     * Constants used for priorities
+     */
+    const DEFAULT_CONTROLLERMAP_PRIORITY = 0;
+
     /**
      * Store the Assets manager
      *
@@ -49,9 +55,14 @@ class Standard implements Template
      * Store an array of patterns used to searching
      * for classes within a namepspace.
      *
-     * @var array $controllerMaps
+     * Controller maps are actually stored within a priority
+     * queue with the default controller map sitting at priority 0.
+     * If you want custom controller maps to be looked at before
+     * the default controller map, give them a higher priority.
+     *
+     * @var Queue $controllerMaps
      */
-    protected $controllerMaps = [];
+    protected $controllerMaps;
 
     /**
      * Store the absolute namespace to the current class
@@ -96,7 +107,11 @@ class Standard implements Template
     public function __construct(Manager $assets)
     {
         $this->assets = $assets;
-        $this->controllerMaps = ['Module\:module\Controller\:controller'];
+        $this->controllerMaps = new Queue;
+        $this->controllerMaps->insert(
+            'Module\:module\Controller\:controller',
+            self::DEFAULT_CONTROLLERMAP_PRIORITY
+        );
     }
 
     /**
@@ -126,7 +141,11 @@ class Standard implements Template
      * This method allows us to add different directory structures
      * which the dispatcher can use to locate controllers.
      *
-     * The default controller map looks like: 'Module\:module\Controller\:controller'
+     * The default controller map looks like: 'Module\:module\Controller\:controller' and
+     * is stored at priority 0.
+     *
+     * If you want custom controller maps to be looked at before the default controller map,
+     * give them a higher priority.
      *
      * You can create your own. The tokens :module and :controller will be replaced
      * with the module and controller that are made available via the payload.
@@ -134,9 +153,9 @@ class Standard implements Template
      * @param string $map
      * @return Proem\Dispatch\Template
      */
-    public function attachControllerMap($map)
+    public function attachControllerMap($map, $priority = self::DEFAULT_CONTROLLERMAP_PRIORITY)
     {
-        $this->controllerMaps[] = $map;
+        $this->controllerMaps->insert($map, $priority);
         return $this;
     }
 

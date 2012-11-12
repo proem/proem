@@ -71,16 +71,13 @@ class Standard implements ControllerTemplate
      */
     public function dispatch($action)
     {
-        $action = strtolower($action);
-
         if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $this->assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.action.' . $action))->setServiceManager($this->assets)
             );
         }
 
-        $method = $action . 'Action';
-        $result = $this->{$method}();
+        $result = $this->{$action}();
 
         if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
             $this->assets->get('events')->trigger(

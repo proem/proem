@@ -171,9 +171,13 @@ class Stage
     public function testRoute($event)
     {
         if ($this->assets->has('dispatch')) {
+            $this->assets->get('dispatch')->setPayload($event->getPayload());
+            $this->assets->get('dispatch')->setModule($event->getPayload()->get('module', ''));
+            $this->assets->get('dispatch')->setController($event->getPayload()->get('controller', ''));
+            $this->assets->get('dispatch')->setAction($event->getPayload()->get('action', ''));
             return $event->setParam(
                 'isDispatchable',
-                $this->assets->get('dispatch')->setPayload($event->getPayload())->isDispatchable()
+                $this->assets->get('dispatch')->isDispatchable()
             );
         }
     }

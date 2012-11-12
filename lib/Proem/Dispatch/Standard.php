@@ -40,9 +40,14 @@ use Proem\Util\Storage\Queue;
 class Standard implements Template
 {
     /**
-     * Constants used for priorities
+     * Priorities
      */
     const DEFAULT_CONTROLLERMAP_PRIORITY = 0;
+
+    /**
+     * Action placeholder
+     */
+    const ACTION_PLACEHOLDER = '{:action}';
 
     /**
      * Store the Assets manager
@@ -63,6 +68,11 @@ class Standard implements Template
      * @var Queue $controllerMaps
      */
     protected $controllerMaps;
+
+    /**
+     * Store the *action map* pattern.
+     */
+    protected $actionMap;
 
     /**
      * Store the absolute namespace to the current class
@@ -112,6 +122,7 @@ class Standard implements Template
             'Module\:module\Controller\:controller',
             self::DEFAULT_CONTROLLERMAP_PRIORITY
         );
+        $this->actionMap = self::ACTION_PLACEHOLDER . 'Action';
     }
 
     /**
@@ -135,6 +146,63 @@ class Standard implements Template
     }
 
     /**
+     * Set the current module
+     *
+     * @param string $module
+     */
+    public function setModule($module)
+    {
+        $this->module = $module;
+        return $this;
+    }
+
+    /**
+     * Get the current module
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
+
+    /**
+     * Set the current controller
+     *
+     * @param string $controller
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+        return $this;
+    }
+
+    /**
+     * Get the current controller
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Set the current action
+     *
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * Get the current action
+     */
+    public function getAction()
+    {
+        return str_replace(self::ACTION_PLACEHOLDER, strtolower($this->action), $this->actionMap);
+    }
+
+    /**
      * Add a new controller map onto the stack of controller
      * maps.
      *
@@ -151,11 +219,28 @@ class Standard implements Template
      * with the module and controller that are made available via the payload.
      *
      * @param string $map
+     * @param int $priority
      * @return Proem\Dispatch\Template
      */
     public function attachControllerMap($map, $priority = self::DEFAULT_CONTROLLERMAP_PRIORITY)
     {
         $this->controllerMaps->insert($map, $priority);
+        return $this;
+    }
+
+    /**
+     * Allows the customisation of the *action map*.
+     *
+     * The default implementation looks like {:action}Action
+     *
+     * {:action} gets replaced by the action returning from the
+     * router.
+     *
+     * @param string $mapping
+     */
+    public function setActionMap($mapping)
+    {
+        $this->actionMap = $mapping;
         return $this;
     }
 
@@ -173,10 +258,6 @@ class Standard implements Template
      */
     public function isDispatchable()
     {
-        $this->module     = $this->payload->has('module')     ? $this->prepare($this->payload->get('module'))      : '';
-        $this->controller = $this->payload->has('controller') ? $this->prepare($this->payload->get('controller'))  : '';
-        $this->action     = $this->payload->has('action')     ? $this->payload->get('action') : '';
-
         foreach (array_reverse($this->controllerMaps) as $map) {
             $this->class = str_replace(
                 [':module', ':controller'],
@@ -187,7 +268,7 @@ class Standard implements Template
             try {
                 $class = new \ReflectionClass($this->class);
                 if ($class->implementsInterface('\Proem\Controller\Template')) {
-                    $method = $class->getMethod($this->action . 'Action');
+                    $method = $class->getMethod($this->getAction());
                     if ($method->isPublic()) {
                         return true;
                     }
@@ -220,7 +301,7 @@ class Standard implements Template
         }
 
         $this->class = new $this->class($this->assets);
-        $this->class->dispatch($this->action);
+        $this->class->dispatch($this->getAction());
         return $this;
     }
 }

@@ -128,14 +128,6 @@ class Standard implements Template
     }
 
     /**
-     * Insure that method and controller names follow PSR-1/2
-     */
-    protected function prepare($str)
-    {
-        return ucfirst(strtolower($str));
-    }
-
-    /**
      * Set the payload object
      *
      * @param Proem\Routing\Route\Payload $payload

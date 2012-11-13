@@ -277,9 +277,7 @@ class Standard implements Template
                         return true;
                     }
                 }
-            } catch (\ReflectionException $e) {
-                return false;
-            }
+            } catch (\ReflectionException $e) {}
         }
 
         return false;

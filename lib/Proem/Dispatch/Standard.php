@@ -45,9 +45,11 @@ class Standard implements Template
     const DEFAULT_CONTROLLERMAP_PRIORITY = 0;
 
     /**
-     * Action placeholder
+     * Placeholders
      */
-    const ACTION_PLACEHOLDER = '{:action}';
+    const MODULE_PLACEHOLDER     = '{:module}';
+    const CONTROLLER_PLACEHOLDER = '{:controller}';
+    const ACTION_PLACEHOLDER     = '{:action}';
 
     /**
      * Store the Assets manager
@@ -119,7 +121,7 @@ class Standard implements Template
         $this->assets = $assets;
         $this->controllerMaps = new Queue;
         $this->controllerMaps->insert(
-            'Module\:module\Controller\:controller',
+            'Module\\' . self::MODULE_PLACEHOLDER . '\Controller\\' . self::CONTROLLER_PLACEHOLDER,
             self::DEFAULT_CONTROLLERMAP_PRIORITY
         );
         $this->actionMap = self::ACTION_PLACEHOLDER . 'Action';
@@ -209,8 +211,10 @@ class Standard implements Template
      * This method allows us to add different directory structures
      * which the dispatcher can use to locate controllers.
      *
-     * The default controller map looks like: 'Module\:module\Controller\:controller' and
-     * is stored at priority 0.
+     * The default controller map looks like: 'Module\{:module}\Controller\{:controller}' where
+     * {:module} and {:controller} are respectfully replaced by data provided by the payload.
+     *
+     * This controller map is injected with a priority of 0.
      *
      * If you want custom controller maps to be looked at before the default controller map,
      * give them a higher priority.
@@ -260,7 +264,7 @@ class Standard implements Template
     {
         foreach (array_reverse($this->controllerMaps) as $map) {
             $this->class = str_replace(
-                [':module', ':controller'],
+                [self::MODULE_PLACEHOLDER, self::CONTROLLER_PLACEHOLDER],
                 [$this->module, $this->controller],
                 $map
             );

@@ -58,13 +58,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
     public function testCanDispatchAction()
     {
         $controller = new \Controller\Foo($this->assets);
-        $this->assertTrue($controller->dispatch('bar'));
+        $this->assertTrue($controller->dispatch('barAction'));
     }
 
     public function testPrePostEvents()
     {
         $controller = new \Controller\Bar($this->assets);
         $this->expectOutputString('preactionpost');
-        $controller->dispatch('foo');
+        $controller->dispatch('fooAction');
     }
 }

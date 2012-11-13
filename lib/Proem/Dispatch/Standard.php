@@ -269,9 +269,10 @@ class Standard implements Template
                         return true;
                     }
                 }
-            } catch (\ReflectionException $e) {}
+            } catch (\ReflectionException $e) {
+                // The next controllerMap might still succeed.
+            }
         }
-
         return false;
     }
 

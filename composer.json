@@ -17,7 +17,13 @@
     "irc": "irc://irc.freenode.net/proem"
   },
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "ext-pcre": "*",
+    "ext-reflection": "*",
+    "ext-spl": "*"
+  },
+  "suggest": {
+    "ext-apc": "*"
   },
   "autoload": {
     "psr-0": { "Proem": "lib/" }

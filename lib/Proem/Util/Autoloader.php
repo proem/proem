@@ -72,7 +72,7 @@ class Autoloader
         }
 
         if ($loadProem) {
-            $this->attachNamespace('Proem', __DIR__);
+            $this->attachNamespace('Proem', realpath(__DIR__ . '/../..'));
         }
     }
 
@@ -164,15 +164,8 @@ class Autoloader
     /**
      * Load a class
      *
-     * This load mechanism is not only responsible for locating and including the
-     * file where a class is defined, but is also responsible for implementing Proem's
-     * cascading file system. This is achieved by suffixing \Api onto the Proem part
-     * of any namespace starting with Proem, including the class from within the Proem
-     * namespace, and then aliasing that class back to Proem (without the \Api suffix)
-     *
-     * @link http://proemframework.org/docs/cascading-namespace.html
      * @param string $class The absolute (including namespace) name of the class
-     * @return Proem\Util\Autoloader
+     * @return bool
      */
     public function load($class)
     {
@@ -182,9 +175,10 @@ class Autoloader
 
         if ($file = $this->locate($class)) {
             include $file;
+            return true;
         }
 
-        return $this;
+        return false;
     }
 
     /**

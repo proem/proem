@@ -254,7 +254,7 @@ class Standard implements Template
      */
     public function isDispatchable()
     {
-        foreach (array_reverse($this->controllerMaps) as $map) {
+        foreach ($this->controllerMaps as $map) {
             $this->class = str_replace(
                 [self::MODULE_PLACEHOLDER, self::CONTROLLER_PLACEHOLDER],
                 [$this->module, $this->controller],

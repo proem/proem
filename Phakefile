@@ -3,7 +3,6 @@
 require_once 'lib/Proem/Util/Autoloader.php';
 
 (new \Proem\Util\Autoloader)
-    ->attachNamespace('Proem', 'lib')
     ->register();
 
 group('proem', function() {

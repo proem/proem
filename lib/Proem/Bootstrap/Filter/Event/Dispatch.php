@@ -110,7 +110,8 @@ class Dispatch extends Event
      */
     public function postIn(Manager $assets)
     {
-        $skipDispatch = false;
+        $skipDispatch       = false;
+        $dispatchStageAsset = null;
 
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger(
@@ -119,12 +120,20 @@ class Dispatch extends Event
                     if ($response->has('skip.dispatch') && $response->getParam('skip.dispatch')) {
                         $skipDispatch = true;
                     }
+                    if ($response->has('stage.asset')) {
+                        $dispatchStageAsset = $response->get('stage.asset');
+                    }
                 }
             );
-        }
 
-        if (!$skipDispatch) {
-            (new DispatchStage($assets));
+            if (!$skipDispatch) {
+                if ($dispatchStageAsset !== null) {
+                    $dispatchStageAsset->setParam('assets', $assets);
+                    $dispatchStageAsset->get();
+                } else {
+                    (new DispatchStage($assets));
+                }
+            }
         }
     }
 

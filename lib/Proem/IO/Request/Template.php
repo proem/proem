@@ -41,5 +41,4 @@ interface Template
      * @param bool $raw
      */
     public function getBody($raw = true);
-
 }

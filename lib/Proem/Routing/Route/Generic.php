@@ -30,11 +30,11 @@
  */
 namespace Proem\Routing\Route;
 
-use Proem\Routing\Route\Payload,
-    Proem\Util\ArrayHelper,
-    Proem\Util\Process\Callback,
-    Proem\IO\Request\Template as Request,
-    Proem\Routing\Route\Template;
+use Proem\Routing\Route\Payload;
+use Proem\Util\ArrayHelper;
+use Proem\Util\Process\Callback;
+use Proem\IO\Request\Template as Request;
+use Proem\Routing\Route\Template;
 
 /**
  * Generic route abstract.
@@ -137,6 +137,23 @@ abstract class Generic implements Template
     }
 
     /**
+     * A generic testMethod function used to test a route
+     * against a request type.
+     *
+     * This should be called within any process() method
+     */
+    public function testRequestMethod(Request $request)
+    {
+        $method = isset($this->options['method']) ? $this->options['method'] : false;
+        $requestMethod = $request->getMethod();
+        if ($method && (strtoupper($method) !== strtoupper($requestMethod))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Method used to execute a route callback.
      *
      * @param Proem\IO\Request\Template $request
@@ -156,5 +173,4 @@ abstract class Generic implements Template
      * @param Proem\IO\Request\Template $request
      */
     abstract public function process(Request $request);
-
 }

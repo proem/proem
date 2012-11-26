@@ -57,5 +57,4 @@ interface Template
      * again.
      */
     public function route();
-
 }

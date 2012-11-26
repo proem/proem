@@ -30,8 +30,8 @@
  */
 namespace Proem\Service\Manager;
 
-use Proem\Service\Manager\Template,
-    Proem\Service\Asset\Template as Asset;
+use Proem\Service\Manager\Template;
+use Proem\Service\Asset\Template as Asset;
 
 /**
  * A registry of assets.
@@ -183,5 +183,4 @@ class Standard implements Template
             }
         }
     }
-
 }

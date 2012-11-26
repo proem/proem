@@ -29,8 +29,8 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Routing\Route\Payload as Payload;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Route\Payload as Payload;
 
 /**
  * Interface all dispatcher must implement.

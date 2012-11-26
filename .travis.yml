@@ -3,14 +3,15 @@ language: php
 php:
   - 5.4
 
-before_script: curl -s http://getcomposer.org/installer | php -- && php composer.phar install --dev
+before_script: composer --dev install
 script: ./vendor/bin/phake dev:tests
 
 notifications:
   irc:
     on_success: change
     on_failure: always
-    - "irc.freenode.net#proem"
+    channels:
+      - "irc.freenode.net#proem"
 
 branches:
   only:

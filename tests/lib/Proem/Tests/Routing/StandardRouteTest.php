@@ -117,4 +117,16 @@ class StandardRouteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($route->getPayload()->isPopulated());
     }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testNonExistentToken()
+    {
+        $route = new Standard([
+            'rule'      => '/:data',
+            'filters'   => ['data' => ':somefilter']
+        ]);
+        $route->process(new Request('/foo'));
+    }
 }

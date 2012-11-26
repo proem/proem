@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem
+ * @namespace Proem\Util
  */
-namespace Proem;
+namespace Proem\Util;
 
 /**
  * The Proem Autoloader
@@ -72,7 +72,7 @@ class Autoloader
         }
 
         if ($loadProem) {
-            $this->attachNamespace('Proem', realpath(__DIR__) . '/..');
+            $this->attachNamespace('Proem', realpath(__DIR__ . '/../..'));
         }
     }
 
@@ -80,7 +80,7 @@ class Autoloader
      * Register an array of namespaces
      *
      * @param array $namespaces An array of namespaces
-     * @return Proem\Autoloader
+     * @return Proem\util\Autoloader
      */
     public function attachNamespaces(array $namespaces)
     {
@@ -95,7 +95,7 @@ class Autoloader
      *
      * @param string $namespace The namespace
      * @param array|string $paths The path to the namespace
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachNamespace($namespace, $paths)
     {
@@ -116,7 +116,7 @@ class Autoloader
      * Registers an array of classes using the Pear naming convention
      *
      * @param array $classes
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachPearPrefixes(array $classes)
     {
@@ -131,7 +131,7 @@ class Autoloader
      *
      * @param string $prefix The prefix
      * @param array|string $paths The path
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function attachPearPrefix($prefix, $paths)
     {
@@ -142,7 +142,7 @@ class Autoloader
     /**
      * Register the autoloader.
      *
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function register()
     {
@@ -153,7 +153,7 @@ class Autoloader
     /**
      * Unregister the autoloader.
      *
-     * @return Proem\Autoloader
+     * @return Proem\Util\Autoloader
      */
     public function unregister()
     {
@@ -164,15 +164,8 @@ class Autoloader
     /**
      * Load a class
      *
-     * This load mechanism is not only responsible for locating and including the
-     * file where a class is defined, but is also responsible for implementing Proem's
-     * cascading file system. This is achieved by suffixing \Api onto the Proem part
-     * of any namespace starting with Proem, including the class from within the Proem
-     * namespace, and then aliasing that class back to Proem (without the \Api suffix)
-     *
-     * @link http://proemframework.org/docs/cascading-namespace.html
      * @param string $class The absolute (including namespace) name of the class
-     * @return Proem\Autoloader
+     * @return bool
      */
     public function load($class)
     {
@@ -182,9 +175,10 @@ class Autoloader
 
         if ($file = $this->locate($class)) {
             include $file;
+            return true;
         }
 
-        return $this;
+        return false;
     }
 
     /**
@@ -200,7 +194,7 @@ class Autoloader
             if ($file = $this->locateFile($class)) {
                 apc_store($class, $file);
             }
-        } else if (!$this->apcEnabled) {
+        } elseif (!$this->apcEnabled) {
             $file = $this->locateFile($class);
         }
 
@@ -218,7 +212,11 @@ class Autoloader
         if (false !== $pos = strrpos($class, '\\')) {
             $namespace = substr($class, 0, $pos);
             $className = substr($class, $pos + 1);
-            $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+            $normalized = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) .
+                DIRECTORY_SEPARATOR .
+                str_replace('_', DIRECTORY_SEPARATOR, $className) .
+                '.php';
+
             foreach ($this->namespaces as $space => $paths) {
                 if (strpos($namespace, $space) !== 0) {
                     continue;
@@ -227,6 +225,12 @@ class Autoloader
                 foreach ($paths as $path) {
                     $file = $path . DIRECTORY_SEPARATOR . $normalized;
 
+                    if (is_file($file)) {
+                        return $file;
+                    }
+
+                    // Attempt to handle paths that end with the *vendor* name.
+                    $file = $path . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . $normalized;
                     if (is_file($file)) {
                         return $file;
                     }

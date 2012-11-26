@@ -29,9 +29,9 @@
  */
 namespace Proem\Controller;
 
-use Proem\Controller\Template as ControllerTemplate,
-    Proem\Bootstrap\Signal\Event\Bootstrap as Bootstrap,
-    Proem\Service\Manager\Template as ServiceManager;
+use Proem\Controller\Template as ControllerTemplate;
+use Proem\Bootstrap\Signal\Event\Bootstrap as Bootstrap;
+use Proem\Service\Manager\Template as ServiceManager;
 
 /**
  * The standard controller implementation.
@@ -53,7 +53,7 @@ class Standard implements ControllerTemplate
      *
      * @param Proem\Service\Manager\Template
      */
-    public final function __construct(ServiceManager $assets)
+    final public function __construct(ServiceManager $assets)
     {
         $this->assets = $assets;
         $this->init();
@@ -69,18 +69,20 @@ class Standard implements ControllerTemplate
     /**
      * Metod called to dispatch an action.
      */
-    public function dispatch($action) {
-        $action = strtolower($action);
-
+    public function dispatch($action)
+    {
         if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $this->assets->get('events')->trigger((new Bootstrap('proem.pre.action.' . $action))->setServiceManager($this->assets));
+            $this->assets->get('events')->trigger(
+                (new Bootstrap('proem.pre.action.' . $action))->setServiceManager($this->assets)
+            );
         }
 
-        $method = $action . 'Action';
-        $result = $this->{$method}();
+        $result = $this->{$action}();
 
         if ($this->assets->provides('events', '\Proem\Signal\Manager\Template')) {
-            $this->assets->get('events')->trigger((new Bootstrap('proem.post.action.' . $action))->setServiceManager($this->assets));
+            $this->assets->get('events')->trigger(
+                (new Bootstrap('proem.post.action.' . $action))->setServiceManager($this->assets)
+            );
         }
 
         return $result;

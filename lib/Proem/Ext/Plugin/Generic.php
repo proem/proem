@@ -30,8 +30,8 @@
  */
 namespace Proem\Ext\Plugin;
 
-use Proem\Ext\Template,
-    Proem\Service\Manager\Template as Manager;
+use Proem\Ext\Template;
+use Proem\Service\Manager\Template as Manager;
 
 /**
  * A base Plugin sbstract.
@@ -44,5 +44,5 @@ abstract class Generic implements Template
      * @param Proem\Service\Manager\Template $assets
      * @param string $environment
      */
-    public abstract function init(Manager $assets, $environment = null);
+    abstract public function init(Manager $assets, $environment = null);
 }

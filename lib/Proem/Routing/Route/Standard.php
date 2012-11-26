@@ -30,9 +30,9 @@
  */
 namespace Proem\Routing\Route;
 
-use Proem\Routing\Route\Template,
-    Proem\Routing\Route\Generic,
-    Proem\IO\Request\Template as Request;
+use Proem\Routing\Route\Template;
+use Proem\Routing\Route\Generic;
+use Proem\IO\Request\Template as Request;
 
 /**
  * Proem's standard route.
@@ -61,7 +61,8 @@ class Standard extends Generic
      *
      * @param array $options Array of Proem\Utils\Option objects
      */
-    public function __construct(array $options) {
+    public function __construct(array $options)
+    {
         parent::__construct($options);
 
         $this->default_filters = [
@@ -113,16 +114,13 @@ class Standard extends Generic
             return false;
         }
 
+        if (!$this->testRequestMethod($request)) {
+            return false;
+        }
+
         $rule               = $this->options['rule'];
         $target             = isset($this->options['targets']) ? $this->options['targets'] : [];
         $custom_filters     = isset($this->options['filters']) ? $this->options['filters'] : [];
-        $method             = isset($this->options['method']) ? $this->options['method'] : false;
-
-        $requestMethod      = $request->getMethod();
-
-        if ($method && (strtoupper($method) !== strtoupper($requestMethod))) {
-            return false;
-        }
 
         $default_tokens     = $this->default_tokens;
         $default_filters    = $this->default_filters;
@@ -137,16 +135,22 @@ class Standard extends Generic
 
         $regex = preg_replace_callback(
             '@:[\w]+@',
-            function($matches) use ($custom_filters, $default_tokens, $default_filters)
-            {
+            function ($matches) use ($custom_filters, $default_tokens, $default_filters) {
                 $key = str_replace(':', '', $matches[0]);
                 if (isset($custom_filters[$key])) {
                     if (isset($default_filters[$custom_filters[$key]])) {
                         return '(' . $default_filters[$custom_filters[$key]] . ')';
                     } else {
-                        return '(' . $custom_filters[$key] . ')';
+                        if ($custom_filters[$key]{0} == ':') {
+                            throw new \RuntimeException(
+                                "The custom filter named \"{$key}\" references a
+                                non-existent builtin filter named \"{$custom_filters[$key]}\"."
+                            );
+                        } else {
+                            return '(' . $custom_filters[$key] . ')';
+                        }
                     }
-                } else if (isset($default_tokens[$key])) {
+                } elseif (isset($default_tokens[$key])) {
                     return '(' . $default_tokens[$key] . ')';
                 } else {
                     return '(' . $default_filters[':default'] . ')';

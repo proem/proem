@@ -12,14 +12,25 @@
       "homepage": "http://thorpesystems.com"
     }
   ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "ext-pcre": "*",
+    "ext-reflection": "*",
+    "ext-spl": "*"
+  },
+  "suggest": {
+    "ext-apc": "*"
   },
   "autoload": {
     "psr-0": { "Proem": "lib/" }
   },
   "require-dev": {
     "jaz303/phake": "dev-master",
-    "EHER/PHPUnit": ">=1.6"
+    "phpunit/phpunit": "3.7.*",
+    "squizlabs/php_codesniffer": "dev-master"
   }
 }

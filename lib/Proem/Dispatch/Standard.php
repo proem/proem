@@ -29,15 +29,28 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Dispatch\Template as Template,
-    Proem\Service\Manager\Template as Manager,
-    Proem\Routing\Route\Payload as Payload;
+use Proem\Dispatch\Template as Template;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Route\Payload as Payload;
+use Proem\Util\Storage\Queue;
 
 /**
  * Proem\Dispatch\Standard
  */
 class Standard implements Template
 {
+    /**
+     * Priorities
+     */
+    const DEFAULT_CONTROLLERMAP_PRIORITY = 0;
+
+    /**
+     * Placeholders
+     */
+    const MODULE_PLACEHOLDER     = '{:module}';
+    const CONTROLLER_PLACEHOLDER = '{:controller}';
+    const ACTION_PLACEHOLDER     = '{:action}';
+
     /**
      * Store the Assets manager
      *
@@ -49,9 +62,19 @@ class Standard implements Template
      * Store an array of patterns used to searching
      * for classes within a namepspace.
      *
-     * @var array $controllerMaps
+     * Controller maps are actually stored within a priority
+     * queue with the default controller map sitting at priority 0.
+     * If you want custom controller maps to be looked at before
+     * the default controller map, give them a higher priority.
+     *
+     * @var Queue $controllerMaps
      */
-    protected $controllerMaps = [];
+    protected $controllerMaps;
+
+    /**
+     * Store the *action map* pattern.
+     */
+    protected $actionMap;
 
     /**
      * Store the absolute namespace to the current class
@@ -96,7 +119,12 @@ class Standard implements Template
     public function __construct(Manager $assets)
     {
         $this->assets = $assets;
-        $this->controllerMaps = ['Module\:module\Controller\:controller'];
+        $this->controllerMaps = new Queue;
+        $this->controllerMaps->insert(
+            'Module\\' . self::MODULE_PLACEHOLDER . '\Controller\\' . self::CONTROLLER_PLACEHOLDER,
+            self::DEFAULT_CONTROLLERMAP_PRIORITY
+        );
+        $this->actionMap = self::ACTION_PLACEHOLDER . 'Action';
     }
 
     /**
@@ -112,22 +140,103 @@ class Standard implements Template
     }
 
     /**
+     * Set the current module
+     *
+     * @param string $module
+     */
+    public function setModule($module)
+    {
+        $this->module = $module;
+        return $this;
+    }
+
+    /**
+     * Get the current module
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
+
+    /**
+     * Set the current controller
+     *
+     * @param string $controller
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+        return $this;
+    }
+
+    /**
+     * Get the current controller
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Set the current action
+     *
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * Get the current action
+     */
+    public function getAction()
+    {
+        return str_replace(self::ACTION_PLACEHOLDER, strtolower($this->action), $this->actionMap);
+    }
+
+    /**
      * Add a new controller map onto the stack of controller
      * maps.
      *
      * This method allows us to add different directory structures
      * which the dispatcher can use to locate controllers.
      *
-     * The default controller map looks like: 'Module\:module\Controller\:controller'
+     * The default controller map looks like: 'Module\{:module}\Controller\{:controller}' where
+     * {:module} and {:controller} are respectfully replaced by data provided by the payload.
+     *
+     * This controller map is injected with a priority of 0.
+     *
+     * If you want custom controller maps to be looked at before the default controller map,
+     * give them a higher priority.
      *
      * You can create your own. The tokens :module and :controller will be replaced
      * with the module and controller that are made available via the payload.
      *
      * @param string $map
+     * @param int $priority
      * @return Proem\Dispatch\Template
      */
-    public function attachControllerMap($map) {
-        $this->controllerMaps[] = $map;
+    public function attachControllerMap($map, $priority = self::DEFAULT_CONTROLLERMAP_PRIORITY)
+    {
+        $this->controllerMaps->insert($map, $priority);
+        return $this;
+    }
+
+    /**
+     * Allows the customisation of the *action map*.
+     *
+     * The default implementation looks like {:action}Action
+     *
+     * {:action} gets replaced by the action returning from the
+     * router.
+     *
+     * @param string $mapping
+     */
+    public function setActionMap($mapping)
+    {
+        $this->actionMap = $mapping;
         return $this;
     }
 
@@ -145,27 +254,25 @@ class Standard implements Template
      */
     public function isDispatchable()
     {
-        $this->module     = $this->payload->has('module')           ? ucfirst(strtolower($this->payload->get('module')))      : '';
-        $this->controller = $this->payload->has('controller')       ? ucfirst(strtolower($this->payload->get('controller')))  : '';
-        $this->action     = $this->payload->has('action')           ? $this->payload->get('action') : '';
-
         foreach ($this->controllerMaps as $map) {
             $this->class = str_replace(
-                [':module', ':controller'],
+                [self::MODULE_PLACEHOLDER, self::CONTROLLER_PLACEHOLDER],
                 [$this->module, $this->controller],
                 $map
             );
 
-            if (class_exists($this->class)) {
-                $this->class = new $this->class($this->assets);
-                if ($this->class instanceof \Proem\Controller\Template) {
-                    if (is_callable([$this->class, $this->action . 'Action'])) {
+            try {
+                $class = new \ReflectionClass($this->class);
+                if ($class->implementsInterface('\Proem\Controller\Template')) {
+                    $method = $class->getMethod($this->getAction());
+                    if ($method->isPublic()) {
                         return true;
                     }
                 }
+            } catch (\ReflectionException $e) {
+                // The next controllerMap might still succeed.
             }
         }
-
         return false;
     }
 
@@ -187,7 +294,9 @@ class Standard implements Template
         if ($this->assets->has('request')) {
             $this->assets->get('request')->injectPayload($this->payload->prepare());
         }
-        $this->class->dispatch($this->action);
+
+        $this->class = new $this->class($this->assets);
+        $this->class->dispatch($this->getAction());
         return $this;
     }
 }

@@ -35,8 +35,8 @@
  */
 namespace Proem\IO\Request\Http;
 
-use Proem\IO\Request\Template,
-    Proem\Util\Storage\KeyValStore;
+use Proem\IO\Request\Template;
+use Proem\Util\Storage\KeyValStore;
 
 /**
  * A fake http request implementation.
@@ -109,6 +109,7 @@ class Fake extends Standard
             case 'PUT':
             case 'DELETE':
                 $defaults['CONTENT_TYPE'] = 'application/x-www-form-urlencoded';
+                // Allow this condition to fall through.
             case 'PATCH':
                 $post   = $param;
                 $get    = [];
@@ -132,12 +133,16 @@ class Fake extends Standard
 
         $uri = $components['path'] . ($getString ? '?' . $getString : '');
 
-        $meta = array_replace($defaults, $meta, [
-            'REQUEST_METHOD'       => strtoupper($method),
-            'PATH_INFO'            => '',
-            'REQUEST_URI'          => $uri,
-            'QUERY_STRING'         => $getString,
-        ]);
+        $meta = array_replace(
+            $defaults,
+            $meta,
+            [
+                'REQUEST_METHOD' => strtoupper($method),
+                'PATH_INFO'      => '',
+                'REQUEST_URI'    => $uri,
+                'QUERY_STRING'   => $getString
+            ]
+        );
 
         $this->body = $body;
 
@@ -151,5 +156,4 @@ class Fake extends Standard
             'header'    => new KeyValStore($this->formHeaders($meta))
         ];
     }
-
 }

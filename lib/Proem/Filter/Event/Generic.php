@@ -30,9 +30,9 @@
  */
 namespace Proem\Filter\Event;
 
-use Proem\Filter\Manager\Standard as FilterManager,
-    Proem\Service\Manager\Template as ServiceManager,
-    Proem\Filter\Event\Template as Template;
+use Proem\Filter\Manager\Standard as FilterManager;
+use Proem\Service\Manager\Template as ServiceManager;
+use Proem\Filter\Event\Template as Template;
 
 /**
  * Filter event abstract
@@ -49,42 +49,50 @@ abstract class Generic implements Template
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public function preIn(ServiceManager $assets) {}
+    public function preIn(ServiceManager $assets)
+    {
+    }
 
     /**
      * Define the method to be called on the way into the filter.
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public abstract function inBound(ServiceManager $assets);
+    abstract public function inBound(ServiceManager $assets);
 
     /**
      * Called after inBound
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public function postIn(ServiceManager $assets) {}
+    public function postIn(ServiceManager $assets)
+    {
+    }
 
     /**
      * Called prior outBound
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public function preOut(ServiceManager $assets) {}
+    public function preOut(ServiceManager $assets)
+    {
+    }
 
     /**
      * Define the method to be called on the way out of the filter.
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public abstract function outBound(ServiceManager $assets);
+    abstract public function outBound(ServiceManager $assets);
 
     /**
      * Called after outBound
      *
      * @param Proem\Service\Manager\Template $assets
      */
-    public function postOut(ServiceManager $assets) {}
+    public function postOut(ServiceManager $assets)
+    {
+    }
 
     /**
      * Execute this event.

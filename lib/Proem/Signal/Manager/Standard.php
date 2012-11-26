@@ -30,10 +30,11 @@
  */
 namespace Proem\Signal\Manager;
 
-use Proem\Util\Storage\Queue,
-    Proem\Util\Process\Callback,
-    Proem\Signal\Event\Standard as Event,
-    Proem\Signal\Manager\Template;
+use Proem\Util\Storage\Queue;
+use Proem\Util\Process\Callback;
+use Proem\Util\Process\EventCallback;
+use Proem\Signal\Event\Template as EventInterface;
+use Proem\Signal\Manager\Template;
 
 /**
  * Standard event manager implementation.
@@ -46,7 +47,7 @@ class Standard implements Template
     /**
      * Wildcard used when listening for all events
      */
-    const WILDCARD = '*';
+    const WILDCARD = '.*';
 
     /**
      * Stores listeners in a hash of priority queues.
@@ -61,6 +62,89 @@ class Standard implements Template
      * @var array callbacks
      */
     protected $callbacks = [];
+
+    /**
+     * Store a flag regarding searching for wildcards
+     */
+    protected $wildcardSearching = false;
+
+    /**
+     * Given an event name, this method searches for all possible
+     * wildcard matches in the queues. When/If a match is found
+     * it will then copy it's key and priority from the wildcards
+     * queue into the named event's queue.
+     *
+     * @param $name The event name
+     * @return bool True if match is found
+     */
+    protected function populateQueueFromWildSearch($name)
+    {
+        $listenerMatched = false;
+        $parts = explode('.', $name);
+        while (count($parts)) {
+            array_pop($parts);
+            $part = implode('.', $parts) . self::WILDCARD;
+
+            if (isset($this->queues[$part])) {
+                $listenerMatched = true;
+                /**
+                 * Add to currently named queue
+                 */
+                foreach ($this->queues[$part] as $listener) {
+                    if (isset($this->queues[$name])) {
+                        $this->queues[$name]->insert($listener['key'], $listener['priority']);
+                    } else {
+                        $this->queues[$name] = new Queue;
+                        $this->queues[$name]->insert($listener['key'], $listener['priority']);
+                    }
+                }
+            }
+        }
+
+        return $listenerMatched;
+    }
+
+    /**
+     * Store a callback index by a generated key
+     *
+     * @param callable $callback
+     * @return string $key
+     */
+    protected function storeCallback(callable $callback)
+    {
+        $key = md5(microtime());
+        $this->callbacks[$key] = $callback;
+        return $key;
+    }
+
+    /**
+     * Store a callback's key and priority in a queue indexed
+     * by the event they are attached to.
+     *
+     * @param $event The name of the event this callback is being attached to
+     * @param string $key The key the callback is stored under
+     * @priority The priority this callback has within this queue
+     */
+    protected function pushToQueue($event, $key, $priority)
+    {
+        $end = substr($event, -2);
+        if (isset($this->queues[$event])) {
+            if ($end == self::WILDCARD) {
+                $this->wildcardSearching = true;
+                $this->queues[$event][] = ['key' => $key, 'priority' => $priority];
+            } else {
+                $this->queues[$event]->insert($key, $priority);
+            }
+        } else {
+            if ($end == self::WILDCARD) {
+                $this->wildcardSearching = true;
+                $this->queues[$event][] = ['key' => $key, 'priority' => $priority];
+            } else {
+                $this->queues[$event] = new Queue;
+                $this->queues[$event]->insert($key, $priority);
+            }
+        }
+    }
 
     /**
      * Remove event listeners from a particular index.
@@ -78,6 +162,42 @@ class Standard implements Template
             unset($this->queues[$name]);
         }
         return $this;
+    }
+
+    /**
+     * Retrieve listeners by name
+     *
+     * @param string $name
+     * @return array $listeners
+     */
+    public function getListeners($name)
+    {
+        $listenerMatched = false;
+
+        /**
+         * Do we have an exact match?
+         */
+        if (isset($this->queues[$name])) {
+            $listenerMatched = true;
+        }
+
+        /**
+         * Optionally search for wildcard matches.
+         */
+        if ($this->wildcardSearching) {
+            if ($this->populateQueueFromWildSearch($name)) {
+                $listenerMatched = true;
+            }
+        }
+
+        $listeners = [];
+        if ($listenerMatched) {
+            foreach ($this->queues[$name] as $key) {
+                $listeners[] = $this->callbacks[$key];
+            }
+        }
+
+        return $listeners;
     }
 
     /**
@@ -109,43 +229,16 @@ class Standard implements Template
      *
      * @return Proem\Signal\Manager\Template
      */
-    public function attach($name, Callable $callback, $priority = 0)
+    public function attach($name, callable $callback, $priority = 0)
     {
-        $key = md5(microtime());
-        $this->callbacks[$key] = $callback;
+        $key = $this->storeCallback($callback);
 
         if (is_array($name)) {
             foreach ($name as $event) {
-                if (isset($this->queues[$event])) {
-                    if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $priority];
-                    } else {
-                        $this->queues[$event]->insert($key, $priority);
-                    }
-                } else {
-                    if ($event == self::WILDCARD) {
-                        $this->queues[self::WILDCARD][] = [$key, $priority];
-                    } else {
-                        $this->queues[$event] = new Queue;
-                        $this->queues[$event]->insert($key, $priority);
-                    }
-                }
+                $this->pushToQueue($event, $key, $priority);
             }
         } else {
-            if (isset($this->queues[$name])) {
-                if ($name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $priority];
-                } else {
-                    $this->queues[$name]->insert($key, $priority);
-                }
-            } else {
-                if ($name == self::WILDCARD) {
-                    $this->queues[self::WILDCARD][] = [$key, $priority];
-                } else {
-                    $this->queues[$name] = new Queue;
-                    $this->queues[$name]->insert($key, $priority);
-                }
-            }
+            $this->pushToQueue($name, $key, $priority);
         }
 
         return $this;
@@ -159,27 +252,29 @@ class Standard implements Template
      *
      * @return Proem\Signal\Manager\Template
      */
-    public function trigger(Event $event, Callable $callback = null)
+    public function trigger(EventInterface $event, Callable $callback = null)
     {
-        $name = $event->getName();
-        if (isset($name) || isset($this->queues[self::WILDCARD])) {
-            if (isset($this->queues[self::WILDCARD])) {
-                foreach ($this->queues[self::WILDCARD] as $listener) {
-                    if (isset($this->queues[$name])) {
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
-                    } else {
-                        $this->queues[$name] = new Queue;
-                        $this->queues[$name]->insert($listener[0], $listener[1]);
-                    }
-                }
-            }
-
-            if (isset($this->queues[$name])) {
-                foreach ($this->queues[$name] as $key) {
-                    if ($return = (new Callback($this->callbacks[$key], $event))->call()) {
-                        if ($callback !== null) {
-                            (new Callback($callback, $return))->call();
+        if ($listeners = $this->getListeners($event->getName())) {
+            foreach ($listeners as $listener) {
+                if ($result = (new EventCallback($listener, $event))->call()) {
+                    if ($result instanceof EventInterface) {
+                        // Was the queue halted early ?
+                        if ($result->isQueueHaltedEarly()) {
+                            return $this;
                         }
+
+                        if ($callback !== null) {
+                            (new EventCallback($callback, $result))->call();
+                        }
+
+                        // Was the queue halted ?
+                        if ($result->isQueueHalted()) {
+                            return $this;
+                        }
+                    } else {
+                        throw new \RuntimeException(
+                            'Value returned from an Event Callback must be of type Proem\Signal\Event\Template'
+                        );
                     }
                 }
             }
@@ -187,5 +282,4 @@ class Standard implements Template
 
         return $this;
     }
-
 }

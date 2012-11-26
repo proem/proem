@@ -1,9 +1,8 @@
 <?php
 
-require_once 'lib/Proem/Autoloader.php';
+require_once 'lib/Proem/Util/Autoloader.php';
 
-(new \Proem\Autoloader)
-    ->attachNamespace('Proem', 'lib')
+(new \Proem\Util\Autoloader)
     ->register();
 
 group('proem', function() {
@@ -14,6 +13,9 @@ group('proem', function() {
 });
 
 group('dev', function() {
+
+    desc('Default tasks to execute before commit');
+    task('pre-commit', 'tests', 'sniff', function() {});
 
     desc('Run the unit tests');
     task('tests', function($args) {
@@ -29,6 +31,12 @@ group('dev', function() {
         } else {
             system('vendor/bin/phpunit' . $report . '--colors --configuration tests/phpunit.xml');
         }
+    });
+
+    desc('Sniff code for PSR-1/2');
+    task('sniff', function ($args) {
+        chdir(realpath(__DIR__));
+        system('vendor/bin/phpcs -a --standard=PSR2 lib/');
     });
 
     desc('Build the Phar archive');
@@ -80,4 +88,4 @@ group('dev', function() {
     });
 });
 
-task('default', 'dev:tests');
+task('default', 'dev:pre-commit');

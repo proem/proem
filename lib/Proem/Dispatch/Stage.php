@@ -29,10 +29,10 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Routing\Signal\Event\RouteMatch,
-    Proem\Routing\Signal\Event\RouteDispatch,
-    Proem\Routing\Signal\Event\RouteExhausted;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Routing\Signal\Event\RouteMatch;
+use Proem\Routing\Signal\Event\RouteDispatch;
+use Proem\Routing\Signal\Event\RouteExhausted;
 
 /**
  * The dispatch stage.
@@ -131,8 +131,8 @@ class Stage
             while ($payload = $router->route()) {
                 $assets->get('events')->trigger(
                     (new RouteMatch('proem.route.match'))->setPayload($payload),
-                    function($e) use (&$dispatched, &$assets) {
-                        if ($e) {
+                    function ($response) use (&$dispatched, &$assets) {
+                        if ($response->has('isDispatchable') && $response->getParam('isDispatchable')) {
                             $dispatched = true;
                             $assets->get('events')->trigger(new RouteDispatch('proem.route.dispatch'));
                         }
@@ -168,12 +168,17 @@ class Stage
      * @param Proem\Routing\Signal\Event\RouteMatch $e
      * @return bool
      */
-    public function testRoute($e)
+    public function testRoute($event)
     {
         if ($this->assets->has('dispatch')) {
-            return $this->assets->get('dispatch')
-                ->setPayload($e->getPayload())
-                ->isDispatchable();
+            $this->assets->get('dispatch')->setPayload($event->getPayload());
+            $this->assets->get('dispatch')->setModule($event->getPayload()->get('module', ''));
+            $this->assets->get('dispatch')->setController($event->getPayload()->get('controller', ''));
+            $this->assets->get('dispatch')->setAction($event->getPayload()->get('action', ''));
+            return $event->setParam(
+                'isDispatchable',
+                $this->assets->get('dispatch')->isDispatchable()
+            );
         }
     }
 

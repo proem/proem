@@ -104,5 +104,4 @@ interface Template
      * @return object
      */
     public function getProvided($provides);
-
 }

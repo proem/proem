@@ -24,49 +24,52 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests\Util\Options\Fixtures;
 
-use Proem\Util\Opt\Options,
-    Proem\Util\Opt\Option;
+/**
+ * @namespace Proem\Util\Process
+ */
+namespace Proem\Util\Process;
 
-class OptionsFixture
+use Proem\Signal\Event\Template as EventInterface;
+
+/**
+ * A simple wrapper around call_user_func_array
+ */
+class EventCallback
 {
-    use Options;
+    /**
+     * Store the callback
+     *
+     * @var callable
+     */
+    protected $callback;
 
-    public function __construct(array $options = [])
+    /**
+     * Store event
+     *
+     * Proem\Signal\Event\Template
+     */
+    protected $event;
+
+    /**
+     * Instantiate the Callback object
+     *
+     * @param callable $callback A valid callback
+     * @param Proem\Signal\Event\Template $event
+     */
+    public function __construct(callable $callback, EventInterface $event)
     {
-        $this->options = $this->setOptions([
-            'foo'   => (new Option('foo')),
-            'asset' => (new Option())->asset('StdClass'),
-            'am'    => (new Option())->asset(['StdClass', 'Proem']),
-            'bar'   => (new Option())->required(),
-            'boo'   => (new Option())->required()->type('array'),
-            'bob'   => (new Option())->required()->object('Proem\Proem'),
-        ], $options);
+        $this->callback = $callback;
+        $this->event    = $event;
     }
 
-    public function getSomething()
+    /**
+     * Execute the callback and return it's results.
+     *
+     * @return mixed
+     */
+    public function call()
     {
-        return $this->options->something;
-    }
-
-    public function getFoo()
-    {
-        return $this->options->foo;
-    }
-
-    public function getBar()
-    {
-        return $this->options->bar;
-    }
-
-    public function getBoo()
-    {
-        return $this->options->boo;
-    }
-
-    public function getBob()
-    {
-        return $this->options->bob;
+        return call_user_func($this->callback, $this->event);
     }
 }

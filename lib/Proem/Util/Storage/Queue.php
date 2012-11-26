@@ -166,5 +166,4 @@ class Queue implements \IteratorAggregate, \Countable
         $queue = $this->getSplQueue();
         return clone $queue;
     }
-
 }

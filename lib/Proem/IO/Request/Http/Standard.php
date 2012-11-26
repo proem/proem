@@ -30,8 +30,8 @@
  */
 namespace Proem\IO\Request\Http;
 
-use Proem\IO\Request\Template,
-    Proem\Util\Storage\KeyValStore;
+use Proem\IO\Request\Template;
+use Proem\Util\Storage\KeyValStore;
 
 /**
  * The standard http request class.
@@ -82,7 +82,8 @@ class Standard implements Template
      *
      * @param Proem\Util\Storage\KeyValStore
      */
-    public function __construct(KeyValStore $payload = null) {
+    public function __construct(KeyValStore $payload = null)
+    {
         $this->data = [
             'payload'   => $payload,
             'get'       => new KeyValStore($_GET),
@@ -255,7 +256,8 @@ class Standard implements Template
      *
      * @return bool
      */
-    public function isAjax() {
+    public function isAjax()
+    {
         return $this->data['header']->get('X_REQUESTED_WITH') === 'XMLHttpRequest';
     }
 
@@ -264,7 +266,8 @@ class Standard implements Template
      *
      * @return string
      */
-    public function getRequestUri() {
+    public function getRequestUri()
+    {
         return parse_url($this->data['meta']->get('REQUEST_URI'), PHP_URL_PATH);
     }
 
@@ -296,5 +299,4 @@ class Standard implements Template
 
         return $this->data['meta']->get('REMOTE_ADDR');
     }
-
 }

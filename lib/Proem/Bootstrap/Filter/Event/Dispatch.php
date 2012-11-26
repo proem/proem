@@ -30,12 +30,12 @@
  */
 namespace Proem\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Service\Asset\Standard as Asset,
-    Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Filter\Event\Generic as Event,
-    Proem\Dispatch\Standard as DispatchStandard,
-    Proem\Dispatch\Stage as DispatchStage;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Service\Asset\Standard as Asset;
+use Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Filter\Event\Generic as Event;
+use Proem\Dispatch\Standard as DispatchStandard;
+use Proem\Dispatch\Stage as DispatchStage;
 
 /**
  * The default "Dispatch" filter event.
@@ -45,9 +45,10 @@ class Dispatch extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object implementing the
-     * Proem\Dispatch\Template interface, will result in that object being
-     * placed within the main service manager under the index of *dispatch*.
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\Dispatch\Template interface, will result in
+     * that implementation being placed within the main service manager under
+     * the index of *dispatch*.
      *
      * @see Proem\Dispatch\Template
      * @param Proem\Service\Manager\Template
@@ -58,9 +59,12 @@ class Dispatch extends Event
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.dispatch'))->setServiceManager($assets),
-                function($response) use ($assets) {
-                    if ($response->provides('Proem\Dispatch\Template')) {
-                        $assets->set('dispatch', $response);
+                function ($response) use ($assets) {
+                    if (
+                        $response->has('dispatch.asset') &&
+                        $response->getParam('dispatch.asset')->provides('Proem\Dispatch\Template')
+                    ) {
+                        $assets->set('dispatch', $response->getParam('dispatch.asset'));
                     }
                 }
             );
@@ -83,9 +87,14 @@ class Dispatch extends Event
             $asset = new Asset;
             $assets->set(
                 'dispatch',
-                $asset->set('Proem\Dispatch\Template', $asset->single(function() use ($assets) {
-                    return new DispatchStandard($assets);
-                }))
+                $asset->set(
+                    'Proem\Dispatch\Template',
+                    $asset->single(
+                        function () use ($assets) {
+                            return new DispatchStandard($assets);
+                        }
+                    )
+                )
             );
         }
     }
@@ -101,11 +110,31 @@ class Dispatch extends Event
      */
     public function postIn(Manager $assets)
     {
-        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
-            $assets->get('events')->trigger((new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets));
-        }
+        $skipDispatch       = false;
+        $dispatchStageAsset = null;
 
-        (new DispatchStage($assets));
+        if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
+            $assets->get('events')->trigger(
+                (new Bootstrap('proem.post.in.dispatch'))->setServiceManager($assets),
+                function ($response) use (&$skipDispatch) {
+                    if ($response->has('skip.dispatch') && $response->getParam('skip.dispatch')) {
+                        $skipDispatch = true;
+                    }
+                    if ($response->has('stage.asset')) {
+                        $dispatchStageAsset = $response->get('stage.asset');
+                    }
+                }
+            );
+
+            if (!$skipDispatch) {
+                if ($dispatchStageAsset !== null) {
+                    $dispatchStageAsset->setParam('assets', $assets);
+                    $dispatchStageAsset->get();
+                } else {
+                    (new DispatchStage($assets));
+                }
+            }
+        }
     }
 
     /**

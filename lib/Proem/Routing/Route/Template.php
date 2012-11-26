@@ -50,5 +50,4 @@ interface Template
      * @param Proem\IO\Request\Template $request
      */
     public function call(Request $request);
-
 }

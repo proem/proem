@@ -30,11 +30,11 @@
  */
 namespace Proem\Bootstrap\Filter\Event;
 
-use Proem\Service\Manager\Template as Manager,
-    Proem\Bootstrap\Signal\Event\Bootstrap,
-    Proem\Service\Asset\Standard as Asset,
-    Proem\IO\Response\Http\Standard as HTTPResponse,
-    Proem\Filter\Event\Generic as Event;
+use Proem\Service\Manager\Template as Manager;
+use Proem\Bootstrap\Signal\Event\Bootstrap;
+use Proem\Service\Asset\Standard as Asset;
+use Proem\IO\Response\Http\Standard as HTTPResponse;
+use Proem\Filter\Event\Generic as Event;
 
 /**
  * The default "Response" filter event.
@@ -44,9 +44,9 @@ class Response extends Event
     /**
      * Called prior to inBound.
      *
-     * A listener responding with an object implementing the
-     * Proem\IO\Response\Template interface, will result in that
-     * object being placed within the main service manager under
+     * A listener responding with an event containing a DI container holding an
+     * implemention of the Proem\IO\Response\Template interface, will result in
+     * that implementation being placed within the main service manager under
      * the index of *response*.
      *
      * @param Proem\Service\Manager\Template $assets
@@ -57,9 +57,12 @@ class Response extends Event
         if ($assets->provides('events', 'Proem\Signal\Manager\Template')) {
             $assets->get('events')->trigger(
                 (new Bootstrap('proem.pre.in.response'))->setServiceManager($assets),
-                function($response) use ($assets) {
-                    if ($response->provides('Proem\IO\Response\Template')) {
-                        $assets->set('response', $response);
+                function ($response) use ($assets) {
+                    if (
+                        $response->has('response.asset') &&
+                        $response->getParam('response.asset')->provides('Proem\IO\Response\Template')
+                    ) {
+                        $assets->set('response', $response->getParam('response.asset'));
                     }
                 }
             );
@@ -81,9 +84,14 @@ class Response extends Event
             $asset = new Asset;
             $assets->set(
                 'response',
-                $asset->set('Proem\IO\Response\Template', $asset->single(function() {
-                    return new HTTPResponse;
-                }))
+                $asset->set(
+                    'Proem\IO\Response\Template',
+                    $asset->single(
+                        function () {
+                            return new HTTPResponse;
+                        }
+                    )
+                )
             );
         }
     }

@@ -30,9 +30,9 @@
  */
 namespace Proem\Routing\Route;
 
-use Proem\Routing\Route\Template,
-    Proem\Routing\Route\Generic,
-    Proem\IO\Request\Template as Request;
+use Proem\Routing\Route\Template;
+use Proem\Routing\Route\Generic;
+use Proem\IO\Request\Template as Request;
 
 /**
  * A simple static route.
@@ -45,13 +45,19 @@ class StaticRoute extends Generic
             return false;
         }
 
-        $method = isset($this->options['method']) ? $this->options['method'] : 'GET';
-
-        if (!isset($this->options['targets']) || !isset($this->options['targets']['module']) || !isset($this->options['targets']['controller']) || !isset($this->options['targets']['action'])) {
+        if (!$this->testRequestMethod($request)) {
             return false;
         }
 
-        if ($request->getRequestUri() == $this->options['rule'] && $request->getMethod() == $method) {
+        switch (true) {
+            case !isset($this->options['targets']):
+            case !isset($this->options['targets']['module']):
+            case !isset($this->options['targets']['controller']):
+            case !isset($this->options['targets']['action']):
+                return false;
+        }
+
+        if ($request->getRequestUri() == $this->options['rule']) {
             $this->getPayload()->set('module', $this->options['targets']['module']);
             $this->getPayload()->set('controller', $this->options['targets']['controller']);
             $this->getPayload()->set('action', $this->options['targets']['action']);

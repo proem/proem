@@ -80,16 +80,72 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $r->out);
     }
 
+    public function testCanHaltQueue()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+        (new Manager)
+            ->attach('a', function($e) use ($r) {
+                $r->out++;
+                return $e->haltQueue();
+            })
+            ->attach('a', function($e) use ($r) {
+                $r->out++;
+            })
+        ->trigger(new Event('a'));
+
+        $this->assertEquals(1, $r->out);
+    }
+
+    public function testCanHaltQueueNow()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+        (new Manager)
+            ->attach('a', function($e) {
+                return $e; // make sure the callback is triggered.
+            })
+            ->attach('a', function($e) {
+                // halt the queue before the trigger's callback can be called for a second time.
+                return $e->haltQueue(true);
+            })
+
+        ->trigger(new Event('a'), function ($event) use ($r) {
+            $r->out++;
+        });
+
+        $this->assertEquals(1, $r->out);
+    }
+
     public function testListenerCanListenToAllEvents()
     {
         $r = new \StdClass;
         $r->out = 0;
-        (new Manager)->attach('*', function($e) use ($r) {
+        (new Manager)->attach('.*', function($e) use ($r) {
             $r->out++;
         })
         ->trigger(new Event('a'))
         ->trigger(new Event('b'))
         ->trigger(new Event('c'));
+
+        $this->assertEquals(3, $r->out);
+    }
+
+    public function testNamespaces()
+    {
+        $r = new \StdClass;
+        $r->out = 0;
+
+        (new Manager)->attach('.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->attach('this.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->attach('this.is.some.*', function($e) use ($r) {
+            $r->out++;
+        })
+        ->trigger(new Event('this.is.some.event'));
 
         $this->assertEquals(3, $r->out);
     }
@@ -110,11 +166,11 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $r = new \StdClass;
         $r->out = '';
         (new Manager)->attach('do', function($e) {
-            return true;
+            return $e;
         })
         ->trigger(new Event('do'),
             function($response) use ($r) {
-                $this->assertTrue($response);
+                $this->assertInstanceOf('Proem\Signal\Event\Template', $response);
                 $r->out = 'Callback';
             }
         );

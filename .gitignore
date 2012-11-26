@@ -2,3 +2,5 @@ build
 tests/log/*
 tests/coverage
 vendor
+composer.lock
+issues

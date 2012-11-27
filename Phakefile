@@ -49,8 +49,10 @@ group('dev', function() {
         $phar->buildFromDirectory('.');
         $phar->setStub("<?php
         Phar::mapPhar('proem.phar');
-        require_once 'phar://proem.phar/Proem/Autoloader.php';
-        (new Proem\Autoloader())->attachNamespaces(['Proem' => 'phar://proem.phar'])->register();
+        require_once 'phar://proem.phar/Proem/Util/Autoloader.php';
+        (new Proem\\Util\\Autoloader(false))
+            ->attachNamespace('Proem', 'phar://proem.phar')
+            ->register();
         __HALT_COMPILER();
         ?>");
         rename('proem.phar', '../build/proem.phar');

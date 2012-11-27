@@ -1,0 +1,99 @@
+{% extends 'docs_layout.twig' %}
+{% block content %}
+<div class="well">
+  <h3>Controllers</h3>
+  <p>
+    Controllers are the heart of userland code. They are simple classes that have there methods (<em>actions</em>) mapped to be the {{ docLink('route', 'Routing') }}. Typically this means a
+    url such as /hello will map to your <em>Index</em> Controller's <em>helloAction()</em> method.
+  </p>
+</div>
+<div class="well">
+  <h3>Creating a controller</h3>
+  <p>
+    Controllers are simple to create. Within Proem, all controllers extend the {{ hubLink('Proem.Controller.Standard') }} object.
+  </p>
+  <pre class="prettyprint">
+    class Index extends Proem\Controller\Standard
+    {
+        public function indexAction()
+        {
+
+        }
+    }
+  </pre>
+  <p>
+    Controllers are automatically passed Proem's {{ docLink('services', 'Service Manager') }} which can be accessed via the property <em>$this->assets</em> and by default contains
+    the <em>Request, Response, Dispatch</em> and <em>Router</em> objects as well as the {{ docLink('signals', 'Signal Manager') }}.
+  </p>
+  <pre class="prettyprint">
+    class Index extends Proem\Controller\Standard
+    {
+        public function indexAction()
+        {
+            $this->assets->get('response')
+                ->apendToBody('This is Index');
+        }
+    }
+  </pre>
+</div>
+<div class="well">
+  <h3>Setting up and Tearing down</h3>
+  <p>
+    Sometimes you might want to setup some infrastructure as an <em>action</em> is called. This could be stuff like database connections, reading config files, whatever.
+  </p>
+  <p>
+    When a <em>controller</em> is instantiated, an <em>init</em> method is called. It is this method we can use to setup whatever we need.
+  </p>
+  <pre class="prettyprint">
+    class Index extends Proem\Controller\Standard
+    {
+        private $db;
+
+        public function init()
+        {
+            $this->db = new SomeDBA;
+        }
+    }
+  </pre>
+  <p>
+    There are also two {{ docLink('events', 'events') }} triggered when an action is called. The <em>proem.pre.action.&lt;actionname&gt;</em> and <em>proem.post.action.&lt;actioname&gt;</em> events. Where the
+    &lt;actionname&gt; is the <em>action</em> being called. You can setup listeners for these events wherever you like, however, you might often setup these listeners within the actual controller itself.
+  </p>
+  <pre class="prettyprint">
+    class Index extends Proem\Controller\Standard
+    {
+        private $db;
+
+        public function init()
+        {
+            $this->assets->get('events')->attach('proem.pre.action.foo', [$this, 'fooListener']);
+        }
+
+        public function fooListener()
+        {
+            $this->db = new SomeDBA;
+        }
+    }
+  </pre>
+  <p>
+    If you want to have common code setup for all actions, just use {{ docLink('signals', 'wildcard notation', 'wildcards') }}.
+  </p>
+  <pre class="prettyprint">
+    class Index extends Proem\Controller\Standard
+    {
+        private $db;
+
+        public function init()
+        {
+            $this->assets->get('events')->attach('proem.pre.action.*', [$this, 'dbLoader']);
+        }
+
+        public function dbLoader()
+        {
+            $this->db = new SomeDBA;
+        }
+    }
+  </pre>
+</div>
+{{ disqus('/docs/dev/controllers') }}
+{% endblock %}

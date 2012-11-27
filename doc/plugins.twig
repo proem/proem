@@ -1,0 +1,88 @@
+{% extends 'docs_layout.twig' %}
+{% block content %}
+<div class="well">
+  <h3>Plugins</h3>
+  <p>
+    Plugins are nothing more than a simple mechanism for packaging third party code. Like {{ docLink('modules') }} they have an <em>init</em> method which
+    is executed on instantiation. Within this <em>init()</em> method you can attach {{ docLink('signals', 'event listeners') }}, attach namespaces to the
+    {{ docLink('autoloader') }} and generally do whatever needs to be done to get your functionality into Proem.
+  </p>
+  <p>
+    At present, the plugin implementation is <strong>very</strong> simple, yet still quite flexible. The easiest way to demonstrate is with a simple example.
+  </p>
+</div>
+<div class="well">
+  <h3>An Example</h3>
+  <p>
+    Working from the code covered within the {{ docLink('modules') }} docs we are going to build a very simple plugin that makes all output
+    upper case. I'll call it <em>Upper</em>.
+  </p>
+  <p>
+    From the root of the myproject app create a directory:
+  </p>
+  <code>mkdir lib/Plugin</code>
+  <p>
+    Now, create a file <em>Plugin/Upper.php</em>
+  </p>
+  <pre class="prettyprint">
+    namespace Plugin;
+
+    class Upper extends \Proem\Ext\Plugin\Generic
+    {
+        public function init(\Proem\Service\Manager\Template $assets, $environment = null)
+        {
+            $assets->get('events')->attach('proem.pre.out.response', [$this, 'upperCase']);
+        }
+
+        public function upperCase($event) {
+            $response = $event->getServiceManager()->get('response');
+            $response->setBody(strtoupper($response->getBody()));
+        }
+    }
+  </pre>
+  <p>
+    Nothing flash here. We are listening for the <em>proem.pre.out.response</em> event which is triggered just prior to the {{ docLink('io', 'Response', 'response') }}
+    object sending it's output to the client. We are then grabing the <em>response body</em> running it through {{ phpLink('strtoupper') }} and
+    placing it back into the {{ docLink('io', 'Response', 'response') }} object.
+  </p>
+</div>
+<div class="well">
+  <h3>Loading a Plugin</h3>
+  <p>
+    Next, we need to load our <em>Plugin</em>. Simple, open our <em>htdocs/index.php</em> file and edit it to look like:
+  </p>
+  <pre class="prettyprint">
+    require_once '/Users/thorpe/www/lib/proem/framework/lib/Proem/Autoloader.php';
+
+    (new Proem\Autoloader())
+        ->attachNamespace('Module', '../lib')
+        ->attachNamespace('Plugin', '../lib')
+        ->register();
+
+    (new Proem\Proem)
+        ->attachPlugin(new Plugin\Upper)
+        ->attachModule(new Module\Foo\Foo)
+        ->attachEventListener('proem.post.in.router', function($event) {
+            $event->getServiceManager()->get('router')->attach(
+                'hello-route', new \Proem\Routing\Route\Standard([
+                    'rule'      => '/hello/:name/:params',
+                    'targets'   => ['module' => 'index', 'controller' => 'index', 'action' => 'hello']
+                ])
+            );
+        }
+    )->init();
+  </pre>
+  <p>
+    We have attached the <em>Plugin</em> namespace to the {{ docLink('autoloader') }} and loaded our <em>Plugin</em> in exactly the same way as we did with our {{ docLink('modules') }}
+  </p>
+  <p>
+    In fact, under the hood, a <em>Module</em> and a <em>Plugin</em> are currently exactly the same. This will likely change somewhat in future versions, but for now,
+    it's more a simple naming convention. <em>Modules</em> are designed to manipulate {{ docLink('routes') }} and house {{ docLink('controllers') }} while <em>Plugins</em>
+    are designed to inject third party code.
+  </p>
+  <p>
+    Take a look at <a href="http://127.0.0.1:8080/foo">http://127.0.0.1:8080/foo</a> and you should now see: <em>HELLO FROM FOO!</em>.
+  </p>
+</div>
+{{ disqus('/docs/dev/modules') }}
+{% endblock %}

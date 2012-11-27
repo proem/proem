@@ -1,0 +1,69 @@
+{% extends "docs_layout.twig" %}
+{% block content %}
+<div class="well">
+  <h3>About Proem</h3>
+  <p>
+    The Proem framework aims to be a lightweight, simple &amp; fast MVC implementation built on top of PHP5.4
+  </p>
+  <p>
+    The overall design has been kicking around my head for a number of years, slowly becoming more
+    and more refined over time. This is actually the third iteration of the idea.
+  </p>
+  <p>
+    The current idea sees the framework become Event driven, with the Bootstrap process executing a filter chain to
+    instantiate the bulk of the components required to build an application. During the execution of each step in the
+    filter chain, events are triggered exposing the ability to customise this process.
+    </p>
+  <p>
+    The project currently consists of this website, <a href="http://proemframework.org">http://proemframework.org</a>, an irc channel on #proem
+    irc.freenode.net, and our issue tracker and code repositories on <a href="https://github.com/proem/proem/issues">GitHub</a>.
+    </p>
+</div>
+<div class="well">
+  <h3>About the documentation</h3>
+  <p>
+    Please be aware that while this documentation is accurate at the time of writing, Proem is a fast moving target at this point in time.
+  </p>
+  <p>
+    Complete and absolute name space paths are used throughout the Proem documentation for clarity. In the real world, you would use
+    shorter aliased names.
+  </p>
+  <p>
+    Proem is still very much in early pre-alpha stages and should be considered under <strong>heavy development</strong>. While writing this documentation I have made a best effort to ensure that
+    all code examples are tested. However, there are parts of the documentation where features that are not currently available are made mention of. Where this occurs, it
+    is also mentioned that these features are "planned" or "soon to be worked on". In some cases issues are also linked to within the <a href="https://github.com/proem/proem/issues">Issue Tracker</a>
+  </p>
+</div>
+<div class="well">
+  <h3>How to make use of this documentation</h3>
+  <p>
+    The menu on the left follows a path that means reading each of the pages linked to from top to bottom should progress through the frameworks functionality in a reasonably linear fashion. The menu
+    has been split into three distinct sections:
+  </p>
+  <h5>An Overview</h5>
+  <p>
+    This section contains guides designed to give you a high level view of how things work, as well as detailed information about the Bootstrap process.
+  </p>
+  <p>
+    {{ docLink('installation') }} is a fairly obvious first step, the {{ docLink('quickstart') }} then guides you through building a <b>very</b>
+    simple application without going into too much detail before {{ docLink('bootstrap') }} walks you through a first introduction to the Proem internals and how
+    the framework is held together.
+  </p>
+  <h5>The Components</h5>
+  <p>
+    In this section each of the components within the framework are described in further detail. These pages could likely be looked at more as a reference than a guide but reading these will give you a
+    thorough understanding of the framework and how to make the most of the functionality it provides.
+  </p>
+  <h5>Userland Code</h5>
+  <p>
+    The <em>Userland</em> section covers how you can write code to extend and build upon the Proem framework.
+  </p>
+  <p>
+    If you are then still looking for more detail we also have available the {{ apiLink('Proem', 'API Documentation') }}. This documentation documents every class and method
+    within Proem and is automatically generated from comments within the actual code itself.
+  </p>
+  <p>
+    If you find any bugs in the documentation, please report them at <a href="https://github.com/proem/proem/issues">https://github.com/proem/proem/issues</a>.
+  </p>
+</div>
+{% endblock %}

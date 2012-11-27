@@ -1,0 +1,164 @@
+{% extends 'docs_layout.twig' %}
+{% block content %}
+<div class="well">
+  <h3>The IO component</h3>
+  <p>
+    As the name suggests, the IO component is responsible for incoming and outgoing data. It is broken down into two further components, the <em>Request</em> and <em>Response</em> components. These
+    represent both In and Out respectively. Each of these components is then broken down further into there types, currently, Proem only supports HTTP, but there are some vague plans to implement
+    command line handlers.
+  </p>
+</div>
+<div id="request" class="well">
+  <h3>The Request Object</h3>
+  <div class="well">
+    <p>
+      The <em>Request</em> object is responsible for storing incoming data and providing an easy access to that data. For the case of HTTP, this means all data that would normally be accessed via PHP's
+      $_GET, $_POST, $_COOKIE, $_FILES and $_SERVER super globals. This data is stored internally using a <em>KeyValStore</em> and can be accessed using:
+    </p>
+    <pre class="prettyprint">
+      $request = new Proem\IO\Request\Http\Standard;
+      var_dump(
+        $request->get->all(),
+        $request->post->all(),
+        $request->cookie->all(),
+        $request->file->all(),
+        $request->meta->all(),
+        $request->header->all()
+      );
+    </pre>
+    <p>
+      The <em>meta</em> and <em>header</em> stores represent the $_SERVER super global, separated into two storage containers because it makes more sense to have a clients request headers separate to the
+      information provided via server configuration.
+    </p>
+    <p>
+      Because each of these properties is a <em>KeyValStore</em> object you can use any of the methods provided by the <em>KeyValStore</em>. For example, you can check a property exists using the <em>has()</em>
+      method or access internal data like they where actual properties.
+    </p>
+    <p>
+      Given the url /controller/action/?name=foo :
+    </p>
+    <pre class="prettyprint">
+      echo $request->has('name')->name;
+      echo $request->get('some-non-existent-value', 'some-default');
+    </pre>
+  </div>
+  <div class="well">
+    <h3>Retrieving Route Parameters</h3>
+    <p>
+      Url parameters such as those passed through the <em>Router</em> do not show up within the <em>get</em> parameter as some may expect. These are not <em>true</em> GET variables and as such are
+      treated a little differently.
+    </p>
+    <p>
+      During the <em>Dispatch</em> of a <em>Request</em> the dispatcher injects a <em>Route Payload</em> into the <em>Standard Request</em> object. It is this <em>Payload</em> that is then made available
+      from within the <em>Request</em> object:
+    </p>
+    <p>
+      Given the url /controller/action/name/foo, to access <em>name</em> you would use:
+    </p>
+    <pre class="prettyprint">
+      echo $request->payload->name;
+    </pre>
+  </div>
+  <div class="well">
+    <h3>Other Functionality</h3>
+    <p>
+      Besides the properties described above the <em>Request</em> object also provides various other helper methods put there to make your life easier. These are documented within the
+      {{ apiLink('Proem.IO.Request.Http.Standard', 'API Documentation') }} and for the most part should be fairly self explanatory. These include:
+    </p>
+    <h5>Helpers used to determine the request method:</h5>
+    <pre class="prettyprint">
+      if ($request->isGet()) {
+          // do something
+      } elseif ($request->getMethod() == 'PUT') {
+          // do something else
+      }
+    </pre>
+    <h5>Determine a client ip address</h5>
+    <pre class="prettyprint">
+      echo $request->getClientIp();
+    </pre>
+    <h5>Get request uri</h5>
+    <pre class="prettyprint">
+      echo $request->getRequestUri();
+    </pre>
+    <h5>Retrieve the body of a request</h5>
+    <p>
+      Todays web consists of much more than just simple web sites. Applications these days need to provide API's and services. For this reason Proem's <em>Standard Request Object</em> has the capability to
+      easily work with more than just GET and POST data. Using both PUT and DELETE are also supported, as well as the ability to easily retrieve raw request data, or have it automatically formatted
+      dependant on it's type. As an example, this controller action listens to a PUT request which has been determined to contain JSON data and simple var dumps the parsed JSON as an array.
+    </p>
+    <pre class="prettyprint">
+      public function dumpAction()
+      {
+          if ($request->getContentType() == 'application/json') {
+              var_dump($this->getBody(false));
+          }
+      }
+    </pre>
+    <p>
+      Note the use of the <em>false</em> passed to the <em>getBody</em> method. This sets the <em>raw</em> flag to false and enables auto parsing of the content type.
+    </p>
+  </div>
+  <div class="well">
+    <h3>The Fake Request Object</h3>
+    <p>
+      One part of the <em>IO\Request</em> component that might not be self explanatory is the <em>Fake Request</em> object. This object actually extends the <em>Standard Request</em> object by allowing
+      the injection of our own <em>Fake</em> data on instantiation. Unlike the <em>Standard Request Object</em> which is populated from the PHP super globals, with a <em>Fake Request</em> we can
+      populate the data ourselves.
+    </p>
+    <pre class="prettyprint">
+      $request = new Proem\IO\Request\Http\Fake('/foo/bar');
+    </pre>
+    <p>
+      The above code creates a <em>Request</em> that looks exactly as it would if a client had made a request to the url <em>/foo/bar</em>. This type of flexibility is currently only taken advantage of
+      from within the test suite. However, this object may soon be the foundation for a mechanism of triggering internal requests to controllers. <em>(HMVC)</em>.
+    </p>
+  </div>
+</div>
+<div id="response" class="well">
+  <h3>The Response Object</h3>
+  <div class="well">
+    <p>
+      The <em>Response</em> object is responsible for storing and then latter sending all outgoing data to the client in response to the request they have made. Generally, as a request is being processed
+      data is stored within the <em>Response</em> by calling it's <em>appendToBody()</em> method. When there response has been completely fulfilled, this data is then sent to the client using
+      <em>send()</em>.
+    </p>
+    <pre class="prettyprint">
+      (new Proem\IO\Response\Standard)->appendToBody('Hello World!')->send();
+    </pre>
+    <div class="alert alert-info">
+      Of course, in most instances using Proem, this sort of thing will be taken care of for you. As a user, you would generally be sending output to the View layer, which in turn is injected
+      into the response and sent to the client.
+    </div>
+  </div>
+  <div class="well">
+    <h3>Sending Headers</h3>
+    <p>
+      As well as being responsible for sending the body of a response, the <em>Response</em> object is also responsible for storing and sending HTTP headers, as well as the response's status. Sending a
+      header is simple, for example, a <em>Content-Type</em> header.
+    </p>
+    <pre class="prettyprint">
+      (new Proem\IO\Response\Standard)
+        ->appendToBody('#foo { background-color: #fff; }')
+        ->setHeader('Content-Type', 'text/css')
+        ->send();
+    </pre>
+  </div>
+  <div class="well">
+    <h3>Setting the Response Status</h3>
+    <p>
+      Sometimes you will need to set a <em>Response</em> status. By default, the <em>Response</em> object will always attempt to set a 200 OK, but you yourself can edit this if need be.
+    </p>
+    <pre class="prettyprint">
+      (new Proem\IO\Response\Standard)
+        ->appendToBody('&lt;h3&gt;Page not found&lt;/h3&gt;')
+        ->setStatus(404)
+        ->send();
+    </pre>
+  </div>
+  <p>
+  More information can be found regarding the <em>Response</em> object by viewing the {{ apiLink('Proem.IO.Response.Http.Standard', 'API Documentation') }}.
+  </p>
+</div>
+{{ disqus('/docs/dev/io') }}
+{% endblock %}

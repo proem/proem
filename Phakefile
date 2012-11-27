@@ -49,8 +49,10 @@ group('dev', function() {
         $phar->buildFromDirectory('.');
         $phar->setStub("<?php
         Phar::mapPhar('proem.phar');
-        require_once 'phar://proem.phar/Proem/Autoloader.php';
-        (new Proem\Autoloader())->attachNamespaces(['Proem' => 'phar://proem.phar'])->register();
+        require_once 'phar://proem.phar/Proem/Util/Autoloader.php';
+        (new Proem\\Util\\Autoloader(false))
+            ->attachNamespace('Proem', 'phar://proem.phar')
+            ->register();
         __HALT_COMPILER();
         ?>");
         rename('proem.phar', '../build/proem.phar');
@@ -62,7 +64,7 @@ group('dev', function() {
 
     desc('Bump the version number');
     task('bump', function($args) {
-        $file = file_get_contents('lib/Proem/Api/Proem.php');
+        $file = file_get_contents('lib/Proem/Proem.php');
         preg_match('/VERSION = \'([0-9]?)\.([0-9]?)\.([a-z0-9])\';/', $file, $matches);
         list($all, $major, $minor, $incr) = $matches;
         if (isset($args['major'])) {
@@ -83,7 +85,7 @@ group('dev', function() {
         echo "VERSION = '$version'\n";
         if (isset($args['write'])) {
             $file = preg_replace('/VERSION = \'(.*)\';/', "VERSION = '$version';", $file);
-            file_put_contents('lib/Proem/Api/Proem.php', $file);
+            file_put_contents('lib/Proem/Proem.php', $file);
         }
     });
 });

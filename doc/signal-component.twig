@@ -1,0 +1,227 @@
+{% extends 'docs_layout.twig' %}
+{% block content %}
+<div class="well">
+  <h2>The Signal Component</h2>
+  <p>
+    The Signal component is a simple implementation of the <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer Pattern</a>
+    used to <em>publish</em> events to subscribing <em>listeners</em>. Listeners are registered by index <em>(name)</em> with an instance
+    of the {{ hubLink('Proem.Signal.Manager') }} object, when an event using this index <em>(name)</em> is then <em>triggered</em> (this also happens on the
+    {{ hubLink('Proem.Signal.Manager') }} object) the listener is then invoked.
+  </p>
+  <p>
+    An <em>Event</em> will typically pass along to the <em>Listener</em> some basic meta data such as where, when and how the
+    <em>Event</em> was triggered. The <em>Listener</em> can then use this meta data to perform some task. In Proem, if the <em>Listener</em>
+    also returns an <em>Event</em> object, this object will be passed back to the original location where the event was triggered and (if defined)
+    will trigger a callback on the <em>Event</em>.
+  </p>
+  <p>
+    This design allows for great flexibility as <em>Listeners</em> are very loosely coupled from the application while still being able to
+    communicate and trigger events on the application themselves.
+  </p>
+</div>
+<div class="well">
+  <a name="a-simple-example" style="position: relative; top: -70px;">&nbsp;</a>
+  <h3>A Simple Example</h3>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    // Attach a listener to 'some.event'
+    $signal_manager->attach('some.event', function($event) {
+        var_dump($event);
+    });
+
+    // Trigger the 'some.event' event.
+    $signal_manager->trigger(new Proem\Signal\Event\Standard('some.event'));
+  </pre>
+  <p>
+    This returns:
+  </p>
+  <pre>
+    object(Proem\Signal\Event\Generic)#63 (3) {
+      ["params":"Proem\Signal\Event\Generic":private] => NULL
+    }
+  </pre>
+  <p>
+    As you can see, the <em>Event</em> object triggered gets sent to the <em>Listener</em> and is passed into the first argument of it's Callback. We can also
+    use this <em>Event</em> object to pass along extra parameters:
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    // Attach a listener
+    $signal_manager->attach('some.event', function($event) {
+        echo $event->getParam('foo');
+    });
+
+    $signal_manager->trigger((new Proem\Signal\Event\Standard('some.event'))->setParam('foo', 'bar'));
+  </pre>
+  <p>
+    The above example outputs the string 'bar'.
+  </p>
+</div>
+<div class="well">
+  {{ anchor('attaching-multiple-listeners') }}
+  <h3>Attaching multiple listeners to a single event</h3>
+  <p>
+    We can also attach multiple <em>Listeners</em> to a single <em>Event</em>.
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    // Attach a listener to 'some.event'
+    $signal_manager->attach('some.event', function() {
+        echo "Event 1";
+    })->attach('some.event', function() {
+        echo "Event 2";
+    });
+
+    // Trigger the 'some.event' event.
+    $signal_manager->trigger(new Proem\Signal\Event\Standard('some.event'));
+  </pre>
+  <p>
+    Outputs:
+  </p>
+  <pre>
+    Event 1
+    Event 2
+  </pre>
+</div>
+<div class="well">
+  {{ anchor('wildcards') }}
+  <h3>Attaching listeners using wildcard notation</h3>
+  <p>
+    You can attach listeners to multiple events using wildcard notation.
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    $signal_manager->attach('this.is.*', function($event) {
+        echo $event->getName();
+    })->attach('this.*', function($event) {
+        echo $event->getName();
+    });
+
+    // Trigger the 'some.event' event.
+    $signal_manager->trigger(new Proem\Signal\Event\Standard('this.is.some.event'));
+  </pre>
+  <p>
+    The above would produce:
+    <pre>
+      this.is.some.event
+      this.is.some.event
+    </pre>
+    because the <em>this.is.some.event</em> is within the same namespace as both of the listener wildcards.
+  </p>
+  <p>
+    You can for example, attach a listener to all <em>proem</em> events using proem.* or, to attach to <em>all</em> events you would use .*
+  </p>
+</div>
+<div class="well">
+  {{ anchor('prioritising-listeners') }}
+  <h3>Prioritising the order in which <em>Listeners</em> are called.</h3>
+  <p>
+    Left alone listeners will be executed in the order that they are attached to an event, FIFO. However, sometimes you will want to make a
+    listener take a higher priority than others, this can be done by passing the priority as the last argument to the <em>Event Manager's - attach()</em> method.
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    // Attach a listener to 'some.event'
+    $signal_manager->attach('some.event', function() {
+        echo "Event 1";
+    })->attach('some.event', function($e) {
+        echo "Event 2";
+    }, 100);
+
+    // Trigger the 'some.event' event.
+    $signal_manager->trigger(new Proem\Signal\Event\Standard('some.event'));
+  </pre>
+  <p>
+    This outputs:
+  </p>
+  <pre>
+    Event 2
+    Event 1
+  </pre>
+</div>
+<div class="well">
+  {{ anchor('custom-events') }}
+  <h3>Creating and using Custom Events</h3>
+  <p>
+    The <em>Standard Event</em> used in the above examples consists of a few simple getter and setter methods like <em>setParam(), getParam(), setParams(), getParams(), setName()
+    and getName()</em> but there will be numerous occasions where you will want to add your own functionality to make the intended use of your Events clearer. This is simply done
+    by creating a class implementing the Signal/Event/Template interface.
+  </p>
+  <pre class="prettyprint">
+
+    class CustomEvent extends Proem\Signal\Event\Generic
+    {
+        private $custom;
+
+        public function setSomeCustomProperty($value)
+        {
+            $this->custom = $value;
+            return $this;
+        }
+
+        public function getSomeCustomProperty()
+        {
+            return $this->custom;
+        }
+    }
+
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    $signal_manager->attach('foo.something', function($event) {
+        echo $e->getSomeCustomProperty();
+    });
+
+    $signal_manager->trigger((new CustomEvent('foo.something'))->setSomeCustomProperty('some custom value'));
+    ]);
+  </pre>
+  <p>
+    As expected, this returns the output:
+  </p>
+  <pre>
+    some custom value
+  </pre>
+</div>
+<div class="well">
+  {{ anchor('event-responses') }}
+  <h3>Triggering an Event Response (Listeners returning Events)</h3>
+  <p>
+    The above examples are all well and good, but often, we will want our listeners to trigger some action back at the location where our
+    original <em>Event</em> was triggered. This is easily achieved by defining a <em>Callback</em> and passing it as the second argument
+    to the <em>trigger()</em> method. All we need do then is return an <em>Event</em> from our listener. This can be the original <em>Event</em>
+    or an entirely new <em>Event</em>.
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    $signal_manager->attach('foo.something', function($event) {
+        return $event;
+    });
+
+    $signal_manager->trigger('foo.something', function($responseEvent) {
+        echo "A response event was returned";
+    });
+  </pre>
+  <p>
+    Of course, this is a pretty trivial example, but it does describe (in simple terms) how an Event can be returned back to where our original triggering <em>Event</em>
+    was first triggered. In most cases however, we would also want to pass some data back along with this event. This is done by simply attaching the data to the
+    <em>Event</em> as you would normally.
+  </p>
+  <pre class="prettyprint">
+    $signal_manager = new Proem\Signal\Manager\Standard;
+
+    $signal_manager->attach('foo.something', function($event) {
+        $event->setParam('some-data', 'This is some data that has been set in a listener');
+    });
+
+    $signal_manager->trigger('foo.something', function($responseEvent) {
+        echo $responseEvent->getParam('some-data');
+    });
+  </pre>
+</div>
+{{ disqus('/docs/dev/signal-component') }}
+{% endblock %}

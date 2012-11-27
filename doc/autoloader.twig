@@ -1,0 +1,115 @@
+{% extends 'docs_layout.twig' %}
+{% block content %}
+<div class="well">
+  <h2>The Autoloader</h2>
+  <p>
+    The autoloader is a simple class loader which adheres to the recently defined PSR-0 standard
+    (see <a href="http://groups.google.com/group/php-standards">here</a> and <a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md">here</a>).
+  </p>
+  <p>
+    Whenever you attempt to use a class which has not yet been included PHP will trigger a mechanism
+    which looks for a registered autoloader. This autoloader can then be used to search the file system
+    for the file required to load the class.
+  </p>
+  <p>
+    If the <a href="http://php.net/apc">APC</a> caching extension is enabled in your servers configuration Proem's Autoloader will automatically
+    make use of this extension, thus optimising class lookups by storing the location of a class within the cache.
+  <p>
+    Proem's Autoloader is simple to use and enables lazy loading of both the Proem libraries as well
+    as any third party code complying with the <a href="https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md">PSR-0 standard</a>.
+  </p>
+  <p>
+    The following example illustrates all the code you need within your bootstrap to be able to use Proem.
+  </p>
+</div>
+<div class="well">
+  <h3>A simple example</h3>
+  <pre class="prettyprint">
+    require_once './lib/Proem/Util/Autoloader.php';
+
+    (new \Proem\Util\AutoLoader)
+        ->register();
+  </pre>
+  <div class="alert alert-info">
+    Note that you first must manually include the {{ hubLink('Proem.Util.Autoloader') }} file itself. Once this is done, you will no longer need any calls to include or require within your
+    code and Proem is included by default.
+  </div>
+</div>
+<div class="well">
+  <h3>Attaching namespaces</h3>
+  <p>The Proem autloader expects namespaces mapped to the paths these namespaces can be found within (or more commonly, there parent directory):</p>
+  <pre class="prettyprint">
+    (new \Proem\Util\AutoLoader)
+        ->attachNamespace([
+            'Foo' => '/myfoo'
+    ]);
+  </pre>
+  <div class="alert alert-info">
+    As of {{ commitLink('f3d110d') }} the following will also now work.
+  </div>
+  <pre class="prettyprint">
+    (new \Proem\Util\AutoLoader)
+        ->attachNamespace([
+            'Foo' => '/myfoo/Foo'
+    ]);
+  </pre>
+</div>
+<div class="well">
+  <h3>Multiple locations for a single namespace</h3>
+  <p>You can also register multiple file system paths for a single name space to reside in:</p>
+  <pre class="prettyprint">
+    (new \Proem\AutoLoader)
+        ->attachNamespace([
+            'Foo' => ['/morefoo', '/myfoo']
+        ]);
+  </pre>
+  <p>
+    Here, the first path registered will be searched first. So, if you have a class in <em>/myfoo/Foo/Foo.php</em>
+    and code which instantiates <em>Foo\Foo</em> the Proem class will be loaded from <em>/morefoo/Foo/Foo.php</em>
+    and not <em>/myfoo/Foo/Foo.php</em>
+  </p>
+</div>
+<div class="well">
+  <h3>Loading PEAR like classes</h3>
+  <p>
+    Classes implementing the PEAR naming conventions can also be added to the autoloader as defined by PSR-0:
+  </p>
+  <pre class="prettyprint">
+    (new \Proem\AutoLoader())
+        ->attachPearPrefix('Pear_', '/usr/share/php');
+  </pre>
+  <p>
+    This tells the autoloader to find classes beginning with the prefix Pear_ within the /usr/share/php directory.
+    There are similar methods for adding multiple Pear type prefixes and locations as there are with name spaces.
+  </p>
+  <p>
+    While you can add as many namespaces &amp; paths as are required prior to calling the register() method
+    you can also, if need be, register a completely new Autoloader at a latter time.
+  </p>
+  <pre class="prettyprint">
+    require_once 'Proem/Autoloader.php';
+
+    (new \Proem\AutoLoader())
+        ->register();
+
+    // some more code
+
+    (new \Proem\AutoLoader())
+        ->attachNamespace('Foo', './foo')
+        ->register();
+
+    // more code using the Foo namespace
+  </pre>
+  <p>
+    You can also unregister an Autoloader simply:
+  </p>
+  <pre class="prettyprint">
+    $autoloader = (new \Proem\AutoLoader());
+
+    // some code making use of $autoloader
+
+    $autoloader->unregister();
+  </pre>
+</div>
+{{ disqus('/docs/autoloader') }}
+{% endblock %}

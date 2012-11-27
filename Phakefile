@@ -62,7 +62,7 @@ group('dev', function() {
 
     desc('Bump the version number');
     task('bump', function($args) {
-        $file = file_get_contents('lib/Proem/Api/Proem.php');
+        $file = file_get_contents('lib/Proem/Proem.php');
         preg_match('/VERSION = \'([0-9]?)\.([0-9]?)\.([a-z0-9])\';/', $file, $matches);
         list($all, $major, $minor, $incr) = $matches;
         if (isset($args['major'])) {
@@ -83,7 +83,7 @@ group('dev', function() {
         echo "VERSION = '$version'\n";
         if (isset($args['write'])) {
             $file = preg_replace('/VERSION = \'(.*)\';/', "VERSION = '$version';", $file);
-            file_put_contents('lib/Proem/Api/Proem.php', $file);
+            file_put_contents('lib/Proem/Proem.php', $file);
         }
     });
 });

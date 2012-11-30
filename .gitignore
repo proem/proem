@@ -4,3 +4,4 @@ tests/coverage
 vendor
 composer.lock
 issues
+tests-old

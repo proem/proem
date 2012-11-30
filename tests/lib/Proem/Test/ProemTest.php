@@ -24,41 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests\IO\Http;
+namespace Proem\Test;
 
-use Proem\IO\Response\Http\Standard as Response;
+use Proem\Proem;
 
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ProemTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCanInstantiate()
+    public function testCanInstantiateProem()
     {
-        $this->assertInstanceOf('\Proem\IO\Response\Template', new Response);
-    }
-
-    public function testCanSetGetVersion()
-    {
-        $r = new Response;
-        $r->setHttpVersion(1.0);
-        $this->assertEquals(1.0, $r->getHttpVersion());
-    }
-
-    public function testStatus()
-    {
-        $r = new Response;
-        $this->assertEquals(200, $r->getHttpStatus());
-        $this->assertEquals('OK', $r->getHttpStatus(true));
-        $r->setHttpStatus(409);
-        $this->assertEquals(409, $r->getHttpStatus());
-        $this->assertEquals('Conflict', $r->getHttpStatus(true));
-        $r->setHttpStatus('Gone');
-        $this->assertEquals(410, $r->getHttpStatus());
-        $this->assertEquals('Gone', $r->getHttpStatus(true));
-    }
-
-    public function testHeaders()
-    {
-        $r = new Response;
-        $r->setHeader('foo', 'bar');
-        $this->assertEquals('bar', $r->getHeader('foo'));
+        $this->assertInstanceOf('Proem\Proem', new Proem);
     }
 }

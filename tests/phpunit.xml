@@ -2,6 +2,9 @@
     <testsuite name="Proem Framework Test Suite">
         <directory>./</directory>
     </testsuite>
+    <listeners>
+        <listener class="\Mockery\Adapter\Phpunit\TestListener" file="../vendor/mockery/mockery/library/Mockery/Adapter/Phpunit/TestListener.php"></listener>
+    </listeners>
     <filter>
         <whitelist>
             <directory suffix=".php">../lib/</directory>

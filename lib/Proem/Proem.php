@@ -29,6 +29,14 @@
  */
 namespace Proem;
 
+use Proem\Service\AssetManagerInterface;
+use Proem\Service\AssetManager;
+use Proem\Service\Asset;
+use Proem\Signal\EventManagerInterface;
+use Proem\Signal\EventManager;
+use Proem\Signal\EventInterface;
+use Proem\Signal\Event;
+
 /**
  * The Proem bootstrap wrapper
  *
@@ -42,9 +50,51 @@ class Proem
     const VERSION = 'wip-0.10.0';
 
     /**
-     * Setup
+     * Store the asset manager.
+     *
+     * @var Proem\Asset\AssetManagerInterface
      */
-    public function __construct()
+    protected $assetManager = null;
+
+    /**
+     * Setup.
+     */
+    public function __construct(AssetManagerInterface $assetManager = null)
     {
+        if ($assetManager !== null) {
+            $this->assetManager = $assetManager;
+        } else {
+            $this->assetManager = new AssetManager;
+        }
+
+        if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
+            $this->assetManager->set(
+                'EventManager',
+                new Asset(
+                    'Proem\Signal\EventManagerInterface',
+                    Asset::single(
+                        function ($asset) {
+                            return new EventManager;
+                        }
+                    )
+                )
+            );
+        }
+    }
+
+    /**
+     * Bootstrap the framework / application.
+     *
+     * @param Proem\Signal\EventInterface $initEvent An optional event to be triggered on init.
+     */
+    public function bootstrap(EventInterface $initEvent = null)
+    {
+        if ($initEvent === null) {
+            $initEvent = new Event('proem.init');
+        }
+
+        $this->assetManager->get('EventManager')->trigger($initEvent);
+
+        return $this;
     }
 }

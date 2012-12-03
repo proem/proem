@@ -26,18 +26,13 @@
 
 
 /**
- * @namespace Proem\Routing\Signal\Event
+ * @namespace Proem\Service
  */
-namespace Proem\Routing\Signal\Event;
-
-use Proem\Signal\Event\Standard;
-use Proem\Routing\Route\Payload;
+namespace Proem\Service;
 
 /**
- * Proem\Routing\Signal\Event\RouteExhausted
- *
- * A custom event used by the router to communicate exhausted routes
+ * Interface that all assets must implement.
  */
-class RouteExhausted extends Standard
+interface AssetInterface
 {
 }

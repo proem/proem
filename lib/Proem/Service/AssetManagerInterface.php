@@ -26,23 +26,13 @@
 
 
 /**
- * @namespace Proem\Ext\Plugin
+ * @namespace Proem\Service
  */
-namespace Proem\Ext\Plugin;
-
-use Proem\Ext\Template;
-use Proem\Service\Manager\Template as Manager;
+namespace Proem\Service;
 
 /**
- * A base Plugin sbstract.
+ * Interface that all asset managers must implement.
  */
-abstract class Generic implements Template
+interface AssetManagerInterface
 {
-    /**
-     * Called on intialisation
-     *
-     * @param Proem\Service\Manager\Template $assets
-     * @param string $environment
-     */
-    abstract public function init(Manager $assets, $environment = null);
 }

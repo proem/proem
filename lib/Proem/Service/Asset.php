@@ -26,22 +26,13 @@
 
 
 /**
- * @namespace Proem\Ext
+ * @namespace Proem\Service
  */
-namespace Proem\Ext;
-
-use Proem\Service\Manager\Template as Manager;
+namespace Proem\Service;
 
 /**
- * Base interface that all modules and plugins must implement.
+ * A default asset.
  */
-interface Template
+class Asset implements AssetInterface
 {
-    /**
-     * Called on initialisation.
-     *
-     * @param Proem\Service\Manager\Template $assets
-     * @param string $environment
-     */
-    public function init(Manager $assets, $environment = null);
 }

@@ -26,35 +26,13 @@
 
 
 /**
- * @namespace Proem\Routing\Router
+ * @namespace Proem\Signal
  */
-namespace Proem\Routing\Router;
-
-use Proem\Routing\Route\Template as Route;
+namespace Proem\Signal;
 
 /**
- * Interface all routers must implement.
+ * Interface that all event managers must implement.
  */
-interface Template
+interface EventManagerInterface
 {
-    /**
-     * Register a route with the router.
-     *
-     * @param string $name
-     * @param Proem\Routing\Route\Template $route
-     */
-    public function attach($name, Route $route);
-
-    /**
-     * Recurse through the Routes until a match is found.
-     *
-     * When called multiple times (in a loop for instance)
-     * this method should return a new matching route until
-     * all routes have been processed.
-     *
-     * Once exhausted this function should return false and the
-     * internal pointer should be reset so the router can be used
-     * again.
-     */
-    public function route();
 }

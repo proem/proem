@@ -26,40 +26,13 @@
 
 
 /**
- * @namespace Proem\Signal\Manager
+ * @namespace Proem\Signal
  */
-namespace Proem\Signal\Manager;
-
-use Proem\Signal\Event\Template as EventInterface;
+namespace Proem\Signal;
 
 /**
- * Interface that all signal managers must implement.
+ * Interface that all events must implement.
  */
-interface Template
+interface EventInterface
 {
-    /**
-     * Remove event listeners from a particular index.
-     *
-     * @param string $name
-     * @return Proem\Signal\Manager\Template
-     */
-    public function remove($name);
-
-    /**
-     * Register a listener attached to a particular named event.
-     *
-     * @param string $name The name of the event to attach to.
-     * @param callable $callback The callback that will be executed when the event is triggered.
-     *
-     * @return Proem\Signal\Manager\Template
-     */
-    public function attach($name, Callable $callback);
-
-    /**
-     * Trigger the execution of all event listeners attached to a named event.
-     *
-     * @param array $options An array of Proem\Util\Opt\Options objects
-     * @return Proem\Signal\Manager\Template
-     */
-    public function trigger(EventInterface $event, Callable $callback = null);
 }

@@ -24,25 +24,15 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Controller
- */
-namespace Proem\Controller;
-
-use Proem\Service\Manager\Template as ServiceManager;
 
 /**
- * Interface describing a controller.
+ * @namespace Proem\Signal
  */
-interface Template
+namespace Proem\Signal;
+
+/**
+ * A default event.
+ */
+class Event implements EventInterface
 {
-    /**
-     * Method called on instantiation.
-     */
-    public function init();
-
-    /**
-     * Method called to dispatch an action.
-     */
-    public function dispatch($method);
 }

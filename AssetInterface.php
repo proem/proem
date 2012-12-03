@@ -24,27 +24,15 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem
- */
-namespace Proem;
 
 /**
- * The Proem bootstrap wrapper
- *
- * Responsible for aiding in the bootstrap process.
+ * @namespace Proem\Service
  */
-class Proem
+namespace Proem\Service;
+
+/**
+ * Interface that all assets must implement.
+ */
+interface AssetInterface
 {
-    /**
-     * Store the framework version.
-     */
-    const VERSION = 'wip-0.10.0';
-
-    /**
-     * Setup
-     */
-    public function __construct()
-    {
-    }
 }

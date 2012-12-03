@@ -24,14 +24,15 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test;
 
-use Proem\Proem;
+/**
+ * @namespace Proem\Service
+ */
+namespace Proem\Service;
 
-class ProemTest extends \PHPUnit_Framework_TestCase
+/**
+ * A default asset.
+ */
+class Asset implements AssetInterface
 {
-    public function testCanInstantiateProem()
-    {
-        $this->assertInstanceOf('Proem\Proem', new Proem);
-    }
 }

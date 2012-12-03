@@ -24,14 +24,15 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test;
 
-use Proem\Proem;
+/**
+ * @namespace Proem\Signal
+ */
+namespace Proem\Signal;
 
-class ProemTest extends \PHPUnit_Framework_TestCase
+/**
+ * A default event.
+ */
+class Event implements EventInterface
 {
-    public function testCanInstantiateProem()
-    {
-        $this->assertInstanceOf('Proem\Proem', new Proem);
-    }
 }

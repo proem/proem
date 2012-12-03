@@ -24,27 +24,15 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem
- */
-namespace Proem;
 
 /**
- * The Proem bootstrap wrapper
- *
- * Responsible for aiding in the bootstrap process.
+ * @namespace Proem\Signal
  */
-class Proem
+namespace Proem\Signal;
+
+/**
+ * Interface that all events must implement.
+ */
+interface EventInterface
 {
-    /**
-     * Store the framework version.
-     */
-    const VERSION = 'wip-0.10.0';
-
-    /**
-     * Setup
-     */
-    public function __construct()
-    {
-    }
 }

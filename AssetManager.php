@@ -104,24 +104,4 @@ class AssetManager implements AssetManagerInterface
     {
         return isset($this->assets[$index]);
     }
-
-    /**
-     * Find the first asset providing a certain type.
-     *
-     * When called, this method will search all assets until it
-     * finds the first that provides the functionality asked for.
-     *
-     * It then returns that object.
-     *
-     * @param string $provides
-     * @return object
-     */
-    public function find($provides)
-    {
-        foreach ($this->assets as $asset) {
-            if ($asset->is($provides)) {
-                return $asset->fetch($this);
-            }
-        }
-    }
 }

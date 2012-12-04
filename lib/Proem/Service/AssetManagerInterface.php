@@ -62,12 +62,4 @@ interface AssetManagerInterface
      * @return bool
      */
     public function has($index);
-
-    /**
-     * Find the first asset providing a certain type.
-     *
-     * @param string $provides
-     * @return object
-     */
-    public function find($provides);
 }

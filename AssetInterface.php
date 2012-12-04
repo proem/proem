@@ -30,9 +30,50 @@
  */
 namespace Proem\Service;
 
+use Proem\Service\AssetInterface;
+use Proem\Service\AssetManagerInterface;
+
 /**
  * Interface that all assets must implement.
  */
 interface AssetInterface
 {
+    /**
+     * Store the Closure responsible for instantiating an asset.
+     *
+     * @param string $is The object this asset is a type of
+     * @param array|closure $params
+     * @param closure|null $closure
+     * @return Proem\Service\AssetInterface
+     */
+    public function __construct($is, $params, $closure = null);
+
+    /**
+     * Get a parameter by index
+     *
+     * @param string $index
+     */
+    public function __get($index);
+
+    /**
+     * Retrieve the type of object this asset is
+     *
+     * @return string
+     */
+    public function is();
+
+    /**
+     * Validate and retrieve an instantiated asset.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function fetch(AssetManagerInterface $assetManager = null);
+
+    /**
+     * Store an asset in such a way that when it is retrieved it will always return
+     * the same instance.
+     *
+     * @param closure $closure
+     */
+    public function single(\Closure $closure);
 }

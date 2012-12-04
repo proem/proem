@@ -30,9 +30,160 @@
  */
 namespace Proem\Service;
 
+use Proem\Service\AssetInterface;
+use Proem\Service\AssetManagerInterface;
+
 /**
- * A default asset.
+ * Standard asset container.
+ *
+ * Asset containers are reponsible for instantiating assets. The containers themselves
+ * are capable of holding all the parameters that might be required to configure an object
+ * as well as having the ability to instantiate an object using these parameters via a
+ * closure.
  */
 class Asset implements AssetInterface
 {
+    /**
+     * Store any required parameters.
+     *
+     * @var array @params
+     */
+    protected $params = [];
+
+    /**
+     * The Closure responsible for instantiating the payload.
+     *
+     * @var closure $asset
+     */
+    protected $asset = null;
+
+    /**
+     * Store a flag indicating the object this asset is a type of.
+     *
+     * @var string $is
+     */
+    protected $is = null;
+
+    /**
+     * Validate that this object is what it advertises.
+     *
+     * @param object
+     */
+    protected function validate($object)
+    {
+        $object = (object) $object;
+
+        if ($object instanceof $this->is) {
+            return $object;
+        }
+
+        throw new \DomainException(
+            sprintf(
+                "The Asset advertised as being of type %s is actually of type %s",
+                $this->is,
+                get_class($object)
+            )
+        );
+    }
+
+    /**
+     * Store the Closure responsible for instantiating an asset.
+     *
+     * @param string $is The object this asset is a type of
+     * @param array|closure|null $params
+     * @param closure|null $closure
+     * @return Proem\Service\AssetInterface
+     */
+    public function __construct($is, $params = null, $closure = null)
+    {
+        $this->is = $is;
+
+        if (is_array($params) && $closure instanceof \Closure) {
+            $this->asset  = $closure;
+            $this->params = $params;
+        } elseif ($params instanceof \Closure) {
+            $this->asset  = $params;
+            $this->params = [];
+        } elseif (is_array($params)) {
+            $this->params = $params;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get a parameter by index
+     *
+     * @param string $index
+     */
+    public function __get($index)
+    {
+        if (isset($this->params[$index])) {
+            return $this->params[$index];
+        }
+    }
+
+    /**
+     * Retrieve the type of object this asset is, or test it's type
+     *
+     * @return string
+     */
+    public function is($type = null)
+    {
+        if ($type === null) {
+            return $this->is;
+        } else {
+            return $type == $this->is;
+        }
+    }
+
+    /**
+     * Validate and retrieve an instantiated asset.
+     *
+     * Here the closure is passed this asset container and optionally a
+     * Proem\Service\AssetManagerInterface implementation.
+     *
+     * This provides the closure with the ability to use any required parameters
+     * and also be able to call upon any other assets stored in the service manager.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function fetch(AssetManagerInterface $assetManager = null)
+    {
+        $asset = $this->asset;
+        return $this->validate($asset($this, $assetManager));
+    }
+
+    /**
+     * Store an asset in such a way that when it is retrieved it will always return
+     * the same instance.
+     *
+     * Here we wrap a closure within a closure and store the returned value (an asset)
+     * of the inner closure within a static variable in the outer closure. This insures
+     * that whenever this Asset is retrieved it will always return the same instance.
+     *
+     * <code>
+     * $foo = new Asset(
+     *     'Foo',
+     *     Asset::single(function() {
+     *         return new Foo;
+     *     })
+     * );
+     * </code>
+     *
+     * @param closure $closure
+     */
+    public function single(\Closure $closure)
+    {
+        if ($this->asset === null) {
+            $this->asset = function ($asset = null, $assetManager = null) use ($closure) {
+                static $obj;
+                if ($obj === null) {
+                    $obj = $this->validate($closure($asset, $assetManager));
+                }
+                return $obj;
+            };
+        }
+        return $this;
+    }
 }

@@ -30,13 +30,37 @@
  */
 namespace Proem\Service;
 
+use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetInterface;
 
 /**
- * Interface that all asset managers must implement.
+ * A collection of assets.
+ *
+ * Within the manager itself assets are stored in a hash of key values where each
+ * value is an asset container.
+ *
+ * These containers contain the parameters required to instantiate an asset as
+ * well as a closure capable of returning a configured and instantiated asset.
+ *
+ * @see Proem\Service\Asset
  */
-interface AssetManagerInterface
+class AssetManager implements AssetManagerInterface
 {
+    /**
+     * Store assets.
+     *
+     * @var $assets array
+     */
+    protected $assets = [];
+
+    /**
+     * Store an array containing information about what
+     * Assets this manager provides.
+     *
+     * @var array
+     */
+    protected $provides = [];
+
     /**
      * Store an Asset container by named index.
      *
@@ -44,16 +68,31 @@ interface AssetManagerInterface
      * @param Proem\Service\AssetInterface $asset
      * @return Proem\Service\AssetManagerInterface
      */
-    public function set($index, AssetInterface $asset);
+    public function set($index, AssetInterface $asset)
+    {
+        $this->assets[$index] = $asset;
+        $this->provides[]     = $asset->is();
+        return $this;
+    }
 
     /**
-     * Retrieve an actual instantiated ssset object from within it's container.
+     * Retrieve an asset.
+     *
+     * Returns an instantiated obejct by default or optionaly the
+     * asset container itself.
      *
      * @param string $index The index the asset is referenced by
      * @param bool Wether or not to return the asset's object or container
      * @return object The object provided by the asset container
      */
-    public function get($index, $asAsset = false);
+    public function get($index, $asAsset = false)
+    {
+        if (!$asAsset) {
+            return isset($this->assets[$index]) ? $this->assets[$index]->fetch($this) : null;
+        }
+
+        return isset($this->assets[$index]) ? $this->assets[$index] : null;
+    }
 
     /**
      * Check to see if this manager has a specific asset by index.
@@ -61,13 +100,28 @@ interface AssetManagerInterface
      * @param string $index The index the asset is referenced by
      * @return bool
      */
-    public function has($index);
+    public function has($index)
+    {
+        return isset($this->assets[$index]);
+    }
 
     /**
      * Find the first asset providing a certain type.
      *
+     * When called, this method will search all assets until it
+     * finds the first that provides the functionality asked for.
+     *
+     * It then returns that object.
+     *
      * @param string $provides
      * @return object
      */
-    public function find($provides);
+    public function find($provides)
+    {
+        foreach ($this->assets as $asset) {
+            if ($asset->is($provides)) {
+                return $asset->fetch($this);
+            }
+        }
+    }
 }

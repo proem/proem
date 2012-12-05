@@ -32,7 +32,7 @@ namespace Proem\Util;
 /**
  * A generic interface for accessing object data.
  */
-interface DataCollectionInterface extends \Iterator, \Serializable
+interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
 {
     /**
      * Set a property

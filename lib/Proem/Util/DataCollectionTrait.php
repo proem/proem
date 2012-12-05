@@ -35,15 +35,38 @@ namespace Proem\Util;
  */
 trait DataCollectionTrait
 {
+    /**
+     * Store the actual data
+     *
+     * @var array $data
+     */
     protected $data = [];
+
+    /**
+     * Store the current data index
+     *
+     * @var int data_index
+     */
     protected $data_index = 0;
 
+    /**
+     * Set a property
+     *
+     * @param string $index
+     * @param mixed $value
+     */
     public function set($index, $value)
     {
         $this->data[$index] = $value;
         return $this;
     }
 
+    /**
+     * Retreive a value or an optional default
+     *
+     * @param string $index
+     * @param mixed $default
+     */
     public function get($index, $default = null)
     {
         if (isset($this->data[$index])) {
@@ -53,46 +76,82 @@ trait DataCollectionTrait
         return $default;
     }
 
+    /**
+     * Has this collection get a property?
+     *
+     * @param string $index
+     */
     public function has($index)
     {
         return isset($this->data[$index]);
     }
 
+    /**
+     * Reset the index
+     */
     public function rewind()
     {
         $this->data_index = 0;
         return $this;
     }
 
+    /**
+     * Retreieve the current value
+     */
     public function current()
     {
         return $this->data[$this->data_index];
     }
 
+    /**
+     * Retrieve the current index
+     */
     public function key()
     {
         return $this->data_index;
     }
 
+    /**
+     * Move cursor forward
+     */
     public function next()
     {
         ++$this->data_index;
         return $this;
     }
 
+    /**
+     * Is this index valid?
+     */
     public function valid()
     {
         return isset($this->data[$this->data_index]);
     }
 
+    /**
+     * Serialize our data
+     */
     public function serialize()
     {
         return serialize($this->data);
     }
 
+    /**
+     * Unserialize our data
+     */
     public function unserialize($data)
     {
         $this->data = unserialize($data);
         return $this;
+    }
+
+    /**
+     * Return count of items in the queue
+     *
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
     }
 }

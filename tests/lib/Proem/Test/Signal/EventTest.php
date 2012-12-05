@@ -24,44 +24,16 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Signal
- */
-namespace Proem\Signal;
+namespace Proem\Test\Service;
 
-use Proem\Util\DataCollectionInterface;
+use \Mockery as m;
+use Proem\Signal\Event;
 
-/**
- * Interface that all events must implement.
- */
-interface EventInterface extends DataCollectionInterface
+class EventTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Instantiate the event and set it's name.
-     */
-    public function __construct($name, $data = []);
-
-    /**
-     * Set the halt queue flag to true
-     *
-     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
-     */
-    public function haltQueue($early = false);
-
-    /**
-     * Check to see if the haltedQueueEarly flag is true
-     */
-    public function isQueueHaltedEarly();
-
-    /**
-     * Check to see if the haltedQueue flag is true
-     */
-    public function isQueueHalted();
-
-    /**
-     * Retrieve the event name.
-     *
-     * @return string The name of the event triggered.
-     */
-    public function getName();
+    public function testCanInstantiateEvent()
+    {
+        //$e = new Event('Foo', function() {});
+        //$this->assertInstanceOf('Proem\Signal\EventInterface', $e);
+    }
 }

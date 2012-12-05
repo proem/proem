@@ -24,44 +24,50 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Signal
- */
-namespace Proem\Signal;
-
-use Proem\Util\DataCollectionInterface;
 
 /**
- * Interface that all events must implement.
+ * @namespace Proem\Util\Process
  */
-interface EventInterface extends DataCollectionInterface
+namespace Proem\Util\Process;
+
+/**
+ * A simple wrapper around call_user_func_array
+ */
+class Callback
 {
     /**
-     * Instantiate the event and set it's name.
-     */
-    public function __construct($name, $data = []);
-
-    /**
-     * Set the halt queue flag to true
+     * Store the callback
      *
-     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
+     * @var callable
      */
-    public function haltQueue($early = false);
+    protected $callback;
 
     /**
-     * Check to see if the haltedQueueEarly flag is true
-     */
-    public function isQueueHaltedEarly();
-
-    /**
-     * Check to see if the haltedQueue flag is true
-     */
-    public function isQueueHalted();
-
-    /**
-     * Retrieve the event name.
+     * Store any params
      *
-     * @return string The name of the event triggered.
+     * @var array
      */
-    public function getName();
+    protected $params = [];
+
+    /**
+     * Instantiate the Callback object
+     *
+     * @param callable $callback A valid callback
+     * @param mixed $params Params passed to the callback
+     */
+    public function __construct(callable $callback, $params = [])
+    {
+        $this->callback = $callback;
+        $this->params   = is_array($params) ? $params : [$params];
+    }
+
+    /**
+     * Execute the callback and return it's results.
+     *
+     * @return mixed
+     */
+    public function call()
+    {
+        return call_user_func_array($this->callback, $this->params);
+    }
 }

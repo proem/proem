@@ -24,15 +24,97 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Signal
  */
 namespace Proem\Signal;
+
+use Proem\Signal\EventInterface;
+use Proem\Util\DataCollectionTrait;
 
 /**
  * A default event.
  */
 class Event implements EventInterface
 {
+    /**
+     * Use the generic DataCollectionTrait trait
+     *
+     * This provides implementations for the DataAccessInterface, Iterator and Serializable
+     */
+    use DataCollectionTrait;
+
+    /**
+     * Halted queue flag
+     *
+     * @var bool
+     */
+    protected $haltedQueue = false;
+
+    /**
+     * Halt the queue *early* flag.
+     *
+     * @var bool
+     */
+    protected $haltedQueueEarly = false;
+
+    /**
+     * Store the name of the event
+     *
+     * @var string $name
+     */
+    protected $name = null;
+
+    /**
+     * Instantiate the event, setting it's name and optionaly some parameters.
+     *
+     * @param string $name
+     * @param array $data
+     */
+    public function __construct($name, $data = [])
+    {
+        $this->name = $name;
+        $this->data = $data;
+    }
+
+    /**
+     * Set the halt queue flag to true
+     *
+     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
+     */
+    public function haltQueue($early = false)
+    {
+        if ($early) {
+            $this->haltedQueueEarly = true;
+        }
+
+        $this->haltedQueue = true;
+        return $this;
+    }
+
+    /**
+     * Check to see if the haltedQueueEarly flag is true
+     */
+    public function isQueueHaltedEarly()
+    {
+        return $this->haltedQueueEarly;
+    }
+
+    /**
+     * Check to see if the haltedQueue flag is true
+     */
+    public function isQueueHalted()
+    {
+        return $this->haltedQueue;
+    }
+
+    /**
+     * Retrieve the event name.
+     *
+     * @return string The name of the event triggered.
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 }

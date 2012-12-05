@@ -34,7 +34,7 @@ use Proem\Service\AssetInterface;
 /**
  * Interface that all asset managers must implement.
  */
-interface AssetManagerInterface extends \Iterator, \Serializable
+interface AssetManagerInterface extends \Iterator, \Serializable, \Countable
 {
     /**
      * Store an Asset container by named index.

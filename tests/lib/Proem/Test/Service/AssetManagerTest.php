@@ -58,8 +58,8 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBuildComplexDependencies()
     {
-        require_once __DIR__ . '/Fixtures/Transport.php';
-        require_once __DIR__ . '/Fixtures/Mail.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Transport.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Mail.php';
 
         $transport = new Asset(
             'Transport',

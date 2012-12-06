@@ -49,13 +49,6 @@ interface AssetInterface
     public function __construct($is, $params, $closure = null);
 
     /**
-     * Get a parameter by index
-     *
-     * @param string $index
-     */
-    public function __get($index);
-
-    /**
      * Retrieve the type of object this asset is
      *
      * @return string

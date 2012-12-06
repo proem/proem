@@ -32,6 +32,8 @@ namespace Proem\Service;
 
 use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
+use Proem\Util\DataCollectionTrait;
+use Proem\Util\DataAccessInterface;
 
 /**
  * Standard asset container.
@@ -41,14 +43,14 @@ use Proem\Service\AssetManagerInterface;
  * as well as having the ability to instantiate an object using these parameters via a
  * closure.
  */
-class Asset implements AssetInterface
+class Asset implements AssetInterface, DataAccessInterface, \Iterator, \Serializable
 {
     /**
-     * Store any required parameters.
+     * Use the generic DataCollectionTrait trait
      *
-     * @var array @params
+     * This provides implementations for the DataAccessInterface, Iterator and Serializable
      */
-    protected $params = [];
+    use DataCollectionTrait;
 
     /**
      * The Closure responsible for instantiating the payload.
@@ -90,37 +92,25 @@ class Asset implements AssetInterface
      * Store the Closure responsible for instantiating an asset.
      *
      * @param string $is The object this asset is a type of
-     * @param array|closure|null $params
+     * @param array|closure|null $data
      * @param closure|null $closure
      * @return Proem\Service\AssetInterface
      */
-    public function __construct($is, $params = null, $closure = null)
+    public function __construct($is, $data = null, $closure = null)
     {
         $this->is = $is;
 
-        if (is_array($params) && $closure instanceof \Closure) {
+        if (is_array($data) && $closure instanceof \Closure) {
             $this->asset  = $closure;
-            $this->params = $params;
-        } elseif ($params instanceof \Closure) {
-            $this->asset  = $params;
-            $this->params = [];
-        } elseif (is_array($params)) {
-            $this->params = $params;
+            $this->data = $data;
+        } elseif ($data instanceof \Closure) {
+            $this->asset  = $data;
+            $this->data = [];
+        } elseif (is_array($data)) {
+            $this->data = $data;
         }
 
         return $this;
-    }
-
-    /**
-     * Get a parameter by index
-     *
-     * @param string $index
-     */
-    public function __get($index)
-    {
-        if (isset($this->params[$index])) {
-            return $this->params[$index];
-        }
     }
 
     /**

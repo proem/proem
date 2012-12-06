@@ -72,6 +72,7 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         (new Proem($assetManager))->bootstrap();
     }
 
+    /*
     public function testBootstrapTriggersInitEvent()
     {
         $eventManager = m::mock('\Proem\Signal\EventManagerInterface');
@@ -95,4 +96,5 @@ class ProemTest extends \PHPUnit_Framework_TestCase
 
         (new Proem($assetManager))->bootstrap();
     }
+     */
 }

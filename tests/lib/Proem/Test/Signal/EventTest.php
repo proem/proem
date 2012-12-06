@@ -24,44 +24,42 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Signal
- */
-namespace Proem\Signal;
+namespace Proem\Test\Service;
 
-use Proem\Util\DataCollectionInterface;
+use \Mockery as m;
+use Proem\Signal\Event;
 
-/**
- * Interface that all events must implement.
- */
-interface EventInterface extends DataCollectionInterface
+class EventTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Instantiate the event and set it's name.
-     */
-    public function __construct($name, $data = []);
+    public function testCanInstantiateEvent()
+    {
+        $e = new Event('Foo');
+        $this->assertInstanceOf('Proem\Signal\EventInterface', $e);
+    }
 
-    /**
-     * Set the halt queue flag to true
-     *
-     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
-     */
-    public function haltQueue($early = false);
+    public function testCanRetreiveName()
+    {
+        $e = new Event('Foo');
+        $this->assertEquals('Foo', $e->getName());
+    }
 
-    /**
-     * Check to see if the haltedQueueEarly flag is true
-     */
-    public function isQueueHaltedEarly();
+    public function testCanSetAndRetreiveData()
+    {
+        $e = new Event('Foo', ['x' => 'y']);
+        $this->assertEquals('y', $e->get('x'));
+    }
 
-    /**
-     * Check to see if the haltedQueue flag is true
-     */
-    public function isQueueHalted();
+    public function testCanHaltQueue()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted());
+    }
 
-    /**
-     * Retrieve the event name.
-     *
-     * @return string The name of the event triggered.
-     */
-    public function getName();
+    public function testCanHaltQueueEarly()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted(true));
+    }
 }

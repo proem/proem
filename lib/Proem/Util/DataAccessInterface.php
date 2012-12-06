@@ -24,49 +24,39 @@
  * THE SOFTWARE.
  */
 
+/**
+ * @namespace Proem\Util
+ */
+namespace Proem\Util;
 
 /**
- * @namespace Proem\Service
+ * A generic interface for accessing object data.
  */
-namespace Proem\Service;
-
-use Proem\Service\AssetInterface;
-use Proem\Service\AssetManagerInterface;
-
-/**
- * Interface that all assets must implement.
- */
-interface AssetInterface
+interface DataAccessInterface
 {
     /**
-     * Store the Closure responsible for instantiating an asset.
+     * Set a property
      *
-     * @param string $is The object this asset is a type of
-     * @param array|closure $params
-     * @param closure|null $closure
-     * @return Proem\Service\AssetInterface
+     * @param string $index
+     * @param mixed $value
+     * @return $this
      */
-    public function __construct($is, $params, $closure = null);
+    public function set($index, $value);
 
     /**
-     * Retrieve the type of object this asset is
+     * Retreive a property or a default value
      *
-     * @return string
+     * @param string $index
+     * @param mixed $default
+     * @return mixed
      */
-    public function is();
+    public function get($index, $default);
 
     /**
-     * Validate and retrieve an instantiated asset.
+     * Does this property exist?
      *
-     * @param Proem\Service\AssetManagerInterface $assetManager
+     * @param string $index
+     * @return bool
      */
-    public function fetch(AssetManagerInterface $assetManager = null);
-
-    /**
-     * Store an asset in such a way that when it is retrieved it will always return
-     * the same instance.
-     *
-     * @param closure $closure
-     */
-    public function single(\Closure $closure);
+    public function has($index);
 }

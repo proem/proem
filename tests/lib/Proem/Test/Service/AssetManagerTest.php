@@ -69,7 +69,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
                 'password' => 'password'
             ],
             function($asset) {
-                return new \Transport($asset->server, $asset->username, $asset->password);
+                return new \Transport($asset->get('server'), $asset->get('username'), $asset->get('password'));
             }
         );
 

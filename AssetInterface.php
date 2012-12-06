@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Service
  */
@@ -32,11 +31,12 @@ namespace Proem\Service;
 
 use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
+use Proem\Util\DataCollectionInterface;
 
 /**
  * Interface that all assets must implement.
  */
-interface AssetInterface
+interface AssetInterface extends DataCollectionInterface
 {
     /**
      * Store the Closure responsible for instantiating an asset.

@@ -24,44 +24,7 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Util
- */
-namespace Proem\Util;
-
-/**
- * A generic interface for accessing object data.
- */
-interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
+class DataCollectionFixture implements \Proem\Util\DataCollectionInterface
 {
-    /**
-     * Set a property or multiple properties at once
-     *
-     * @param string $index
-     * @param mixed $value
-     * @return $this
-     */
-    public function set($index, $value = null);
-
-    /**
-     * Retreive a property or a default value
-     *
-     * @param string $index
-     * @param mixed $default
-     * @return mixed
-     */
-    public function get($index, $default);
-
-    /**
-     * Retreive all properties
-     */
-    public function all();
-
-    /**
-     * Does this property exist?
-     *
-     * @param string $index
-     * @return bool
-     */
-    public function has($index);
+    use \Proem\Util\DataCollectionTrait;
 }

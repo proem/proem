@@ -79,7 +79,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
     {
         $asset = new Asset('stdClass', ['foo' => 'bar'], function($asset) {
             $class = new \stdClass;
-            $class->foo = $asset->foo;
+            $class->foo = $asset->get('foo');
             return $class;
         });
 
@@ -108,7 +108,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
     {
         $asset = (new Asset('stdClass', ['foo' => 'bar']))->single(function($asset) {
             $class = new \stdClass;
-            $class->foo = $asset->foo;
+            $class->foo = $asset->get('foo');
             return $class;
         });
 

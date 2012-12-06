@@ -32,6 +32,7 @@ namespace Proem\Service;
 
 use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetInterface;
+use Proem\Util\DataCollectionTrait;
 
 /**
  * A collection of assets.
@@ -42,16 +43,20 @@ use Proem\Service\AssetInterface;
  * These containers contain the parameters required to instantiate an asset as
  * well as a closure capable of returning a configured and instantiated asset.
  *
+ * While this class looks very similar to the DataAccessInterface it does *NOT* implement
+ * this interface and in fact, if you look closer you will note that the methods involved
+ * are slight variants of the interface.
+ *
  * @see Proem\Service\Asset
  */
-class AssetManager implements AssetManagerInterface
+class AssetManager implements AssetManagerInterface, \Iterator, \Serializable
 {
     /**
-     * Store assets.
+     * Use the generic DataCollectionTrait trait.
      *
-     * @var $assets array
+     * This provides implementations for the Iterator and Serializable
      */
-    protected $assets = [];
+    use DataCollectionTrait;
 
     /**
      * Store an array containing information about what
@@ -70,8 +75,8 @@ class AssetManager implements AssetManagerInterface
      */
     public function set($index, AssetInterface $asset)
     {
-        $this->assets[$index] = $asset;
-        $this->provides[]     = $asset->is();
+        $this->data[$index] = $asset;
+        $this->provides[]   = $asset->is();
         return $this;
     }
 
@@ -88,10 +93,10 @@ class AssetManager implements AssetManagerInterface
     public function get($index, $asAsset = false)
     {
         if (!$asAsset) {
-            return isset($this->assets[$index]) ? $this->assets[$index]->fetch($this) : null;
+            return isset($this->data[$index]) ? $this->data[$index]->fetch($this) : null;
         }
 
-        return isset($this->assets[$index]) ? $this->assets[$index] : null;
+        return isset($this->data[$index]) ? $this->data[$index] : null;
     }
 
     /**

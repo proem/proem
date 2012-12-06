@@ -30,7 +30,7 @@
  */
 namespace Proem\Util\Process;
 
-use Proem\Signal\Event\Template as EventInterface;
+use Proem\Signal\EventInterface;
 
 /**
  * A simple wrapper around call_user_func_array

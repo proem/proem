@@ -33,7 +33,33 @@ class EventTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateEvent()
     {
-        //$e = new Event('Foo', function() {});
-        //$this->assertInstanceOf('Proem\Signal\EventInterface', $e);
+        $e = new Event('Foo');
+        $this->assertInstanceOf('Proem\Signal\EventInterface', $e);
+    }
+
+    public function testCanRetreiveName()
+    {
+        $e = new Event('Foo');
+        $this->assertEquals('Foo', $e->getName());
+    }
+
+    public function testCanSetAndRetreiveData()
+    {
+        $e = new Event('Foo', ['x' => 'y']);
+        $this->assertEquals('y', $e->get('x'));
+    }
+
+    public function testCanHaltQueue()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted());
+    }
+
+    public function testCanHaltQueueEarly()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted(true));
     }
 }

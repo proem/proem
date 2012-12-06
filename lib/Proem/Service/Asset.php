@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Service
  */
@@ -33,7 +32,6 @@ namespace Proem\Service;
 use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
 use Proem\Util\DataCollectionTrait;
-use Proem\Util\DataAccessInterface;
 
 /**
  * Standard asset container.
@@ -43,7 +41,7 @@ use Proem\Util\DataAccessInterface;
  * as well as having the ability to instantiate an object using these parameters via a
  * closure.
  */
-class Asset implements AssetInterface, DataAccessInterface, \Iterator, \Serializable
+class Asset implements AssetInterface
 {
     /**
      * Use the generic DataCollectionTrait trait

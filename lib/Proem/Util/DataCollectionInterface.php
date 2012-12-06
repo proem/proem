@@ -35,13 +35,13 @@ namespace Proem\Util;
 interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
 {
     /**
-     * Set a property
+     * Set a property or multiple properties at once
      *
      * @param string $index
      * @param mixed $value
      * @return $this
      */
-    public function set($index, $value);
+    public function set($index, $value = null);
 
     /**
      * Retreive a property or a default value
@@ -51,6 +51,11 @@ interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
      * @return mixed
      */
     public function get($index, $default);
+
+    /**
+     * Retreive all properties
+     */
+    public function all();
 
     /**
      * Does this property exist?

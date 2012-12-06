@@ -50,14 +50,18 @@ trait DataCollectionTrait
     protected $data_index = 0;
 
     /**
-     * Set a property
+     * Set a single property or multiple properties at once
      *
-     * @param string $index
+     * @param string|array $index
      * @param mixed $value
      */
-    public function set($index, $value)
+    public function set($index, $value = null)
     {
-        $this->data[$index] = $value;
+        if (is_array($index)) {
+            $this->data = array_merge($this->data, $index);
+        } else {
+            $this->data[$index] = $value;
+        }
         return $this;
     }
 
@@ -74,6 +78,14 @@ trait DataCollectionTrait
         }
 
         return $default;
+    }
+
+    /**
+     * Retreieve all properties
+     */
+    public function all()
+    {
+        return $this->data;
     }
 
     /**

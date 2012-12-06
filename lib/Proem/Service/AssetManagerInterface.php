@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Service
  */
@@ -35,7 +34,7 @@ use Proem\Service\AssetInterface;
 /**
  * Interface that all asset managers must implement.
  */
-interface AssetManagerInterface
+interface AssetManagerInterface extends \Iterator, \Serializable
 {
     /**
      * Store an Asset container by named index.

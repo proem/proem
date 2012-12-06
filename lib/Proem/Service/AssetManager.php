@@ -24,7 +24,6 @@
  * THE SOFTWARE.
  */
 
-
 /**
  * @namespace Proem\Service
  */
@@ -43,13 +42,13 @@ use Proem\Util\DataCollectionTrait;
  * These containers contain the parameters required to instantiate an asset as
  * well as a closure capable of returning a configured and instantiated asset.
  *
- * While this class looks very similar to the DataAccessInterface it does *NOT* implement
- * this interface and in fact, if you look closer you will note that the methods involved
- * are slight variants of the interface.
+ * While this class looks very similar to the DataCollectionInterface it does *NOT* implement
+ * it. In fact, if you look closer you will note that the methods defined within the AssetManagerInterface
+ * are slight variants of the DataCollectionInterface's set(), get() and has().
  *
  * @see Proem\Service\Asset
  */
-class AssetManager implements AssetManagerInterface, \Iterator, \Serializable
+class AssetManager implements AssetManagerInterface
 {
     /**
      * Use the generic DataCollectionTrait trait.

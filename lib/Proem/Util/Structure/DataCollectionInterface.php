@@ -24,45 +24,44 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
+/**
+ * @namespace Proem\Util\Structure
+ */
+namespace Proem\Util\Structure;
 
-use Proem\Util\Autoloader;
-
-class AutoloaderTest extends \PHPUnit_Framework_TestCase
+/**
+ * A generic interface for accessing object data.
+ */
+interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
 {
     /**
-     * @dataProvider getData
+     * Set a property or multiple properties at once
+     *
+     * @param string $index
+     * @param mixed $value
+     * @return $this
      */
-    public function testLoad($className, $testClassName, $message)
-    {
-        (new AutoLoader())
-            ->attachNamespace('PSR', __DIR__ . '/AutoloaderFixtures')
-            ->attachPearPrefix('PEAR_', __DIR__ . '/AutoloaderFixtures')
-            ->load($testClassName);
-
-        $this->assertTrue(class_exists($className), $message);
-    }
+    public function set($index, $value = null);
 
     /**
-     * @dataProvider getData
+     * Retreive a property or a default value
+     *
+     * @param string $index
+     * @param mixed $default
+     * @return mixed
      */
-    public function testRegister($className, $testClassName, $message)
-    {
-        (new AutoLoader())
-            ->attachNamespace('PSR', __DIR__ . '/AutoloaderFixtures')
-            ->attachPearPrefix('PEAR_', __DIR__ . '/AutloaderFixtures')
-            ->register();
+    public function get($index, $default);
 
-        $this->assertTrue(class_exists($className), $message);
-    }
+    /**
+     * Retreive all properties
+     */
+    public function all();
 
-    public function getData()
-    {
-        return [
-            ['\PSR\Foo',    'PSR\Foo',      'Including PSR\Foo class'],
-            ['\PEAR_Foo',   'PEAR_Foo',     'Including PEAR_Foo class'],
-            ['\PSR\Bar',    '\PSR\Bar',     'Including \PSR\Bar class'],
-            ['\PEAR_Bar',   '\PEAR_Bar',    'Including \PEAR_Bar class']
-        ];
-    }
+    /**
+     * Does this property exist?
+     *
+     * @param string $index
+     * @return bool
+     */
+    public function has($index);
 }

@@ -26,7 +26,6 @@
 
 namespace Proem\Test\Service;
 
-use \Mockery as m;
 use Proem\Service\Asset;
 
 class AssetTest extends \PHPUnit_Framework_TestCase

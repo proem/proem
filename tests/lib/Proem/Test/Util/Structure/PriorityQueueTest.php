@@ -26,27 +26,24 @@
 
 
 /**
- * @namespace Proem\Test\Util\Storage
+ * @namespace Proem\Test\Util\Structure
  */
-namespace Proem\Test\Util\Storage;
+namespace Proem\Test\Util\Structure;
 
-use Proem\Util\Storage\Queue;
+use Proem\Util\Structure\PriorityQueue;
 
-/**
- * Proem\Test\Util\Storage\QueueTest
- */
-class QueueTest extends \PHPUnit_Framework_TestCase
+class PriorityQueueTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiate()
     {
-        $q = new Queue;
-        $this->assertInstanceOf('Proem\Util\Storage\Queue', $q);
+        $q = new PriorityQueue;
+        $this->assertInstanceOf('Proem\Util\Structure\PriorityQueue', $q);
     }
 
     public function testSamePriorityWorksAsFIFO()
     {
         $results = '';
-        $q = new Queue;
+        $q = new PriorityQueue;
         $q->insert('a', 1);
         $q->insert('b', 1);
         $q->insert('c', 1);
@@ -61,7 +58,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testPriority()
     {
         $results = '';
-        $q = new Queue;
+        $q = new PriorityQueue;
         $q->insert('a', 100);
         $q->insert('b', 200);
         $q->insert('c', 50);
@@ -76,7 +73,7 @@ class QueueTest extends \PHPUnit_Framework_TestCase
     public function testCanReplayQueue()
     {
         $results = '';
-        $q = new Queue;
+        $q = new PriorityQueue;
         $q->insert('a', 1);
         $q->insert('b', 1);
         $q->insert('c', 1);

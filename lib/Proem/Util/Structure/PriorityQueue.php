@@ -26,9 +26,9 @@
 
 
 /**
- * @namespace Proem\Util\Storage
+ * @namespace Proem\Util\Structure
  */
-namespace Proem\Util\Storage;
+namespace Proem\Util\Structure;
 
 /**
  * Priority queue implementation.
@@ -41,7 +41,7 @@ namespace Proem\Util\Storage;
  * achieved with the SplPRiorityQueue alone because it is a stack and as
  * such items are lost as they are iterated over.
  */
-class Queue implements \IteratorAggregate, \Countable
+class PriorityQueue implements \IteratorAggregate, \Countable
 {
     /**
      * Store the SplPriorityQueue.
@@ -82,7 +82,6 @@ class Queue implements \IteratorAggregate, \Countable
      *
      * @param mixed $data
      * @param int $priority
-     * @return Proem\Util\Storage\Queue
      */
     public function insert($data, $priority = 0)
     {

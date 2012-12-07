@@ -31,7 +31,7 @@ namespace Proem\Service;
 
 use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
-use Proem\Util\DataCollectionInterface;
+use Proem\Util\Structure\DataCollectionInterface;
 
 /**
  * Interface that all assets must implement.

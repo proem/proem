@@ -24,9 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
+namespace Proem\Test\Util\Structure;
 
-use Proem\Util\Autoloader;
+use Proem\Util\Loader\Autoloader;
 
 require_once __DIR__ . '/DataCollectionFixture.php';
 use \DataCollectionFixture as Fixture;
@@ -36,7 +36,7 @@ class DataCollectionTraitTest extends \PHPUnit_Framework_TestCase
     public function testCanInstantiateFixture()
     {
         $f = new Fixture;
-        $this->assertInstanceOf('Proem\Util\DataCollectionInterface', $f);
+        $this->assertInstanceOf('Proem\Util\Structure\DataCollectionInterface', $f);
     }
 
     public function testCanGetSetSingleValue()

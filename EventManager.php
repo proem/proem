@@ -30,7 +30,6 @@
 namespace Proem\Signal;
 
 use Proem\Util\Storage\Queue;
-use Proem\Util\Process\EventCallback;
 use Proem\Signal\EventInterface;
 use Proem\Signal\EventManagerInterface;
 
@@ -249,7 +248,7 @@ class EventManager implements EventManagerInterface
     {
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
-                if ($result = (new EventCallback($listener, $event))->call()) {
+                if ($result = call_user_func($listener, $event)) {
                     if ($result instanceof EventInterface) {
                         // Was the queue halted early ?
                         if ($result->isQueueHaltedEarly()) {
@@ -257,7 +256,7 @@ class EventManager implements EventManagerInterface
                         }
 
                         if ($callback !== null) {
-                            (new EventCallback($callback, $result))->call();
+                            call_user_func($callback, $result);
                         }
 
                         // Was the queue halted ?

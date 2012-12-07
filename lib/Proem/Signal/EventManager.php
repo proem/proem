@@ -266,7 +266,7 @@ class EventManager implements EventManagerInterface
                         }
                     } else {
                         throw new \RuntimeException(
-                            'Value returned from an Event Callback must be of type Proem\Signal\Event\Template'
+                            'Value returned from an Event Callback must be of type Proem\Signal\EventInterface'
                         );
                     }
                 }

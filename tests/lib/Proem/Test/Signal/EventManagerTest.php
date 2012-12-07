@@ -38,6 +38,33 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Signal\EventManagerInterface', new EventManager);
     }
 
+    public function testSimpleEvent()
+    {
+        $r = new \StdClass;
+        $r->out = '';
+        (new EventManager)
+            ->attach('do', function($e) use ($r) {
+                $r->out .= 'yep';
+            })->trigger(new Event('do'));
+
+        $this->assertEquals('yep', $r->out);
+    }
+
+    public function testCanRemoveEvent()
+    {
+        $r = new \StdClass;
+        $r->out = '';
+        (new EventManager)
+            ->attach('do', function($e) use ($r) {
+                $r->out .= 'yep';
+            }
+        )
+        ->remove('do')
+        ->trigger(new Event('do'));
+
+        $this->assertEquals('', $r->out);
+    }
+
     public function testCanPriority()
     {
         $r = new \StdClass;
@@ -174,5 +201,18 @@ class SignalTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals('Callback', $r->out);
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testInvalidReturnTriggersException()
+    {
+        $r = new \StdClass;
+        $r->out = '';
+        (new EventManager)->attach('do', function($e) {
+            return new \StdClass;
+        })
+        ->trigger(new Event('do'));
     }
 }

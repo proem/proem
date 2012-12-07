@@ -159,11 +159,15 @@ class Queue implements \IteratorAggregate, \Countable
     /**
      * Clone the internal priority queue and return it for iterating over.
      *
+     * By cloning, we add the ability to replay a queue. Without cloning, the queue
+     * would be empty after the first iteration has been completed.
+     *
      * @return \SplPriorityQueue
      */
     public function getIterator()
     {
         $queue = $this->getSplQueue();
+        //return $queue;
         return clone $queue;
     }
 }

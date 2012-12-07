@@ -25,9 +25,9 @@
  */
 
 /**
- * @namespace Proem\Util
+ * @namespace Proem\Util\Structure
  */
-namespace Proem\Util;
+namespace Proem\Util\Structure;
 
 /**
  * A generic data collection trait used by various classes

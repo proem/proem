@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-class DataCollectionFixture implements \Proem\Util\DataCollectionInterface
+class DataCollectionFixture implements \Proem\Util\Structure\DataCollectionInterface
 {
-    use \Proem\Util\DataCollectionTrait;
+    use \Proem\Util\Structure\DataCollectionTrait;
 }

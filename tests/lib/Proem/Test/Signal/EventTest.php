@@ -26,7 +26,6 @@
 
 namespace Proem\Test\Service;
 
-use \Mockery as m;
 use Proem\Signal\Event;
 
 class EventTest extends \PHPUnit_Framework_TestCase

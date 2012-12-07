@@ -29,7 +29,7 @@
  */
 namespace Proem\Signal;
 
-use Proem\Util\Storage\Queue;
+use Proem\Util\Structure\PriorityQueue;
 use Proem\Signal\EventInterface;
 use Proem\Signal\EventManagerInterface;
 
@@ -91,7 +91,7 @@ class EventManager implements EventManagerInterface
                     if (isset($this->queues[$name])) {
                         $this->queues[$name]->insert($listener['key'], $listener['priority']);
                     } else {
-                        $this->queues[$name] = new Queue;
+                        $this->queues[$name] = new PriorityQueue;
                         $this->queues[$name]->insert($listener['key'], $listener['priority']);
                     }
                 }
@@ -137,7 +137,7 @@ class EventManager implements EventManagerInterface
                 $this->wildcardSearching = true;
                 $this->queues[$event][] = ['key' => $key, 'priority' => $priority];
             } else {
-                $this->queues[$event] = new Queue;
+                $this->queues[$event] = new PriorityQueue;
                 $this->queues[$event]->insert($key, $priority);
             }
         }

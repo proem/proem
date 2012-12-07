@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Tests;
+namespace Proem\Test\Signal;
 
 use Proem\Signal\Event;
 use Proem\Signal\EventManager;

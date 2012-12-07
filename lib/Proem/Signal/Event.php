@@ -30,7 +30,7 @@
 namespace Proem\Signal;
 
 use Proem\Signal\EventInterface;
-use Proem\Util\DataCollectionTrait;
+use Proem\Util\Structure\DataCollectionTrait;
 
 /**
  * A default event.

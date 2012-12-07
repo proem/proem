@@ -29,7 +29,7 @@
  */
 namespace Proem\Signal;
 
-use Proem\Util\DataCollectionInterface;
+use Proem\Util\Structure\DataCollectionInterface;
 
 /**
  * Interface that all events must implement.

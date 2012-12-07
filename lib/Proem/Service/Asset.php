@@ -31,7 +31,7 @@ namespace Proem\Service;
 
 use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
-use Proem\Util\DataCollectionTrait;
+use Proem\Util\Structure\DataCollectionTrait;
 
 /**
  * Standard asset container.

@@ -74,7 +74,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $mail = new Asset('Mail', function($asset, $assetManager) {
-            return new \Mail($assetManager->get('transport', true));
+            return new \Mail($assetManager->get('transport'));
         });
 
         $assetManager = new AssetManager;

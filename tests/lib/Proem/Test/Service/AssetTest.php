@@ -114,4 +114,15 @@ class AssetTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($asset->fetch(), $asset->fetch());
         $this->assertEquals('bar', $asset->fetch()->foo);
     }
+
+    public function testCanPassParamsAtFetch()
+    {
+        $asset = new Asset('stdClass', function($asset) {
+            $class = new \stdClass;
+            $class->foo = $asset->get('foo');
+            return $class;
+        });
+
+        $this->assertEquals('bar', $asset->fetch(['foo' => 'bar'])->foo);
+    }
 }

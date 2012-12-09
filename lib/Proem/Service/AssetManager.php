@@ -86,13 +86,14 @@ class AssetManager implements AssetManagerInterface
      * asset container itself.
      *
      * @param string $index The index the asset is referenced by
+     * @param array $params Allow last minute setting of parameters.
      * @param bool Wether or not to return the asset's object or container
      * @return object The object provided by the asset container
      */
-    public function get($index, $asAsset = false)
+    public function get($index, array $params = [], $asAsset = false)
     {
         if (!$asAsset) {
-            return isset($this->data[$index]) ? $this->data[$index]->fetch($this) : null;
+            return isset($this->data[$index]) ? $this->data[$index]->fetch($params, $this) : null;
         }
 
         return isset($this->data[$index]) ? $this->data[$index] : null;

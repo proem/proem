@@ -49,10 +49,11 @@ interface AssetManagerInterface extends \Iterator, \Serializable, \Countable
      * Retrieve an actual instantiated ssset object from within it's container.
      *
      * @param string $index The index the asset is referenced by
+     * @param array $params Allow last minute setting of parameters.
      * @param bool Wether or not to return the asset's object or container
      * @return object The object provided by the asset container
      */
-    public function get($index, $asAsset = false);
+    public function get($index, array $params = [], $asAsset = false);
 
     /**
      * Check to see if this manager has a specific asset by index.

@@ -134,11 +134,15 @@ class Asset implements AssetInterface
      * This provides the closure with the ability to use any required parameters
      * and also be able to call upon any other assets stored in the service manager.
      *
+     * @param array $params Allow last minute setting of parameters.
      * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function fetch(AssetManagerInterface $assetManager = null)
+    public function fetch(array $params = [], AssetManagerInterface $assetManager = null)
     {
         $asset = $this->asset;
+
+        $this->set($params);
+
         return $this->validate($asset($this, $assetManager));
     }
 

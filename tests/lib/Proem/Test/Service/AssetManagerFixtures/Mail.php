@@ -28,10 +28,8 @@ class Mail
 {
     public $transport;
 
-    public function __construct(\Proem\Service\Asset $transport)
+    public function __construct(Transport $transport)
     {
-        if ($transport->is('Transport')) {
-            $this->transport = $transport->fetch();
-        }
+        $this->transport = $transport;
     }
 }

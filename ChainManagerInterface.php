@@ -24,6 +24,47 @@
  * THE SOFTWARE.
  */
 
-class PEAR_Foo
+/**
+ * @namespace Proem\Filter
+ */
+namespace Proem\Filter;
+
+use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventInterface;
+
+/**
+ * The filter chain manager interface.
+ */
+interface ChainManagerInterface
 {
+    /**
+     * Instantiate the Filter Manager.
+     *
+     * This sets up the queues and service manager.
+     *
+     * @param Proem\Service\AssetManagerInterface
+     */
+    public function __construct(AssetManagerInterface $assetManager);
+
+    /**
+     * Insert an event into the queue
+     *
+     * @param Proem\Filter\ChainEventInterface $event
+     * @param int $priority
+     */
+    public function attach(ChainEventInterface $event, $priority = 0);
+
+    /**
+     * Retreieve the priority queue used to queue events.
+     *
+     * @return Proem\Util\Structure\PriorityQueue
+     */
+    public function getQueue();
+
+    /**
+     * Get the first event in the filter and execute it's init() method
+     *
+     * @param array $params
+     */
+    public function bootstrap(array $params = []);
 }

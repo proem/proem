@@ -25,41 +25,41 @@
  */
 
 /**
- * @namespace Proem\Service
+ * @namespace Proem\Filter\ChainEvent
  */
-namespace Proem\Service;
+namespace Proem\Filter;
 
-use Proem\Service\AssetInterface;
+use Proem\Filter\ChainManagerInterface;
+use Proem\Filter\ChainEventInterface;
 
 /**
- * Interface that all asset managers must implement.
+ * The filter chain event interface. All filter
+ * chain events should implement this interface.
  */
-interface AssetManagerInterface extends \Iterator, \Serializable, \Countable
+interface ChainEventInterface
 {
     /**
-     * Store an Asset container by named index.
+     * Define the method to be called on the way into the filter.
      *
-     * @param string $index The index the asset will be referenced by.
-     * @param Proem\Service\AssetInterface $asset
-     * @return Proem\Service\AssetManagerInterface
+     * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function set($index, AssetInterface $asset);
+    public function in(ServiceManager $assets);
 
     /**
-     * Retrieve an actual instantiated ssset object from within it's container.
+     * Define the method to be called on the way out of the filter.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @param bool Wether or not to return the asset's object or container
-     * @return object The object provided by the asset container
+     * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function get($index, array $params = [], $asAsset = false);
+    public function out(ServiceManager $assets);
 
     /**
-     * Check to see if this manager has a specific asset by index.
+     * Bootstrap this event.
      *
-     * @param string $index The index the asset is referenced by
-     * @return bool
+     * Executes in() then init() on the next event= in the filter chain
+     * before returning to execute out().
+     *
+     * @param Proem\Filter\ChainManagerInterface $chainManager
+     * @param array Optional extra parameters.
      */
-    public function has($index);
+    public function init(ChainManagerInterface $chainManager, array $params = []);
 }

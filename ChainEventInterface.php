@@ -31,6 +31,7 @@ namespace Proem\Filter;
 
 use Proem\Filter\ChainManagerInterface;
 use Proem\Filter\ChainEventInterface;
+use Proem\Service\AssetManagerInterface;
 
 /**
  * The filter chain event interface. All filter
@@ -43,14 +44,14 @@ interface ChainEventInterface
      *
      * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function in(ServiceManager $assets);
+    public function in(AssetManagerInterface $assets);
 
     /**
      * Define the method to be called on the way out of the filter.
      *
      * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function out(ServiceManager $assets);
+    public function out(AssetManagerInterface $assets);
 
     /**
      * Bootstrap this event.

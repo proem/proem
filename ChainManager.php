@@ -62,20 +62,17 @@ class ChainManager implements ChainManagerInterface
      */
     public function __construct(AssetManagerInterface $assetManager)
     {
-        $this->queue = new PriorityQueue;
+        $this->assetManager = $assetManager;
+        $this->queue        = new PriorityQueue;
     }
 
     /**
-     * Insert an event into the queue
-     *
-     * @param Proem\Filter\ChainEventInterface $event
-     * @param int $priority
+     * Retreive the asset manager
      */
-    public function attach(ChainEventInterface $event, $priority = 0)
+    public function getAssetManager()
     {
-        $this->queue->insert($event, $priority);
-        return $this;
-    })
+        return $this->assetManager;
+    }
 
     /**
      * Retreieve the priority queue used to queue events.
@@ -88,17 +85,56 @@ class ChainManager implements ChainManagerInterface
     }
 
     /**
+     * Insert an event into the queue
+     *
+     * @param Proem\Filter\ChainEventInterface $event
+     * @param int $priority
+     */
+    public function attach(ChainEventInterface $event, $priority = 0)
+    {
+        $this->queue->insert($event, $priority);
+        return $this;
+    }
+
+    /**
+     * Rewind the queue to the start and return the first event
+     *
+     * @return Proem\Filter\Event\Template
+     */
+    public function getInitialEvent()
+    {
+        $this->queue->rewind();
+        return $this->queue->current();
+    }
+
+    /**
+     * Retrieve the next event in the filter
+     *
+     * @return Proem\Filter\Event\Template
+     */
+    public function getNextEvent()
+    {
+        $this->queue->next();
+        return $this->queue->current();
+    }
+
+    /**
+     * Check to see if there are more events left in the filter.
+     *
+     * @return bool
+     */
+    public function hasEvents()
+    {
+        return $this->queue->valid();
+    }
+
+    /**
      * Get the first event in the filter and execute it's init() method
      *
      * @param array $params
      */
     public function bootstrap(array $params = [])
     {
-        $this->queue
-            ->rewind();
-
-        return $this->queue
-            ->current()
-            ->init($this, $params);
+        return $this->getInitialEvent()->init($this, $params);
     }
 }

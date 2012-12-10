@@ -32,6 +32,6 @@ namespace Proem\Http;
 /**
  * The Proem HTTP Response wrapper.
  */
-class Response extends Symfony\Component\HttpFoundation\Response
+class Response extends \Symfony\Component\HttpFoundation\Response
 {
 }

@@ -32,6 +32,6 @@ namespace Proem\Http;
 /**
  * The Proem HTTP Request wrapper.
  */
-class Request extends Symfony\Component\HttpFoundation\Request
+class Request extends \Symfony\Component\HttpFoundation\Request
 {
 }

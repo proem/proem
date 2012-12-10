@@ -28,6 +28,9 @@
   "autoload": {
     "psr-0": { "Proem": "lib/" }
   },
+  "require": {
+    "symfony/http-foundation": "2.1.*"
+  },
   "require-dev": {
     "jaz303/phake": "dev-master",
     "phpunit/phpunit": "3.7.*",

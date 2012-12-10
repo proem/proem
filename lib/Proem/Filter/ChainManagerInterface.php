@@ -68,15 +68,11 @@ interface ChainManagerInterface
 
     /**
      * Rewind the queue to the start and return the first event
-     *
-     * @return Proem\Filter\Event\Template
      */
     public function getInitialEvent();
 
     /**
      * Retrieve the next event in the filter
-     *
-     * @return Proem\Filter\Event\Template
      */
     public function getNextEvent();
 

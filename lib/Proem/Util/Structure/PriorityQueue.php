@@ -166,7 +166,6 @@ class PriorityQueue implements \IteratorAggregate, \Countable
     public function getIterator()
     {
         $queue = $this->getSplQueue();
-        //return $queue;
         return clone $queue;
     }
 }

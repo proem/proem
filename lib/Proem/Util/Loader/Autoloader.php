@@ -64,6 +64,12 @@ class Autoloader
 
     /**
      * Instantiate our Autoloader and check for APC.
+     *
+     * By default this autoloader will attach all Proem dependant
+     * namespaces. This can be provented by passing false to the
+     * __construct.
+     *
+     * @param bool $loadProem
      */
     public function __construct($loadProem = true)
     {
@@ -73,6 +79,10 @@ class Autoloader
 
         if ($loadProem) {
             $this->attachNamespace('Proem', realpath(__DIR__ . '/../..'));
+            $this->attachNamespace(
+                'Symfony\Component\HttpFoundation',
+                realpath(__DIR__ . '/../../../../vendor/symfony/http-foundation')
+            );
         }
     }
 

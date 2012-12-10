@@ -47,6 +47,18 @@ interface ChainManagerInterface
     public function __construct(AssetManagerInterface $assetManager);
 
     /**
+     * Retreive the asset manager
+     */
+    public function getAssetManager();
+
+    /**
+     * Retreieve the priority queue used to queue events.
+     *
+     * @return Proem\Util\Structure\PriorityQueue
+     */
+    public function getQueue();
+
+    /**
      * Insert an event into the queue
      *
      * @param Proem\Filter\ChainEventInterface $event
@@ -55,11 +67,25 @@ interface ChainManagerInterface
     public function attach(ChainEventInterface $event, $priority = 0);
 
     /**
-     * Retreieve the priority queue used to queue events.
+     * Rewind the queue to the start and return the first event
      *
-     * @return Proem\Util\Structure\PriorityQueue
+     * @return Proem\Filter\Event\Template
      */
-    public function getQueue();
+    public function getInitialEvent();
+
+    /**
+     * Retrieve the next event in the filter
+     *
+     * @return Proem\Filter\Event\Template
+     */
+    public function getNextEvent();
+
+    /**
+     * Check to see if there are more events left in the filter.
+     *
+     * @return bool
+     */
+    public function hasEvents();
 
     /**
      * Get the first event in the filter and execute it's init() method

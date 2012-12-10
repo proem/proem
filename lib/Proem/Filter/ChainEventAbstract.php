@@ -66,8 +66,8 @@ abstract class ChainEventAbstract implements ChainEventInterface
     {
         $this->in($chainManager->getAssetManager());
 
-        if ($chainManager->getQueue()->valid()) {
-            $event = $chainManager->getQueue()->next();
+        if ($chainManager->hasEvents()) {
+            $event = $chainManager->getNextEvent();
             if (is_object($event)) {
                 $event->init($chainManager);
             }

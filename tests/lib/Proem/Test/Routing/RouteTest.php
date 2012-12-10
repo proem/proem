@@ -24,14 +24,21 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Http
- */
-namespace Proem\Http;
+namespace Proem\Test\Routing;
 
-/**
- * The Proem HTTP Response wrapper.
- */
-class Response extends \Symfony\Component\HttpFoundation\Response
+use \Mockery as m;
+
+class RouteTest extends \PHPUnit_Framework_TestCase
 {
+    public function testCanInstantiateRoute()
+    {
+        $this->assertInstanceOf('Proem\Routing\RouteInterface', m::mock('Proem\Routing\RouteAbstract'));
+    }
+
+    public function testCanProcessCallback()
+    {
+        $route = m::mock('Proem\Routing\RouteAbstract[process]', [['callback' => function() { return true; }]]);
+        $this->assertTrue($route->hasCallback());
+        $this->assertTrue(call_user_func($route->getCallback()));
+    }
 }

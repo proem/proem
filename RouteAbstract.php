@@ -25,42 +25,62 @@
  */
 
 /**
- * @namespace Proem\Filter\ChainEvent
+ * @namespace Proem\Routing
  */
-namespace Proem\Filter;
+namespace Proem\Routing;
 
-use Proem\Filter\ChainManagerInterface;
-use Proem\Filter\ChainEventInterface;
-use Proem\Service\AssetManagerInterface;
+use Proem\Routing\RouteInterface;
+use Proem\Http\Request;
 
 /**
- * The filter chain event interface. All filter
- * chain events should implement this interface.
+ * The Route interface that all routes must implement.
  */
-interface ChainEventInterface
+abstract class RouteAbstract implements RouteInterface
 {
     /**
-     * Define the method to be called on the way into the filter.
+     * Store options
      *
-     * @param Proem\Service\AssetManagerInterface $assets
+     * @var array $options
      */
-    public function in(AssetManagerInterface $assets);
+    protected $options = [];
 
     /**
-     * Define the method to be called on the way out of the filter.
+     * Instantiate this route
      *
-     * @param Proem\Service\AssetManagerInterface $assets
+     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     *
+     * @param array $options
      */
-    public function out(AssetManagerInterface $assets);
+    public function __construct(array $options)
+    {
+        $this->options = $options;
+    }
 
     /**
-     * Bootstrap this event.
+     * Do we have a callback?
      *
-     * Executes in() then init() on the next event= in the filter chain
-     * before returning to execute out().
-     *
-     * @param Proem\Filter\ChainManagerInterface $chainManager
-     * @param array Optional extra parameters.
+     * @return bool
      */
-    public function init(ChainManagerInterface $chainManager, array $params = []);
+    public function hasCallback()
+    {
+        return isset($this->options['callback']);
+    }
+
+    /**
+     * Retreive callback.
+     */
+    public function getCallback()
+    {
+        if (isset($this->options['callback'])) {
+            return $this->options['callback'];
+        }
+    }
+
+    /**
+     * Method to actually test for a match.
+     *
+     * @param Proem\Http\Request $request
+     * @return bool
+     */
+    abstract public function process(Request $request);
 }

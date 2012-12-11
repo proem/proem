@@ -70,13 +70,10 @@ class Proem
         if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
             $this->assetManager->set(
                 'EventManager',
-                new Asset(
-                    'Proem\Signal\EventManagerInterface',
-                    Asset::single(
-                        function ($asset) {
-                            return new EventManager;
-                        }
-                    )
+                (new Asset('Proem\Signal\EventManagerInterface'))->single(
+                    function ($asset) {
+                        return new EventManager;
+                    }
                 )
             );
         }

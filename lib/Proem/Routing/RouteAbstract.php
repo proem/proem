@@ -25,13 +25,62 @@
  */
 
 /**
- * @namespace Proem\Http
+ * @namespace Proem\Routing
  */
-namespace Proem\Http;
+namespace Proem\Routing;
+
+use Proem\Routing\RouteInterface;
+use Proem\Http\Request;
 
 /**
- * The Proem HTTP Response wrapper.
+ * The Route interface that all routes must implement.
  */
-class Response extends \Symfony\Component\HttpFoundation\Response
+abstract class RouteAbstract implements RouteInterface
 {
+    /**
+     * Store options
+     *
+     * @var array $options
+     */
+    protected $options = [];
+
+    /**
+     * Instantiate this route
+     *
+     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     *
+     * @param array $options
+     */
+    public function __construct(array $options)
+    {
+        $this->options = $options;
+    }
+
+    /**
+     * Do we have a callback?
+     *
+     * @return bool
+     */
+    public function hasCallback()
+    {
+        return isset($this->options['callback']);
+    }
+
+    /**
+     * Retreive callback.
+     */
+    public function getCallback()
+    {
+        if (isset($this->options['callback'])) {
+            return $this->options['callback'];
+        }
+    }
+
+    /**
+     * Method to actually test for a match.
+     *
+     * @param Proem\Http\Request $request
+     * @return bool
+     */
+    abstract public function process(Request $request);
 }

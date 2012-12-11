@@ -29,7 +29,10 @@ namespace Proem\Test\Signal;
 use Proem\Signal\Event;
 use Proem\Signal\EventManager;
 
-class SignalTest extends \PHPUnit_Framework_TestCase
+/**
+ * TODO: There is quite a few Event objects in here that should likely be mocked
+ */
+class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
     private $event;
 

@@ -56,6 +56,9 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->get('foo'));
     }
 
+    /**
+     * TODO: SHould have a better look at mocking the Mail & Transport classes.
+     */
     public function testCanBuildComplexDependencies()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Transport.php';

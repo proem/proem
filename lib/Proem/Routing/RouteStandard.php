@@ -116,7 +116,7 @@ class RouteStandard extends RouteAbstract
         }
 
         // Setup.
-        $rule              = $this->options['rule'];
+        $rule              = str_replace('/', '/?', $this->options['rule']);
         $targets           = isset($this->options['targets']) ? $this->options['targets'] : [];
         $customFilters     = isset($this->options['filters']) ? $this->options['filters'] : [];
 
@@ -129,7 +129,7 @@ class RouteStandard extends RouteAbstract
         $results = [];
 
         // Build the main regular expression.
-        $regex = preg_replace_callback(
+        $regex = '^' . preg_replace_callback(
             '@:[\w]+@',
             function ($matches) use ($customFilters, $defaultTokens, $defaultFilters) {
                 $key = str_replace(':', '', $matches[0]);
@@ -153,7 +153,7 @@ class RouteStandard extends RouteAbstract
                 }
             },
             $rule
-        ) . '/?';
+        ) . '/?$';
 
         // Find all tokens.
         preg_match_all('@:([\w]+)@', $rule, $tokens, PREG_PATTERN_ORDER);

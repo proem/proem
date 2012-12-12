@@ -27,18 +27,158 @@
 namespace Proem\Test\Routing;
 
 use \Mockery as m;
+use Proem\Routing\Route;
+use Proem\Http\Request;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateRoute()
     {
-        $this->assertInstanceOf('Proem\Routing\RouteInterface', m::mock('Proem\Routing\RouteAbstract'));
+        $this->assertInstanceOf('Proem\Routing\RouteInterface', new Route([]));
     }
 
-    public function testCanProcessCallback()
+    public function testProcessReturnsfalseOnFailedMatch()
     {
-        $route = m::mock('Proem\Routing\RouteAbstract[process]', [['callback' => function() { return true; }]]);
-        $this->assertTrue($route->hasCallback());
-        $this->assertTrue(call_user_func($route->getCallback()));
+        $request = Request::create('/foo');
+        $route = new Route([
+            'rule' => '/',
+        ]);
+        $this->assertFalse($route->process($request));
+    }
+
+    public function testProcessReturnsResultsOnMatch()
+    {
+        $request = Request::create('/foo');
+        $route = new Route([
+            'rule' => '/foo',
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testProcessComplextMatch()
+    {
+        $request = Request::create('/somemodule/somecontroller/someaction');
+        $route = new Route([
+            'rule' => '/:module/:controller/:action',
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testTokensAreReplaced()
+    {
+        $request = Request::create('/somemodule/somecontroller/someaction');
+        $route = new Route([
+            'rule' => '/:module/:controller/:action',
+        ]);
+        $results = $route->process($request);
+
+        $this->assertTrue(is_array($results));
+        $this->assertTrue(isset($results['module']));
+        $this->assertTrue($results['module'] == 'somemodule');
+        $this->assertTrue(isset($results['controller']));
+        $this->assertTrue($results['controller'] == 'somecontroller');
+        $this->assertTrue(isset($results['action']));
+        $this->assertTrue($results['action'] == 'someaction');
+    }
+
+    public function testTargetsAreReplaced()
+    {
+        $request = Request::create('/somemodule/somecontroller/someaction');
+        $route = new Route([
+            'rule'    => '/:module/:controller/:action',
+            'targets' => [
+                'module'     => 'thismodule',
+                'controller' => 'thiscontroller',
+                'action'     => 'thisaction',
+            ]
+        ]);
+        $results = $route->process($request);
+
+        $this->assertTrue(is_array($results));
+        $this->assertTrue(isset($results['module']));
+        $this->assertTrue($results['module'] == 'thismodule');
+        $this->assertTrue(isset($results['controller']));
+        $this->assertTrue($results['controller'] == 'thiscontroller');
+        $this->assertTrue(isset($results['action']));
+        $this->assertTrue($results['action'] == 'thisaction');
+    }
+
+    public function testParamsAreExploded()
+    {
+        $request = Request::create('/a/b/c/d');
+        $route = new Route([
+            'rule' => '/:params',
+        ]);
+        $results = $route->process($request);
+
+        $this->assertTrue(is_array($results));
+        $this->assertTrue(isset($results['a']));
+        $this->assertTrue($results['a'] == 'b');
+        $this->assertTrue(isset($results['c']));
+        $this->assertTrue($results['c'] == 'd');
+    }
+
+    public function testDefaultFiltersMatch()
+    {
+        $request = Request::create('/foo/1/abc/a-b-c/a/b/c/d');
+        $route = new Route([
+            'rule' => '/:default/:int/:alpha/:slug/:params',
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testCustomFilterMatches()
+    {
+        $request = Request::create('/200');
+        $route = new Route([
+            'rule'    => '/:custom',
+            'filters' => ['custom' => '[0-9]{3}']
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testCustomFilterUsingDefaultFilter()
+    {
+        $request = Request::create('/200');
+        $route = new Route([
+            'rule'    => '/:custom',
+            'filters' => ['custom' => ':int']
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testCustomFilterUsingUndefinedDefaultFilter()
+    {
+        $request = Request::create('/200');
+        $route = new Route([
+            'rule'    => '/:custom',
+            'filters' => ['custom' => ':foo']
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testOptionalSwitchMatches()
+    {
+        $request_with    = Request::create('/foo');
+        $request_without = Request::create('/');
+        $route = new Route([
+            'rule'    => '/:controller?'
+        ]);
+        $this->assertTrue(is_array($route->process($request_with)));
+        $this->assertTrue(is_array($route->process($request_without)));
+    }
+
+    public function testOptionalSwitchMatchesCenter()
+    {
+        $request_with    = Request::create('/foo/bar/bob');
+        $request_without = Request::create('/foo/bob');
+        $route = new Route([
+            'rule'    => '/:module/:controller?/:action'
+        ]);
+        $this->assertTrue(is_array($route->process($request_with)));
+        $this->assertTrue(is_array($route->process($request_without)));
     }
 }

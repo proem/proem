@@ -147,4 +147,15 @@ class RouteStandardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($route->process($request_with)));
         $this->assertTrue(is_array($route->process($request_without)));
     }
+
+    public function testOptionalSwitchMatchesCenter()
+    {
+        $request_with    = Request::create('/foo/bar/bob');
+        $request_without = Request::create('/foo/bob');
+        $route = new RouteStandard([
+            'rule'    => '/:module/:controller?/:action'
+        ]);
+        $this->assertTrue(is_array($route->process($request_with)));
+        $this->assertTrue(is_array($route->process($request_without)));
+    }
 }

@@ -57,6 +57,16 @@ abstract class RouteAbstract implements RouteInterface
     }
 
     /**
+     * Retreive route options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * Do we have a callback?
      *
      * @return bool

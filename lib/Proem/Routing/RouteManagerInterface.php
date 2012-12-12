@@ -24,52 +24,52 @@
  * THE SOFTWARE.
  */
 
+
 /**
- * @namespace Proem\Routing
+ * @namespace Proem\Routing\Router
  */
 namespace Proem\Routing;
 
+use Proem\Routing\RouteInterface;
 use Proem\Http\Request;
-use Proem\Http\Response;
 
 /**
- * The Route interface that all routes must implement.
+ * The route manager interface.
  */
-interface RouteInterface
+interface RouteManagerInterface
 {
     /**
-     * Instantiate this route
+     * Setup
      *
-     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
-     *
-     * @param array $options
+     * @param Proem\Http\Request $request
      */
-    public function __construct(array $options);
+    public function __construct(Request $request);
 
     /**
-     * Retreive route options.
+     * Retrieve routes.
      *
      * @return array
      */
-    public function getOptions();
+    public function getRoutes();
 
     /**
-     * Do we have a callback?
+     * Store route objects indexed by request method.
      *
-     * @return bool
+     * @param string $name
+     * @param Proem\Routing\RouteInterface $route
      */
-    public function hasCallback();
+    public function attach($name, RouteInterface $route);
 
     /**
-     * Retreive callback.
-     */
-    public function getCallback();
-
-    /**
-     * Method to actually test for a match.
+     * Iterate through interested routes until a match is found.
      *
-     * @param Proem\Http\Request $request
-     * @return bool
+     * When called multiple times (in a loop for instance)
+     * this method will return a new matching route until
+     * all routes have been processed.
+     *
+     * Once exhausted this function returns false and the
+     * internal pointer is reset so the Router can be used
+     * again.
      */
-    public function process(Request $request);
+    public function route();
 }

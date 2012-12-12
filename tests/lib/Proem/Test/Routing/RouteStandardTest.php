@@ -137,6 +137,29 @@ class RouteStandardTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($route->process($request)));
     }
 
+    public function testCustomFilterUsingDefaultFilter()
+    {
+        $request = Request::create('/200');
+        $route = new RouteStandard([
+            'rule'    => '/:custom',
+            'filters' => ['custom' => ':int']
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testCustomFilterUsingUndefinedDefaultFilter()
+    {
+        $request = Request::create('/200');
+        $route = new RouteStandard([
+            'rule'    => '/:custom',
+            'filters' => ['custom' => ':foo']
+        ]);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
     public function testOptionalSwitchMatches()
     {
         $request_with    = Request::create('/foo');

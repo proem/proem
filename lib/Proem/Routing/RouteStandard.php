@@ -124,9 +124,9 @@ class RouteStandard extends RouteAbstract
         $defaultFilters    = $this->defaultFilters;
         $url               = $request->getRequestUri();
 
-        $keys    = [];
-        $values  = [];
-        $results = [];
+        $keys              = [];
+        $values            = [];
+        $results           = [];
 
         // Build the main regular expression.
         $regex = '^' . preg_replace_callback(

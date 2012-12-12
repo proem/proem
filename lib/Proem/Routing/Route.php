@@ -121,7 +121,7 @@ class Route extends RouteAbstract
         $defaultFilters    = $this->defaultFilters;
         $url               = $request->getRequestUri();
 
-        $keys              = [];
+        $tokens            = [];
         $values            = [];
         $results           = [];
 

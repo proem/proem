@@ -35,11 +35,8 @@ use Proem\Http\Request;
 
 /**
  * Proem's standard route.
- *
- * This route should cover most use cases and is currently the only
- * route provided within the framework.
  */
-class RouteStandard extends RouteAbstract
+class Route extends RouteAbstract
 {
     /**
      * Store default tokens.

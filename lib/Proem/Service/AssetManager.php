@@ -100,7 +100,6 @@ class AssetManager implements AssetManagerInterface
     }
 
     /**
-     * TODO: Busted, asset vs data
      * Check to see if this manager has a specific asset by index.
      *
      * @param string $index The index the asset is referenced by
@@ -108,6 +107,6 @@ class AssetManager implements AssetManagerInterface
      */
     public function has($index)
     {
-        return isset($this->assets[$index]);
+        return isset($this->data[$index]);
     }
 }

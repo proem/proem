@@ -24,42 +24,36 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Service
- */
-namespace Proem\Service;
-
-use Proem\Service\AssetInterface;
 
 /**
- * Interface that all asset managers must implement.
+ * @namespace Proem\Bootstrap
  */
-interface AssetManagerInterface extends \Iterator, \Serializable, \Countable
+namespace Proem\Bootstrap;
+
+use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventAbstract;
+use Proem\Signal\Event;
+
+/**
+ * The default "View" filter chain event.
+ */
+class View extends ChainEventAbstract
 {
     /**
-     * Store an Asset container by named index.
+     * Called on the way *in* to the filter chain.
      *
-     * @param string $index The index the asset will be referenced by.
-     * @param Proem\Service\AssetInterface $asset
-     * @return Proem\Service\AssetManagerInterface
+     * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function set($index, AssetInterface $asset);
+    public function in(AssetManagerInterface $assetManager)
+    {
+    }
 
     /**
-     * Retrieve an actual instantiated ssset object from within it's container.
+     * Called on the way *out* of the filter chain.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @param bool Wether or not to return the asset's object or container
-     * @return object The object provided by the asset container
+     * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function get($index, array $params = [], $asAsset = false);
-
-    /**
-     * Check to see if this manager has a specific asset by index.
-     *
-     * @param string $index The index the asset is referenced by
-     * @return bool
-     */
-    public function has($index);
+    public function out(AssetManagerInterface $assets)
+    {
+    }
 }

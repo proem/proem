@@ -24,6 +24,36 @@
  * THE SOFTWARE.
  */
 
-class PEAR_Foo
+
+/**
+ * @namespace Proem\Bootstrap
+ */
+namespace Proem\Bootstrap;
+
+use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventAbstract;
+use Proem\Signal\Event;
+
+/**
+ * The default "Dispatch" filter chain event.
+ */
+class Dispatch extends ChainEventAbstract
 {
+    /**
+     * Called on the way *in* to the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function in(AssetManagerInterface $assetManager)
+    {
+    }
+
+    /**
+     * Called on the way *out* of the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function out(AssetManagerInterface $assets)
+    {
+    }
 }

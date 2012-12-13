@@ -24,14 +24,36 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test\Http;
 
-use Proem\Http\Response;
+/**
+ * @namespace Proem\Bootstrap
+ */
+namespace Proem\Bootstrap;
 
-class ResponseTest extends \PHPUnit_Framework_TestCase
+use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventAbstract;
+use Proem\Signal\Event;
+
+/**
+ * The default "Request" filter chain event.
+ */
+class Request extends ChainEventAbstract
 {
-    public function testCanInstantiate()
+    /**
+     * Called on the way *in* to the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function in(AssetManagerInterface $assetManager)
     {
-        $this->assertInstanceOf('Proem\Http\Response', new Response);
+    }
+
+    /**
+     * Called on the way *out* of the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function out(AssetManagerInterface $assets)
+    {
     }
 }

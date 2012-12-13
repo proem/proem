@@ -24,43 +24,36 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Filter\ChainEvent
- */
-namespace Proem\Filter;
 
-use Proem\Filter\ChainManagerInterface;
-use Proem\Filter\ChainEventInterface;
+/**
+ * @namespace Proem\Bootstrap
+ */
+namespace Proem\Bootstrap;
+
 use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventAbstract;
+use Proem\Signal\Event;
 
 /**
- * The filter chain event interface. All filter
- * chain events should implement this interface.
+ * The default "Response" filter chain event.
  */
-interface ChainEventInterface
+class Response extends ChainEventAbstract
 {
     /**
-     * Define the method to be called on the way into the filter.
+     * Called on the way *in* to the filter chain.
      *
-     * @param Proem\Service\AssetManagerInterface $assets
+     * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function in(AssetManagerInterface $assets);
+    public function in(AssetManagerInterface $assetManager)
+    {
+    }
 
     /**
-     * Define the method to be called on the way out of the filter.
+     * Called on the way *out* of the filter chain.
      *
-     * @param Proem\Service\AssetManagerInterface $assets
+     * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function out(AssetManagerInterface $assets);
-
-    /**
-     * Bootstrap this event.
-     *
-     * Executes in() then init() on the next event= in the filter chain
-     * before returning to execute out().
-     *
-     * @param Proem\Filter\ChainManagerInterface $chainManager
-     * @param array Optional extra parameters.
-     */
-    public function init(ChainManagerInterface $chainManager, array $params = []);
+    public function out(AssetManagerInterface $assets)
+    {
+    }
 }

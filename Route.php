@@ -24,21 +24,36 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test\Routing;
 
-use \Mockery as m;
+/**
+ * @namespace Proem\Bootstrap
+ */
+namespace Proem\Bootstrap;
 
-class RouteAbstractTest extends \PHPUnit_Framework_TestCase
+use Proem\Service\AssetManagerInterface;
+use Proem\Filter\ChainEventAbstract;
+use Proem\Signal\Event;
+
+/**
+ * The default "Route" filter chain event.
+ */
+class Route extends ChainEventAbstract
 {
-    public function testCanInstantiate()
+    /**
+     * Called on the way *in* to the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function in(AssetManagerInterface $assetManager)
     {
-        $this->assertInstanceOf('Proem\Routing\RouteInterface', m::mock('Proem\Routing\RouteAbstract'));
     }
 
-    public function testCanProcessCallback()
+    /**
+     * Called on the way *out* of the filter chain.
+     *
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function out(AssetManagerInterface $assets)
     {
-        $route = m::mock('Proem\Routing\RouteAbstract[process]', [['callback' => function() { return true; }]]);
-        $this->assertTrue($route->hasCallback());
-        $this->assertTrue(call_user_func($route->getCallback()));
     }
 }

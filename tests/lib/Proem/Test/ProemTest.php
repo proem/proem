@@ -61,12 +61,12 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $assetManager
             ->shouldReceive('set')
             ->once()
-            ->with('EventManager', 'Proem\Service\Asset');
+            ->with('eventManager', 'Proem\Service\Asset');
 
         $assetManager
             ->shouldReceive('get')
             ->once()
-            ->with('EventManager')
+            ->with('eventManager')
             ->andReturn($eventManager);
 
         (new Proem($assetManager))->bootstrap();

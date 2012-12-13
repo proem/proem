@@ -69,7 +69,7 @@ class Proem
 
         if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
             $this->assetManager->set(
-                'EventManager',
+                'eventManager',
                 (new Asset('Proem\Signal\EventManagerInterface'))->single(
                     function ($asset) {
                         return new EventManager;
@@ -90,7 +90,7 @@ class Proem
             $initEvent = new Event('proem.init');
         }
 
-        $this->assetManager->get('EventManager')->trigger($initEvent);
+        $this->assetManager->get('eventManager')->trigger($initEvent);
 
         return $this;
     }

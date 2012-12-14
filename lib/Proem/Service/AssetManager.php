@@ -109,4 +109,23 @@ class AssetManager implements AssetManagerInterface
     {
         return isset($this->data[$index]);
     }
+
+    /**
+     * Check to see if this manager provides a specifically named
+     * asset and (optionally) that asset is a specific type.
+     *
+     * @param string $index
+     * @param string $provides
+     * @return bool
+     */
+    public function provides($index, $provides = null)
+    {
+        if ($provides === null) {
+            return in_array($index, $this->provides);
+        } else {
+            if ($this->has($index)) {
+                return $this->data[$index]->is($provides);
+            }
+        }
+    }
 }

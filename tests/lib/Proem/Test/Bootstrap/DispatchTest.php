@@ -24,42 +24,40 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Test\Bootstrap;
 
-/**
- * @namespace Proem\Bootstrap
- */
-namespace Proem\Bootstrap;
+use \Mockery as m;
+use Proem\Bootstrap\Dispatch;
 
-use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetInterface;
-use Proem\Filter\ChainEventAbstract;
-use Proem\Signal\Event;
-
-/**
- * The default "Dispatch" filter chain event.
- */
-class Dispatch extends ChainEventAbstract
+class DispatchTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Called on the way *in* to the filter chain.
-     *
-     * @param Proem\Service\AssetManagerInterface $assetManager
-     * @triggers proem.in.dispatch
-     */
-    public function in(AssetManagerInterface $assetManager)
+    public function testCanInstantiate()
     {
-        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
-            $assetManager->get('eventManager')->trigger(new Event('proem.in.dispatch'));
-        }
+        $this->assertInstanceOf('Proem\Bootstrap\Dispatch', new Dispatch);
     }
 
-    /**
-     * Called on the way *out* of the filter chain.
-     *
-     * @param Proem\Service\AssetManagerInterface $assetManager
-     */
-    public function out(AssetManagerInterface $assets)
+    public function testCanTriggerEvent()
     {
-        // Does nothing.
+        $eventManager = m::mock('Proem\Signal\EventManagerInterface');
+        $eventManager
+            ->shouldReceive('trigger')
+            ->with('Proem\Signal\EventInterface')
+            ->once();
+
+        $assetManager = m::mock('Proem\Service\AssetManagerInterface');
+        $assetManager
+            ->shouldReceive('provides')
+            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
+            ->once()
+            ->andReturn(true);
+
+        $assetManager
+            ->shouldReceive('get')
+            ->with('eventManager')
+            ->once()
+            ->andReturn($eventManager);
+
+        $dispatch = new Dispatch;
+        $dispatch->in($assetManager);
     }
 }

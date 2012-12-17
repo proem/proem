@@ -31,8 +31,11 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
+use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
+use Proem\Service\Asset;
+use Proem\Http\Response as HttpResponse;
 
 /**
  * The default "Response" filter chain event.
@@ -42,10 +45,42 @@ class Response extends ChainEventAbstract
     /**
      * Called on the way *in* to the filter chain.
      *
+     * First triggers a *proem.in.response* event. This event allows a client to
+     * attach a custom Proem\Http\Response asset to the Asset Manager.
+     *
+     * If no such asset has been attached, this method will then go ahead and attach
+     * a default Proem\Http\Response.
+     *
      * @param Proem\Service\AssetManagerInterface $assetManager
+     * @triggers proem.in.response
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
+            $assetManager->get('eventManager')->trigger(
+                new Event('proem.in.response'),
+                function ($responseEvent) use ($assetManager) {
+                    if (
+                        $responseEvent->has('responseAsset') &&
+                        $responseEvent->get('responseAsset') instanceof AssetInterface &&
+                        $responseEvent->get('responseAsset')->provides('Proem\Http\Response')
+                    ) {
+                        $assetManager->set('response', $responseEvent->get('responseAsset'));
+                    }
+                }
+            );
+        }
+
+        if (!$assetManager->provides('Proem\Http\Response')) {
+            $assetManager->set(
+                'response',
+                (new Asset('Proem\Http\Response'))->single(
+                    function ($asset) {
+                        return new HttpResponse;
+                    }
+                )
+            );
+        }
     }
 
     /**
@@ -55,5 +90,6 @@ class Response extends ChainEventAbstract
      */
     public function out(AssetManagerInterface $assets)
     {
+        // Does nothing.
     }
 }

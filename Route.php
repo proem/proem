@@ -31,8 +31,11 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
+use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
+use Proem\Service\Asset;
+use Proem\Routing\RouteManager;
 
 /**
  * The default "Route" filter chain event.
@@ -42,10 +45,42 @@ class Route extends ChainEventAbstract
     /**
      * Called on the way *in* to the filter chain.
      *
+     * First triggers a *proem.in.route* event. This event allows a client to
+     * attach a custom Proem\Routing\RouteManagerInterface asset to the Asset Manager.
+     *
+     * If no such asset has been attached, this method will then go ahead and attach
+     * a default Proem\Routing\RouteManager.
+     *
      * @param Proem\Service\AssetManagerInterface $assetManager
+     * @triggers proem.in.route
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
+            $assetManager->get('eventManager')->trigger(
+                new Event('proem.in.route'),
+                function ($responseEvent) use ($assetManager) {
+                    if (
+                        $responseEvent->has('routeManagerAsset') &&
+                        $responseEvent->get('routeManagerAsset') instanceof AssetInterface &&
+                        $responseEvent->get('routeManagerAsset')->provides('Proem\Routing\RouteManagerInterface')
+                    ) {
+                        $assetManager->set('routeManager', $responseEvent->get('routeManagerAsset'));
+                    }
+                }
+            );
+        }
+
+        if (!$assetManager->provides('Proem\Routing\RouteManagerInterface')) {
+            $assetManager->set(
+                'routeManager',
+                (new Asset('Proem\Routing\RouteManager'))->single(
+                    function ($asset) {
+                        return new RouteManager;
+                    }
+                )
+            );
+        }
     }
 
     /**
@@ -55,5 +90,6 @@ class Route extends ChainEventAbstract
      */
     public function out(AssetManagerInterface $assets)
     {
+        // Does nothing.
     }
 }

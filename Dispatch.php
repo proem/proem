@@ -31,6 +31,7 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
+use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
 
@@ -43,9 +44,13 @@ class Dispatch extends ChainEventAbstract
      * Called on the way *in* to the filter chain.
      *
      * @param Proem\Service\AssetManagerInterface $assetManager
+     * @triggers proem.in.dispatch
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
+            $assetManager->get('eventManager')->trigger(new Event('proem.in.dispatch'));
+        }
     }
 
     /**
@@ -55,5 +60,6 @@ class Dispatch extends ChainEventAbstract
      */
     public function out(AssetManagerInterface $assets)
     {
+        // Does nothing.
     }
 }

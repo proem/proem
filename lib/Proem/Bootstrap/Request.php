@@ -31,8 +31,11 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
+use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
+use Proem\Service\Asset;
+use Proem\Http\Request as HttpRequest;
 
 /**
  * The default "Request" filter chain event.
@@ -42,10 +45,42 @@ class Request extends ChainEventAbstract
     /**
      * Called on the way *in* to the filter chain.
      *
+     * First triggers a *proem.in.request* event. This event allows a client to
+     * attach a custom Proem\Http\Request asset to the Asset Manager.
+     *
+     * If no such asset has been attached, this method will then go ahead and attach
+     * a default Proem\Http\Request.
+     *
      * @param Proem\Service\AssetManagerInterface $assetManager
+     * @triggers proem.in.request
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
+            $assetManager->get('eventManager')->trigger(
+                new Event('proem.in.request'),
+                function ($responseEvent) use ($assetManager) {
+                    if (
+                        $responseEvent->has('requestAsset') &&
+                        $responseEvent->get('requestAsset') instanceof AssetInterface &&
+                        $responseEvent->get('requestAsset')->provides('Proem\Http\Request')
+                    ) {
+                        $assetManager->set('request', $responseEvent->get('requestAsset'));
+                    }
+                }
+            );
+        }
+
+        if (!$assetManager->provides('Proem\Http\Request')) {
+            $assetManager->set(
+                'request',
+                (new Asset('Proem\Http\Request'))->single(
+                    function ($asset) {
+                        return new HttpRequest;
+                    }
+                )
+            );
+        }
     }
 
     /**
@@ -55,5 +90,6 @@ class Request extends ChainEventAbstract
      */
     public function out(AssetManagerInterface $assets)
     {
+        // Does nothing.
     }
 }

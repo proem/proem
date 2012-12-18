@@ -147,22 +147,26 @@ class AssetComposer implements AssetComposerInterface
         $methodArgs     = $this->methodArgs;
 
         if ($single) {
-            return (new Asset($this->class))->single(
-                function () use ($reflection, $constructArgs, $methodArgs) {
-                    if ($constructArgs) {
-                        $object = $reflection->newInstanceArgs($constructArgs);
-                    } else {
-                        $object = $reflection->newInstance();
-                    }
-
-                    foreach ($methodArgs as $method => $params) {
-                        if ($reflection->hasMethod($method)) {
-                            call_user_func_array([$object, $method], $params);
+            static $obj;
+            if ($obj == null) {
+                $obj = (new Asset($this->class))->single(
+                    function () use ($reflection, $constructArgs, $methodArgs) {
+                        if ($constructArgs) {
+                            $object = $reflection->newInstanceArgs($constructArgs);
+                        } else {
+                            $object = $reflection->newInstance();
                         }
+
+                        foreach ($methodArgs as $method => $params) {
+                            if ($reflection->hasMethod($method)) {
+                                call_user_func_array([$object, $method], $params);
+                            }
+                        }
+                        return $object;
                     }
-                    return $object;
-                }
-            );
+                );
+            }
+            return $obj;
         } else {
             return new Asset(
                 $this->class,

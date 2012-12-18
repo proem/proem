@@ -34,8 +34,7 @@ use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
-use Proem\Service\Asset;
-use Proem\Routing\RouteManager;
+use Proem\Service\AssetComposer;
 
 /**
  * The default "Route" filter chain event.
@@ -72,14 +71,7 @@ class Route extends ChainEventAbstract
         }
 
         if (!$assetManager->provides('Proem\Routing\RouteManagerInterface')) {
-            $assetManager->set(
-                'routeManager',
-                (new Asset('Proem\Routing\RouteManager'))->single(
-                    function ($asset) {
-                        return new RouteManager;
-                    }
-                )
-            );
+            $assetManager->set('routeManager', (new AssetComposer('Proem\Routing\RouteManager'))->compose(true));
         }
     }
 

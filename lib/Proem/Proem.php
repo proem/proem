@@ -31,9 +31,7 @@ namespace Proem;
 
 use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetManager;
-use Proem\Service\Asset;
-use Proem\Signal\EventManagerInterface;
-use Proem\Signal\EventManager;
+use Proem\Service\AssetComposer;
 use Proem\Signal\EventInterface;
 use Proem\Signal\Event;
 
@@ -68,14 +66,7 @@ class Proem
         }
 
         if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
-            $this->assetManager->set(
-                'eventManager',
-                (new Asset('Proem\Signal\EventManagerInterface'))->single(
-                    function ($asset) {
-                        return new EventManager;
-                    }
-                )
-            );
+            $this->assetManager->set('eventManager', (new AssetComposer('Proem\Signal\EventManager'))->compose(true));
         }
     }
 

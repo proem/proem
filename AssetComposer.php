@@ -29,6 +29,7 @@
  */
 namespace Proem\Service;
 
+use Proem\Service\AssetComposerInterface;
 use Proem\Service\Asset;
 
 /**
@@ -37,7 +38,7 @@ use Proem\Service\Asset;
  * This composer is capable of building assets from an array of
  * arguments. It also contains methods for editing the same.
  */
-class AssetComposer
+class AssetComposer implements AssetComposerInterface
 {
     /**
      * The class this asset is to provide.

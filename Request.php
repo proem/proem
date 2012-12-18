@@ -34,8 +34,7 @@ use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
-use Proem\Service\Asset;
-use Proem\Http\Request as HttpRequest;
+use Proem\Service\AssetComposer;
 
 /**
  * The default "Request" filter chain event.
@@ -72,14 +71,7 @@ class Request extends ChainEventAbstract
         }
 
         if (!$assetManager->provides('Proem\Http\Request')) {
-            $assetManager->set(
-                'request',
-                (new Asset('Proem\Http\Request'))->single(
-                    function ($asset) {
-                        return new HttpRequest;
-                    }
-                )
-            );
+            $assetManager->set('request', (new AssetComposer('Proem\Http\Request'))->compose(true));
         }
     }
 

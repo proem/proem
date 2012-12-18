@@ -26,18 +26,25 @@
 
 namespace Proem\Test\Service;
 
+use Proem\Service\AssetComposerInterface;
 use Proem\Service\AssetComposer;
+
+require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
 
 class AssetComposerTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateAssetManager()
     {
-        $this->assertInstanceOf('Proem\Service\AssetComposer', new AssetComposer([]));
+        $this->assertInstanceOf('Proem\Service\AssetComposerInterface', new AssetComposer([]));
     }
 
     public function testCanBuildSimpleAsset()
     {
-        require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
+        $foo = new AssetComposer('Foo');
+
+        $this->assertInstanceOf('Proem\Service\AssetInterface', $foo->compose());
+        $this->assertInstanceOf('Foo', $foo->compose()->fetch());
+    }
 
         $foo = new AssetComposer('Foo');
 
@@ -47,7 +54,6 @@ class AssetComposerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBuildAssetFromConstructArray()
     {
-        require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
 
         $foo = new AssetComposer([
             'class' => 'Foo',
@@ -61,8 +67,6 @@ class AssetComposerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBuildAssetFromComplexArray()
     {
-        require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
-
         $foo = new AssetComposer([
             'class' => 'Foo',
             'methods' => ['setVar' => ['hello']]
@@ -75,8 +79,6 @@ class AssetComposerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBuildAssetFromConstructCall()
     {
-        require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
-
         $foo = new AssetComposer('Foo');
         $foo->construct(['hello']);
 
@@ -87,8 +89,6 @@ class AssetComposerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanBuildAssetFromMethodCall()
     {
-        require_once __DIR__ . '/AssetComposerFixtures/Foo.php';
-
         $foo = new AssetComposer('Foo');
         $foo->methods(['setVar' => ['hello']]);
 

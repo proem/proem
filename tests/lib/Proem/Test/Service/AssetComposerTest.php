@@ -46,10 +46,12 @@ class AssetComposerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Foo', $foo->compose()->fetch());
     }
 
+    public function testCanBuildSingletonAsset()
+    {
         $foo = new AssetComposer('Foo');
-
         $this->assertInstanceOf('Proem\Service\AssetInterface', $foo->compose());
         $this->assertInstanceOf('Foo', $foo->compose()->fetch());
+        $this->assertSame($foo->compose(true)->fetch(), $foo->compose(true)->fetch());
     }
 
     public function testCanBuildAssetFromConstructArray()

@@ -29,6 +29,7 @@
  */
 namespace Proem\Service;
 
+use Proem\Service\AssetComposerInterface;
 use Proem\Service\Asset;
 
 /**
@@ -37,7 +38,7 @@ use Proem\Service\Asset;
  * This composer is capable of building assets from an array of
  * arguments. It also contains methods for editing the same.
  */
-class AssetComposer
+class AssetComposer implements AssetComposerInterface
 {
     /**
      * The class this asset is to provide.
@@ -146,22 +147,26 @@ class AssetComposer
         $methodArgs     = $this->methodArgs;
 
         if ($single) {
-            return (new Asset($this->class))->single(
-                function () use ($reflection, $constructArgs, $methodArgs) {
-                    if ($constructArgs) {
-                        $object = $reflection->newInstanceArgs($constructArgs);
-                    } else {
-                        $object = $reflection->newInstance();
-                    }
-
-                    foreach ($methodArgs as $method => $params) {
-                        if ($reflection->hasMethod($method)) {
-                            call_user_func_array([$object, $method], $params);
+            static $obj;
+            if ($obj == null) {
+                $obj = (new Asset($this->class))->single(
+                    function () use ($reflection, $constructArgs, $methodArgs) {
+                        if ($constructArgs) {
+                            $object = $reflection->newInstanceArgs($constructArgs);
+                        } else {
+                            $object = $reflection->newInstance();
                         }
+
+                        foreach ($methodArgs as $method => $params) {
+                            if ($reflection->hasMethod($method)) {
+                                call_user_func_array([$object, $method], $params);
+                            }
+                        }
+                        return $object;
                     }
-                    return $object;
-                }
-            );
+                );
+            }
+            return $obj;
         } else {
             return new Asset(
                 $this->class,

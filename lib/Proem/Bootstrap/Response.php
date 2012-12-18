@@ -34,8 +34,7 @@ use Proem\Service\AssetManagerInterface;
 use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
-use Proem\Service\Asset;
-use Proem\Http\Response as HttpResponse;
+use Proem\Service\AssetComposer;
 
 /**
  * The default "Response" filter chain event.
@@ -72,14 +71,7 @@ class Response extends ChainEventAbstract
         }
 
         if (!$assetManager->provides('Proem\Http\Response')) {
-            $assetManager->set(
-                'response',
-                (new Asset('Proem\Http\Response'))->single(
-                    function ($asset) {
-                        return new HttpResponse;
-                    }
-                )
-            );
+            $assetManager->set('response', (new AssetComposer('Proem\Http\Response'))->compose(true));
         }
     }
 

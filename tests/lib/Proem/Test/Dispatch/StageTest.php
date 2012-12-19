@@ -27,21 +27,19 @@
 namespace Proem\Test\Service;
 
 use \Mockery as m;
-use Proem\Dispatch\Staging;
+use Proem\Dispatch\Stage;
 
-class StagingTest extends \PHPUnit_Framework_TestCase
+class StageTest extends \PHPUnit_Framework_TestCase
 {
-    protected $request;
-    protected $eventManager;
+    protected $assetManager;
 
     public function setUp()
     {
-        $this->request      = m::mock('Proem\Http\Request');
-        $this->eventManager = m::mock('Proem\Signal\EventManager');
+        $this->assetManager = m::mock('Proem\Service\AssetManagerInterface');
     }
 
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Dispatch\StagingInterface', new Staging($this->request, $this->eventManager));
+        $this->assertInstanceOf('Proem\Dispatch\StageInterface', new Stage($this->assetManager));
     }
 }

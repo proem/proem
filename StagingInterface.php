@@ -25,42 +25,24 @@
  */
 
 /**
- * @namespace Proem\Filter\ChainEvent
+ * @namespace Proem\Dispatch
  */
-namespace Proem\Filter;
+namespace Proem\Dispatch;
 
-use Proem\Filter\ChainManagerInterface;
-use Proem\Filter\ChainEventInterface;
-use Proem\Service\AssetManagerInterface;
+use Proem\Http\Request;
+use Proem\Signal\EventManagerInterface;
 
 /**
- * The filter chain event interface. All filter
- * chain events should implement this interface.
+ * The dispatch staging area interface.
  */
-interface ChainEventInterface
+interface StagingInterface
 {
     /**
-     * Define the method to be called on the way into the filter.
-     *
-     * @param Proem\Service\AssetManagerInterface $assets
+     * Setup the stage and start the dispatch process
      */
-    public function in(AssetManagerInterface $assets);
+    public function __construct(Request $request, EventManagerInterface $eventManager);
 
     /**
-     * Define the method to be called on the way out of the filter.
-     *
-     * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function out(AssetManagerInterface $assets);
-
-    /**
-     * Bootstrap this event.
-     *
-     * Executes in() then init() on the next event= in the filter chain
-     * before returning to execute out().
-     *
-     * @param Proem\Filter\ChainManagerInterface $chainManager
-     * @param array Optional extra parameters.
-     */
-    public function init(ChainManagerInterface $chainManager, array $params = []);
+    public function process();
 }

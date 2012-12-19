@@ -24,14 +24,31 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test\Http;
+/**
+ * @namespace Proem\Dispatch
+ */
+namespace Proem\Dispatch;
 
-use Proem\Http\Response;
+use Proem\Http\Request;
+use Proem\Signal\EventManagerInterface;
 
-class ResponseTest extends \PHPUnit_Framework_TestCase
+/**
+ * The dispatch staging area.
+ */
+class Staging implements StagingInterface
 {
-    public function testCanInstantiate()
+    /**
+     * Setup the stage and start the dispatch process
+     */
+    public function __construct(Request $request, EventManagerInterface $eventManager)
     {
-        $this->assertInstanceOf('Proem\Http\Response', new Response);
+
+    }
+
+    /**
+     */
+    public function process()
+    {
+
     }
 }

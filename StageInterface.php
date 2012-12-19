@@ -29,18 +29,17 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Http\Request;
-use Proem\Signal\EventManagerInterface;
+use Proem\Service\AssetManagerInterface;
 
 /**
  * The dispatch staging area interface.
  */
-interface StagingInterface
+interface StageInterface
 {
     /**
      * Setup the stage and start the dispatch process
      */
-    public function __construct(Request $request, EventManagerInterface $eventManager);
+    public function __construct(AssetManagerInterface $assetManager);
 
     /**
      */

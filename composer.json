@@ -16,12 +16,6 @@
     "issues": "https://github.com/proem/proem/issues",
     "irc": "irc://irc.freenode.net/proem"
   },
-  "require": {
-    "php": ">=5.4.0",
-    "ext-pcre": "*",
-    "ext-reflection": "*",
-    "ext-spl": "*"
-  },
   "suggest": {
     "ext-apc": "*"
   },
@@ -29,6 +23,10 @@
     "psr-0": { "Proem": "lib/" }
   },
   "require": {
+    "php": ">=5.4.0",
+    "ext-pcre": "*",
+    "ext-reflection": "*",
+    "ext-spl": "*",
     "symfony/http-foundation": "2.1.*",
     "symfony/http-kernel": "2.1.*"
   },

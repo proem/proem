@@ -24,46 +24,22 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Service
- */
-namespace Proem\Service;
+namespace Proem\Test\Service;
 
-/**
- * A **VERY** simple asset composer interface.
- */
-interface AssetComposerInterface
+use \Mockery as m;
+use Proem\Dispatch\Dispatcher;
+
+class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup
-     *
-     * @param string|array $class Either the name of the class to create, or an array of arguments.
-     */
-    public function __construct($class);
+    protected $asssetManager;
 
-    /**
-     * Set an array of arguments to pass to the object's
-     * __construct method.
-     *
-     * @param array
-     */
-    public function construct($constructArgs);
+    public function setUp()
+    {
+        $this->assetManager = m::mock('\Proem\Service\AssetManagerInterface');
+    }
 
-    /**
-     * Set an array of arguments to pass to different methods on the
-     * objected being constructed.
-     *
-     * @param array
-     */
-    public function methods($methodArgs);
-
-    /**
-     * Build a configured Asset and return it.
-     *
-     * This Asset can optionally be returned implementing a singleton.
-     *
-     * @param bool $single
-     * @return Proem\Service\AssetInterface
-     */
-    public function compose($single = false);
+    public function testCanInstantiate()
+    {
+        $this->assertInstanceOf('Proem\Dispatch\DispatcherInterface', new Dispatcher($this->assetManager));
+    }
 }

@@ -49,7 +49,45 @@ class Dispatch extends ChainEventAbstract
     public function in(AssetManagerInterface $assetManager)
     {
         if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
-            $assetManager->get('eventManager')->trigger(new Event('proem.in.dispatch'));
+            $assetManager->get('eventManager')->trigger(
+                new Event('proem.in.dispatch'),
+                function ($responseEvent) use ($assetManager) {
+                    // Check for a customized Dispatch\Dispatcher.
+                    if (
+                        $responseEvent->has('dispatcherAsset') &&
+                        $responseEvent->get('dispatcherAsset') instanceof AssetInterface &&
+                        $responseEvent->get('dispatcherAsset')->provides('Proem\Dispatch\DispatcherInterface')
+                    ) {
+                        $assetManager->set('dispatcher', $responseEvent->get('dispatcherAsset'));
+                    }
+
+                    // Check for a customized Dispatch\Staging
+                    if (
+                        $responseEvent->has('stageAsset') &&
+                        $responseEvent->get('stageAsset') instanceof AssetInterface &&
+                        $responseEvent->get('stageAsset')->provides('Proem\Dispatch\StageInterface')
+                    ) {
+                        $assetManager->set('stage', $responseEvent->get('stageAsset'));
+                    }
+                }
+            );
+        }
+
+        if (!$assetManager->provides('Proem\Dispatch\Dispatcher')) {
+            $assetManager->set('dispatcher', (new AssetComposer('Proem\Dispatch\Dispatcher'))->compose(true));
+        }
+
+        if (!$assetManager->provides('Proem\Dispatch\Stage')) {
+            (new Stage($assetManager))->process();
+        } else {
+            /**
+             * TODO: This call should likely be replaced by some method that resolves
+             * to return an asset by type not by index. eg; getProvided().
+             *
+             * It could in fact replace this entire if statement if it can also resolve
+             * to create assets that don't exist within the asset manager.
+             */
+            $assetManager->get('stage')->process();
         }
     }
 

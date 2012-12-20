@@ -24,42 +24,22 @@
  * THE SOFTWARE.
  */
 
+namespace Proem\Test\Service;
 
-/**
- * @namespace Proem\Bootstrap
- */
-namespace Proem\Bootstrap;
+use \Mockery as m;
+use Proem\Dispatch\Stage;
 
-use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetInterface;
-use Proem\Filter\ChainEventAbstract;
-use Proem\Signal\Event;
-
-/**
- * The default "View" filter chain event.
- */
-class View extends ChainEventAbstract
+class StageTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Called on the way *in* to the filter chain.
-     *
-     * @param Proem\Service\AssetManagerInterface $assetManager
-     * @triggers proem.in.view
-     */
-    public function in(AssetManagerInterface $assetManager)
+    protected $assetManager;
+
+    public function setUp()
     {
-        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
-            $assetManager->get('eventManager')->trigger(new Event('proem.in.view'));
-        }
+        $this->assetManager = m::mock('Proem\Service\AssetManagerInterface');
     }
 
-    /**
-     * Called on the way *out* of the filter chain.
-     *
-     * @param Proem\Service\AssetManagerInterface $assetManager
-     */
-    public function out(AssetManagerInterface $assets)
+    public function testCanInstantiate()
     {
-        // Does nothing.
+        $this->assertInstanceOf('Proem\Dispatch\StageInterface', new Stage($this->assetManager));
     }
 }

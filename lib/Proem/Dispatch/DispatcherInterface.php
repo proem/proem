@@ -25,45 +25,38 @@
  */
 
 /**
- * @namespace Proem\Service
+ * @namespace Proem\Dispatch
  */
-namespace Proem\Service;
+namespace Proem\Dispatch;
+
+use \Symfony\Component\HttpKernel\HttpKernelInterface;
+use \Symfony\Component\HttpFoundation\Request;
+use Proem\Service\AssetManagerInterface;
 
 /**
- * A **VERY** simple asset composer interface.
+ * Interface all dispatchers must implement.
  */
-interface AssetComposerInterface
+interface DispatcherInterface extends HttpKernelInterface
 {
     /**
-     * Setup
-     *
-     * @param string|array $class Either the name of the class to create, or an array of arguments.
+     * Setup the dispatcher
      */
-    public function __construct($class);
+    public function __construct(AssetManagerInterface $assetManager);
 
     /**
-     * Set an array of arguments to pass to the object's
-     * __construct method.
-     *
-     * @param array
+     * Set the current payload data.
      */
-    public function construct($constructArgs);
+    public function setPayload(array $payload = []);
 
     /**
-     * Set an array of arguments to pass to different methods on the
-     * objected being constructed.
+     * Test to see if the current payload is dispatchable.
      *
-     * @param array
+     * @return bool
      */
-    public function methods($methodArgs);
+    public function isDispatchable();
 
     /**
-     * Build a configured Asset and return it.
-     *
-     * This Asset can optionally be returned implementing a singleton.
-     *
-     * @param bool $single
-     * @return Proem\Service\AssetInterface
+     * Handles a Request, converting it to a Response.
      */
-    public function compose($single = false);
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
 }

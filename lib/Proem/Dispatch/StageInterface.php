@@ -24,40 +24,24 @@
  * THE SOFTWARE.
  */
 
-namespace Proem\Test\Bootstrap;
+/**
+ * @namespace Proem\Dispatch
+ */
+namespace Proem\Dispatch;
 
-use \Mockery as m;
-use Proem\Bootstrap\View;
+use Proem\Service\AssetManagerInterface;
 
-class ViewTest extends \PHPUnit_Framework_TestCase
+/**
+ * The dispatch staging area interface.
+ */
+interface StageInterface
 {
-    public function testCanInstantiate()
-    {
-        $this->assertInstanceOf('Proem\Bootstrap\View', new View);
-    }
+    /**
+     * Setup the stage and start the dispatch process
+     */
+    public function __construct(AssetManagerInterface $assetManager);
 
-    public function testCanTriggerEvent()
-    {
-        $eventManager = m::mock('Proem\Signal\EventManagerInterface');
-        $eventManager
-            ->shouldReceive('trigger')
-            ->with('Proem\Signal\EventInterface')
-            ->once();
-
-        $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
-
-        $assetManager
-            ->shouldReceive('get')
-            ->with('eventManager')
-            ->once()
-            ->andReturn($eventManager);
-
-        $view = new View;
-        $view->in($assetManager);
-    }
+    /**
+     */
+    public function process();
 }

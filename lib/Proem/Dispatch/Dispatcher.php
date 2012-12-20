@@ -25,45 +25,65 @@
  */
 
 /**
- * @namespace Proem\Service
+ * @namespace Proem\Dispatch
  */
-namespace Proem\Service;
+namespace Proem\Dispatch;
+
+use \Symfony\Component\HttpFoundation\Request;
+use Proem\Service\AssetManagerInterface;
 
 /**
- * A **VERY** simple asset composer interface.
+ * The default dispatcher.
  */
-interface AssetComposerInterface
+class Dispatcher implements DispatcherInterface
 {
     /**
-     * Setup
+     * Store the asset manager.
      *
-     * @param string|array $class Either the name of the class to create, or an array of arguments.
+     * @var Proem\Service\AssetManagerInterface
      */
-    public function __construct($class);
+    protected $assetManager;
 
     /**
-     * Set an array of arguments to pass to the object's
-     * __construct method.
+     * Store the current payload.
      *
-     * @param array
+     * @var array $payload
      */
-    public function construct($constructArgs);
+    protected $payload;
 
     /**
-     * Set an array of arguments to pass to different methods on the
-     * objected being constructed.
-     *
-     * @param array
+     * Setup the dispatcher
      */
-    public function methods($methodArgs);
+    public function __construct(AssetManagerInterface $assetManager)
+    {
+        $this->assetManager = $assetManager;
+    }
 
     /**
-     * Build a configured Asset and return it.
-     *
-     * This Asset can optionally be returned implementing a singleton.
-     *
-     * @param bool $single
-     * @return Proem\Service\AssetInterface
+     * Set the current payload data.
      */
-    public function compose($single = false);
+    public function setPayload(array $payload = [])
+    {
+        $this->payload  = $payload;
+    }
+
+    /**
+     * Test to see if the current payload is dispatchable.
+     *
+     * @return bool
+     */
+    public function isDispatchable()
+    {
+
+    }
+
+    /**
+     * Handles a Request, converting it to a Response.
+     *
+     * @return Proem\Http\Response
+     */
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+
+    }
 }

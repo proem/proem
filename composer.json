@@ -16,24 +16,27 @@
     "issues": "https://github.com/proem/proem/issues",
     "irc": "irc://irc.freenode.net/proem"
   },
-  "suggest": {
-    "ext-apc": "*"
-  },
   "autoload": {
     "psr-0": { "Proem": "lib/" }
   },
   "require": {
-    "php": ">=5.4.0",
-    "ext-pcre": "*",
-    "ext-reflection": "*",
-    "ext-spl": "*",
-    "symfony/http-foundation": "2.1.*",
-    "symfony/http-kernel": "2.1.*"
+    "php": ">=5.4.0"
   },
   "require-dev": {
     "jaz303/phake": "dev-master",
     "phpunit/phpunit": "3.7.*",
     "mockery/mockery": "dev-master",
     "squizlabs/php_codesniffer": "dev-master"
+  },
+  "replace": {
+    "proem-components/bootstrap": "self.version",
+    "proem-components/dispatch": "self.version",
+    "proem-components/filter": "self.version",
+    "proem-components/http": "self.version",
+    "proem-components/routing": "self.version",
+    "proem-components/service": "self.version",
+    "proem-components/signal": "self.version",
+    "proem-components/util-structure": "self.version",
+    "proem-components/util-loader": "self.version"
   }
 }

@@ -1,0 +1,34 @@
+{
+  "name": "proem-components/util-loader",
+  "description": "The Util\\Loader component of the Proem Framework.",
+  "keywords": ["MVC","Framework"],
+  "homepage": "http://proemframework.org",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tony R Quilkey",
+      "email": "trq@proemframework.org",
+      "homepage": "http://thorpesystems.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "ext-spl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*"
+  },
+  "suggest": {
+    "ext-apc": "*"
+  },
+  "autoload": {
+    "psr-0": { "Proem\\Util\\Loader": "" }
+  },
+  "target-dir": "Proem/Util/Loader",
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "proem-components/filter",
+  "description": "The Filter component of the Proem Framework.",
+  "keywords": ["MVC","Framework"],
+  "homepage": "http://proemframework.org",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tony R Quilkey",
+      "email": "trq@proemframework.org",
+      "homepage": "http://thorpesystems.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "proem-components/service": "wip-0.10.0",
+    "proem-components/util-structure": "wip-0.10.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "mockery/mockery": "dev-master"
+  },
+  "autoload": {
+    "psr-0": { "Proem\\Filter": "" }
+  },
+  "target-dir": "Proem/Filter",
+  "minimum-stability": "dev"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "proem-components/dispatch",
+  "description": "The Dispatch component of the Proem Framework.",
+  "keywords": ["MVC","Framework"],
+  "homepage": "http://proemframework.org",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tony R Quilkey",
+      "email": "trq@proemframework.org",
+      "homepage": "http://thorpesystems.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
+  "require": {
+    "php": ">=5.4.0",
+    "proem-components/service": "wip-0.10.0",
+    "symfony/http-foundation": "2.1.*",
+    "symfony/http-kernel": "2.1.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "mockery/mockery": "dev-master"
+  },
+  "autoload": {
+    "psr-0": { "Proem\\Dispatch": "" }
+  },
+  "target-dir": "Proem/Dispatch",
+  "minimum-stability": "dev"
+}

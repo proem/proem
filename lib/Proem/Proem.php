@@ -45,7 +45,7 @@ class Proem
     /**
      * Store the framework version.
      */
-    const VERSION = 'wip-0.10.0';
+    const VERSION = '0.10.0-dev';
 
     /**
      * Store the asset manager.

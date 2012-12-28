@@ -20,7 +20,9 @@
     "psr-0": { "Proem": "lib/" }
   },
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "symfony/http-foundation": "2.1.*",
+    "symfony/http-kernel": "2.1.*"
   },
   "require-dev": {
     "jaz303/phake": "dev-master",

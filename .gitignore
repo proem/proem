@@ -6,3 +6,4 @@ composer.lock
 issues
 tests-old
 lib-old
+.subsplit

@@ -32,22 +32,16 @@ namespace Proem\Dispatch;
 use Proem\Service\AssetManagerInterface;
 
 /**
- * The dispatch staging area.
+ * The dispatch staging area interface.
  */
-class Stage implements StageInterface
+interface StageInterface
 {
     /**
      * Setup the stage and start the dispatch process
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct(AssetManagerInterface $assetManager);
 
     /**
      */
-    public function process()
-    {
-
-    }
+    public function process();
 }

@@ -18,11 +18,11 @@ The main objective here is to create a lightweight, simple & fast MVC implementa
 
 ## INSTALLATION
 
-http://proemframework.org/docs/installation.html
+http://proemframework.org/docs/current/installation.html
 
 ## DOCUMENTATION
 
-http://proemframework.org/docs
+http://proemframework.org/docs/current
 
 ## CONTRIBUTING
 

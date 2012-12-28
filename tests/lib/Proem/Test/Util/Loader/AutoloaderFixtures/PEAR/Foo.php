@@ -24,30 +24,6 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
-
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class PEAR_Foo
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
-
-    /**
-     */
-    public function process()
-    {
-
-    }
 }

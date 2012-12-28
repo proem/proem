@@ -25,29 +25,72 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Routing
  */
-namespace Proem\Dispatch;
+namespace Proem\Routing;
 
-use Proem\Service\AssetManagerInterface;
+use Proem\Routing\RouteInterface;
+use Proem\Http\Request;
 
 /**
- * The dispatch staging area.
+ * The Route interface that all routes must implement.
  */
-class Stage implements StageInterface
+abstract class RouteAbstract implements RouteInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Store options
+     *
+     * @var array $options
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
+    protected $options = [];
 
+    /**
+     * Instantiate this route
+     *
+     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     *
+     * @param array $options
+     */
+    public function __construct(array $options)
+    {
+        $this->options = $options;
     }
 
     /**
+     * Retreive route options.
+     *
+     * @return array
      */
-    public function process()
+    public function getOptions()
     {
-
+        return $this->options;
     }
+
+    /**
+     * Do we have a callback?
+     *
+     * @return bool
+     */
+    public function hasCallback()
+    {
+        return isset($this->options['callback']);
+    }
+
+    /**
+     * Retreive callback.
+     */
+    public function getCallback()
+    {
+        if (isset($this->options['callback'])) {
+            return $this->options['callback'];
+        }
+    }
+
+    /**
+     * Method to actually test for a match.
+     *
+     * @param Proem\Http\Request $request
+     * @return bool
+     */
+    abstract public function process(Request $request);
 }

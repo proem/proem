@@ -25,29 +25,49 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Service
  */
-namespace Proem\Dispatch;
+namespace Proem\Service;
 
+use Proem\Service\AssetInterface;
 use Proem\Service\AssetManagerInterface;
+use Proem\Util\Structure\DataCollectionInterface;
 
 /**
- * The dispatch staging area.
+ * Interface that all assets must implement.
  */
-class Stage implements StageInterface
+interface AssetInterface extends DataCollectionInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Store the Closure responsible for instantiating an asset.
+     *
+     * @param string $is The object this asset is a type of
+     * @param array|closure $params
+     * @param closure|null $closure
+     * @return Proem\Service\AssetInterface
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct($is, $params, $closure = null);
 
     /**
+     * Retrieve the type of object this asset is
+     *
+     * @return string
      */
-    public function process()
-    {
+    public function is();
 
-    }
+    /**
+     * Validate and retrieve an instantiated asset.
+     *
+     * @param array $params Allow last minute setting of parameters.
+     * @param Proem\Service\AssetManagerInterface $assetManager
+     */
+    public function fetch(array $params = [], AssetManagerInterface $assetManager = null);
+
+    /**
+     * Store an asset in such a way that when it is retrieved it will always return
+     * the same instance.
+     *
+     * @param closure $closure
+     */
+    public function single(\Closure $closure);
 }

@@ -24,30 +24,21 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Routing;
 
-use Proem\Service\AssetManagerInterface;
+use \Mockery as m;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class RouteAbstractTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function testCanInstantiate()
     {
-
+        $this->assertInstanceOf('Proem\Routing\RouteInterface', m::mock('Proem\Routing\RouteAbstract'));
     }
 
-    /**
-     */
-    public function process()
+    public function testCanProcessCallback()
     {
-
+        $route = m::mock('Proem\Routing\RouteAbstract[process]', [['callback' => function() { return true; }]]);
+        $this->assertTrue($route->hasCallback());
+        $this->assertTrue(call_user_func($route->getCallback()));
     }
 }

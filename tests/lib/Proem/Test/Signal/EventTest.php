@@ -24,30 +24,41 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Service;
 
-use Proem\Service\AssetManagerInterface;
+use Proem\Signal\Event;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class EventTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function testCanInstantiateEvent()
     {
-
+        $e = new Event('Foo');
+        $this->assertInstanceOf('Proem\Signal\EventInterface', $e);
     }
 
-    /**
-     */
-    public function process()
+    public function testCanRetreiveName()
     {
+        $e = new Event('Foo');
+        $this->assertEquals('Foo', $e->getName());
+    }
 
+    public function testCanSetAndRetreiveData()
+    {
+        $e = new Event('Foo', ['x' => 'y']);
+        $this->assertEquals('y', $e->get('x'));
+    }
+
+    public function testCanHaltQueue()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted());
+    }
+
+    public function testCanHaltQueueEarly()
+    {
+        $e = new Event('Foo');
+        $e->haltQueue();
+        $this->assertTrue($e->isQueueHalted(true));
     }
 }

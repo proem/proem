@@ -29,25 +29,34 @@
  */
 namespace Proem\Dispatch;
 
+use \Symfony\Component\HttpKernel\HttpKernelInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use Proem\Service\AssetManagerInterface;
 
 /**
- * The dispatch staging area.
+ * Interface all dispatchers must implement.
  */
-class Stage implements StageInterface
+interface DispatcherInterface extends HttpKernelInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Setup the dispatcher
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct(AssetManagerInterface $assetManager);
 
     /**
+     * Set the current payload data.
      */
-    public function process()
-    {
+    public function setPayload(array $payload = []);
 
-    }
+    /**
+     * Test to see if the current payload is dispatchable.
+     *
+     * @return bool
+     */
+    public function isDispatchable();
+
+    /**
+     * Handles a Request, converting it to a Response.
+     */
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true);
 }

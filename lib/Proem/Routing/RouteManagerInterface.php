@@ -24,30 +24,52 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
 
 /**
- * The dispatch staging area.
+ * @namespace Proem\Routing\Router
  */
-class Stage implements StageInterface
+namespace Proem\Routing;
+
+use Proem\Routing\RouteInterface;
+use Proem\Http\Request;
+
+/**
+ * The route manager interface.
+ */
+interface RouteManagerInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Setup
+     *
+     * @param Proem\Http\Request $request
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct(Request $request);
 
     /**
+     * Retrieve routes.
+     *
+     * @return array
      */
-    public function process()
-    {
+    public function getRoutes();
 
-    }
+    /**
+     * Store route objects indexed by request method.
+     *
+     * @param string $name
+     * @param Proem\Routing\RouteInterface $route
+     */
+    public function attach($name, RouteInterface $route);
+
+    /**
+     * Iterate through interested routes until a match is found.
+     *
+     * When called multiple times (in a loop for instance)
+     * this method will return a new matching route until
+     * all routes have been processed.
+     *
+     * Once exhausted this function returns false and the
+     * internal pointer is reset so the Router can be used
+     * again.
+     */
+    public function route();
 }

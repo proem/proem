@@ -24,30 +24,8 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace PSR;
 
-use Proem\Service\AssetManagerInterface;
-
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class Bar
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
-
-    /**
-     */
-    public function process()
-    {
-
-    }
 }

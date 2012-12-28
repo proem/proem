@@ -24,30 +24,45 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Util\Loader;
 
-use Proem\Service\AssetManagerInterface;
+use Proem\Util\Loader\Autoloader;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class AutoloaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Setup the stage and start the dispatch process
+     * @dataProvider getData
      */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function testLoad($className, $testClassName, $message)
     {
+        (new AutoLoader())
+            ->attachNamespace('PSR', __DIR__ . '/AutoloaderFixtures')
+            ->attachPearPrefix('PEAR_', __DIR__ . '/AutoloaderFixtures')
+            ->load($testClassName);
 
+        $this->assertTrue(class_exists($className), $message);
     }
 
     /**
+     * @dataProvider getData
      */
-    public function process()
+    public function testRegister($className, $testClassName, $message)
     {
+        (new AutoLoader())
+            ->attachNamespace('PSR', __DIR__ . '/AutoloaderFixtures')
+            ->attachPearPrefix('PEAR_', __DIR__ . '/AutloaderFixtures')
+            ->register();
 
+        $this->assertTrue(class_exists($className), $message);
+    }
+
+    public function getData()
+    {
+        return [
+            ['\PSR\Foo',    'PSR\Foo',      'Including PSR\Foo class'],
+            ['\PEAR_Foo',   'PEAR_Foo',     'Including PEAR_Foo class'],
+            ['\PSR\Bar',    '\PSR\Bar',     'Including \PSR\Bar class'],
+            ['\PEAR_Bar',   '\PEAR_Bar',    'Including \PEAR_Bar class']
+        ];
     }
 }

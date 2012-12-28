@@ -24,30 +24,20 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Http;
 
-use Proem\Service\AssetManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class SymfonyTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function testCanInstantiateRequest()
     {
-
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', new Request);
     }
 
-    /**
-     */
-    public function process()
+    public function testCanInstantiateResponse()
     {
-
+        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', new Response);
     }
 }

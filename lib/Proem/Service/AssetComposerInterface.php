@@ -25,29 +25,45 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Service
  */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
+namespace Proem\Service;
 
 /**
- * The dispatch staging area.
+ * A **VERY** simple asset composer interface.
  */
-class Stage implements StageInterface
+interface AssetComposerInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Setup
+     *
+     * @param string|array $class Either the name of the class to create, or an array of arguments.
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct($class);
 
     /**
+     * Set an array of arguments to pass to the object's
+     * __construct method.
+     *
+     * @param array
      */
-    public function process()
-    {
+    public function construct($constructArgs);
 
-    }
+    /**
+     * Set an array of arguments to pass to different methods on the
+     * objected being constructed.
+     *
+     * @param array
+     */
+    public function methods($methodArgs);
+
+    /**
+     * Build a configured Asset and return it.
+     *
+     * This Asset can optionally be returned implementing a singleton.
+     *
+     * @param bool $single
+     * @return Proem\Service\AssetInterface
+     */
+    public function compose($single = false);
 }

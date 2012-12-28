@@ -25,63 +25,55 @@
  */
 
 /**
- * @namespace Proem
+ * @namespace Proem\Filter\ChainEvent
  */
-namespace Proem;
+namespace Proem\Filter;
 
+use Proem\Filter\ChainManagerInterface;
+use Proem\Filter\ChainEventInterface;
 use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetManager;
-use Proem\Service\AssetComposer;
-use Proem\Signal\EventInterface;
-use Proem\Signal\Event;
 
 /**
- * The Proem bootstrap wrapper
- *
- * Responsible for aiding in the bootstrap process.
+ * An abstract filter chain event. All filter chain
+ * events should extend this abstract class.
  */
-class Proem
+abstract class ChainEventAbstract implements ChainEventInterface
 {
     /**
-     * Store the framework version.
-     */
-    const VERSION = '0.10.0-dev';
-
-    /**
-     * Store the asset manager.
+     * Define the method to be called on the way into the filter.
      *
-     * @var Proem\Asset\AssetManagerInterface
+     * @param Proem\Service\AssetManagerInterface $assets
      */
-    protected $assetManager = null;
+    abstract public function in(AssetManagerInterface $assets);
 
     /**
-     * Setup.
-     */
-    public function __construct(AssetManagerInterface $assetManager = null)
-    {
-        if ($assetManager !== null) {
-            $this->assetManager = $assetManager;
-        } else {
-            $this->assetManager = new AssetManager;
-        }
-
-        if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
-            $this->assetManager->set('eventManager', (new AssetComposer('Proem\Signal\EventManager'))->compose(true));
-        }
-    }
-
-    /**
-     * Bootstrap the framework / application.
+     * Define the method to be called on the way out of the filter.
      *
-     * @param Proem\Signal\EventInterface $initEvent An optional event to be triggered on init.
+     * @param Proem\Service\AssetManagerInterface $assets
      */
-    public function bootstrap(EventInterface $initEvent = null)
+    abstract public function out(AssetManagerInterface $assets);
+
+    /**
+     * Bootstrap this event.
+     *
+     * Executes in() then init() on the next event= in the filter chain
+     * before returning to execute out().
+     *
+     * @param Proem\Filter\ChainManagerInterface $chainManager
+     * @param array Optional extra parameters.
+     */
+    public function init(ChainManagerInterface $chainManager, array $params = [])
     {
-        if ($initEvent === null) {
-            $initEvent = new Event('proem.init');
+        $this->in($chainManager->getAssetManager());
+
+        if ($chainManager->hasEvents()) {
+            $event = $chainManager->getNextEvent();
+            if (is_object($event)) {
+                $event->init($chainManager);
+            }
         }
 
-        $this->assetManager->get('eventManager')->trigger($initEvent);
+        $this->out($chainManager->getAssetManager());
 
         return $this;
     }

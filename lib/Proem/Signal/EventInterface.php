@@ -25,29 +25,43 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Signal
  */
-namespace Proem\Dispatch;
+namespace Proem\Signal;
 
-use Proem\Service\AssetManagerInterface;
+use Proem\Util\Structure\DataCollectionInterface;
 
 /**
- * The dispatch staging area.
+ * Interface that all events must implement.
  */
-class Stage implements StageInterface
+interface EventInterface extends DataCollectionInterface
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Instantiate the event and set it's name.
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function __construct($name, $data = []);
 
     /**
+     * Set the halt queue flag to true
+     *
+     * @param bool $early If true, the queue will be halted prior to the triggers callback being executed
      */
-    public function process()
-    {
+    public function haltQueue($early = false);
 
-    }
+    /**
+     * Check to see if the haltedQueueEarly flag is true
+     */
+    public function isQueueHaltedEarly();
+
+    /**
+     * Check to see if the haltedQueue flag is true
+     */
+    public function isQueueHalted();
+
+    /**
+     * Retrieve the event name.
+     *
+     * @return string The name of the event triggered.
+     */
+    public function getName();
 }

@@ -24,30 +24,22 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Service;
 
-use Proem\Service\AssetManagerInterface;
+use \Mockery as m;
+use Proem\Dispatch\Stage;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class StageTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
+    protected $assetManager;
 
+    public function setUp()
+    {
+        $this->assetManager = m::mock('Proem\Service\AssetManagerInterface');
     }
 
-    /**
-     */
-    public function process()
+    public function testCanInstantiate()
     {
-
+        $this->assertInstanceOf('Proem\Dispatch\StageInterface', new Stage($this->assetManager));
     }
 }

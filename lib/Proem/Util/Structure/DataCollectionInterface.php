@@ -25,29 +25,43 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Util\Structure
  */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
+namespace Proem\Util\Structure;
 
 /**
- * The dispatch staging area.
+ * A generic interface for accessing object data.
  */
-class Stage implements StageInterface
+interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
 {
     /**
-     * Setup the stage and start the dispatch process
+     * Set a property or multiple properties at once
+     *
+     * @param string $index
+     * @param mixed $value
+     * @return $this
      */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
+    public function set($index, $value = null);
 
     /**
+     * Retreive a property or a default value
+     *
+     * @param string $index
+     * @param mixed $default
+     * @return mixed
      */
-    public function process()
-    {
+    public function get($index, $default);
 
-    }
+    /**
+     * Retreive all properties
+     */
+    public function all();
+
+    /**
+     * Does this property exist?
+     *
+     * @param string $index
+     * @return bool
+     */
+    public function has($index);
 }

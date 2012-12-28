@@ -25,64 +25,65 @@
  */
 
 /**
- * @namespace Proem
+ * @namespace Proem\Dispatch
  */
-namespace Proem;
+namespace Proem\Dispatch;
 
+use \Symfony\Component\HttpFoundation\Request;
 use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetManager;
-use Proem\Service\AssetComposer;
-use Proem\Signal\EventInterface;
-use Proem\Signal\Event;
 
 /**
- * The Proem bootstrap wrapper
- *
- * Responsible for aiding in the bootstrap process.
+ * The default dispatcher.
  */
-class Proem
+class Dispatcher implements DispatcherInterface
 {
-    /**
-     * Store the framework version.
-     */
-    const VERSION = '0.10.0-dev';
-
     /**
      * Store the asset manager.
      *
-     * @var Proem\Asset\AssetManagerInterface
+     * @var Proem\Service\AssetManagerInterface
      */
-    protected $assetManager = null;
+    protected $assetManager;
 
     /**
-     * Setup.
+     * Store the current payload.
+     *
+     * @var array $payload
      */
-    public function __construct(AssetManagerInterface $assetManager = null)
-    {
-        if ($assetManager !== null) {
-            $this->assetManager = $assetManager;
-        } else {
-            $this->assetManager = new AssetManager;
-        }
+    protected $payload;
 
-        if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
-            $this->assetManager->set('eventManager', (new AssetComposer('Proem\Signal\EventManager'))->compose(true));
-        }
+    /**
+     * Setup the dispatcher
+     */
+    public function __construct(AssetManagerInterface $assetManager)
+    {
+        $this->assetManager = $assetManager;
     }
 
     /**
-     * Bootstrap the framework / application.
-     *
-     * @param Proem\Signal\EventInterface $initEvent An optional event to be triggered on init.
+     * Set the current payload data.
      */
-    public function bootstrap(EventInterface $initEvent = null)
+    public function setPayload(array $payload = [])
     {
-        if ($initEvent === null) {
-            $initEvent = new Event('proem.init');
-        }
+        $this->payload  = $payload;
+    }
 
-        $this->assetManager->get('eventManager')->trigger($initEvent);
+    /**
+     * Test to see if the current payload is dispatchable.
+     *
+     * @return bool
+     */
+    public function isDispatchable()
+    {
 
-        return $this;
+    }
+
+    /**
+     * Handles a Request, converting it to a Response.
+     *
+     * @return Proem\Http\Response
+     */
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+
     }
 }

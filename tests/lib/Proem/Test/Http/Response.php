@@ -24,30 +24,14 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
+namespace Proem\Test\Http;
 
-use Proem\Service\AssetManagerInterface;
+use Proem\Http\Response;
 
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class ResponseTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function testCanInstantiate()
     {
-
-    }
-
-    /**
-     */
-    public function process()
-    {
-
+        $this->assertInstanceOf('Proem\Http\Response', new Response);
     }
 }

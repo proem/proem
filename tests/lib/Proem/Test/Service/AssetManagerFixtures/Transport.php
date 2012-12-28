@@ -24,30 +24,16 @@
  * THE SOFTWARE.
  */
 
-/**
- * @namespace Proem\Dispatch
- */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
-
-/**
- * The dispatch staging area.
- */
-class Stage implements StageInterface
+class Transport
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
+    public $server;
+    public $username;
+    public $password;
+
+    public function __construct($server, $username, $password)
     {
-
-    }
-
-    /**
-     */
-    public function process()
-    {
-
+        $this->server   = $server;
+        $this->username = $username;
+        $this->password = $password;
     }
 }

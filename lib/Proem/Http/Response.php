@@ -25,29 +25,13 @@
  */
 
 /**
- * @namespace Proem\Dispatch
+ * @namespace Proem\Http
  */
-namespace Proem\Dispatch;
-
-use Proem\Service\AssetManagerInterface;
+namespace Proem\Http;
 
 /**
- * The dispatch staging area.
+ * The Proem HTTP Response wrapper.
  */
-class Stage implements StageInterface
+class Response extends \Symfony\Component\HttpFoundation\Response
 {
-    /**
-     * Setup the stage and start the dispatch process
-     */
-    public function __construct(AssetManagerInterface $assetManager)
-    {
-
-    }
-
-    /**
-     */
-    public function process()
-    {
-
-    }
 }

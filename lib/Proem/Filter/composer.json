@@ -18,8 +18,8 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "proem-components/service": "0.10.0-dev",
-    "proem-components/util-structure": "0.10.0-dev"
+    "proem-components/service": "dev-develop",
+    "proem-components/util-structure": "dev-develop"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*",

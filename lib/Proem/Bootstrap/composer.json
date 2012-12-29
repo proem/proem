@@ -18,9 +18,9 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "proem-components/service": "0.10.0-dev",
-    "proem-components/signal": "0.10.0-dev",
-    "proem-components/filter": "0.10.0-dev"
+    "proem-components/service": "dev-develop",
+    "proem-components/signal": "dev-develop",
+    "proem-components/filter": "dev-develop"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*",

@@ -18,7 +18,7 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "proem-components/service": "dev-develop",
+    "proem-components/service": "0.10.0-alpha1",
     "symfony/http-foundation": "2.1.*",
     "symfony/http-kernel": "2.1.*"
   },

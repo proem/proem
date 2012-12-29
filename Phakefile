@@ -1,8 +1,8 @@
 <?php
 
-require_once 'lib/Proem/Util/Autoloader.php';
+require_once 'lib/Proem/Util/Loader/Autoloader.php';
 
-(new \Proem\Util\Autoloader)
+(new \Proem\Util\Loader\Autoloader)
     ->register();
 
 group('proem', function() {

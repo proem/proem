@@ -29,172 +29,25 @@
  */
 namespace Proem\Dispatch;
 
-use Proem\Service\Manager\Template as Manager;
-use Proem\Routing\Signal\Event\RouteMatch;
-use Proem\Routing\Signal\Event\RouteDispatch;
-use Proem\Routing\Signal\Event\RouteExhausted;
+use Proem\Service\AssetManagerInterface;
 
 /**
- * The dispatch stage.
- *
- * This object sets up a staging area where the router and dispatcher
- * can put on there show
+ * The dispatch staging area.
  */
-class Stage
+class Stage implements StageInterface
 {
     /**
-     * Store the Services Manager
-     *
-     * @var Proem\Services\Manager\Template
-     */
-    protected $assets;
-
-    /**
-     * Store a flag
-     */
-    protected $dispatchable = false;
-
-    /**
      * Setup the stage and start the dispatch process
-     *
-     * Within this single construct we attach listeners
-     * for both the route.macth & route.exhausted events
-     *
-     * We then start processing the routes. Once the dispatchable
-     * flag is true the route is dispatched and execution moves
-     * into userland *controller* code
-     *
-     * @param Proem\Service\Manager\Template $assets
      */
-    public function __construct(Manager $assets)
+    public function __construct(AssetManagerInterface $assetManager)
     {
-        $this->assets = $assets;
 
-        $this->attachRouteMatchListener();
-        $this->attachRouteExhaustedListener();
-        $this->attachRouteDispatchListener();
-
-        $this->processRoutes();
     }
 
     /**
-     * Register a callback ready to listen for the route.match Event.
      */
-    protected function attachRouteMatchListener()
+    public function process()
     {
-        if ($this->assets->has('events')) {
-            $this->assets->get('events')->attach('proem.route.match', [$this, 'testRoute']);
-        }
-    }
 
-    /**
-     * Register a callback ready to listen for the route.exhausted Event.
-     */
-    protected function attachRouteExhaustedListener()
-    {
-        if ($this->assets->has('events')) {
-            $this->assets->get('events')->attach('proem.route.exhausted', [$this, 'routesExhausted']);
-        }
-    }
-
-    /**
-     * Register a callback ready to listen for the route.dispatch Event.
-     */
-    protected function attachRouteDispatchListener()
-    {
-        if ($this->assets->has('events')) {
-            $this->assets->get('events')->attach('proem.route.dispatch', [$this, 'dispatch']);
-        }
-    }
-
-    /**
-     * Iterate through matching routes and trigger a match.route Event
-     * on each iteration.
-     *
-     * A listener returning the bool true indicates that the payload is
-     * dispatchable. This sets the dispatchable flag to true and will
-     * exit this method.
-     *
-     * If all matching routes have been exhausted a route.exhausted event
-     * is triggered.
-     *
-     * @triggers Proem\Routing\Signal\Event\RouteMatch route.match Check to see if a route is dispatchable
-     * @triggers Proem\Routing\Signal\Event\RouteDispatch route.dispatch Dispatch a route
-     * @triggers Proem\Routing\Signal\Event\RouteExhausted route.exhausted All routes exhausted
-     */
-    protected function processRoutes()
-    {
-        if ($this->assets->has('router') && $this->assets->has('events')) {
-            $assets     = $this->assets;
-            $router     = $assets->get('router');
-            $dispatched = false;
-            while ($payload = $router->route()) {
-                $assets->get('events')->trigger(
-                    (new RouteMatch('proem.route.match'))->setPayload($payload),
-                    function ($response) use (&$dispatched, &$assets) {
-                        if ($response->has('isDispatchable') && $response->getParam('isDispatchable')) {
-                            $dispatched = true;
-                            $assets->get('events')->trigger(new RouteDispatch('proem.route.dispatch'));
-                        }
-                    }
-                );
-                if ($dispatched) {
-                    break;
-                }
-            }
-
-            if (!$dispatched) {
-                $assets->get('events')->trigger(new RouteExhausted('proem.route.exhausted'));
-            }
-        }
-    }
-
-    /**
-     * Dispatch the payload.
-     */
-    public function dispatch($e)
-    {
-        if ($this->assets->has('dispatch')) {
-            $this->assets->get('dispatch')->dispatch();
-        }
-    }
-
-    /**
-     * Listen for the route.match Event.
-     *
-     * Pass the RouteMatch event to the dispatcher and have it tested
-     * to see if it is dispatchable. Return the result.
-     *
-     * @param Proem\Routing\Signal\Event\RouteMatch $e
-     * @return bool
-     */
-    public function testRoute($event)
-    {
-        if ($this->assets->has('dispatch')) {
-            $this->assets->get('dispatch')->setPayload($event->getPayload());
-            $this->assets->get('dispatch')->setModule($event->getPayload()->get('module', ''));
-            $this->assets->get('dispatch')->setController($event->getPayload()->get('controller', ''));
-            $this->assets->get('dispatch')->setAction($event->getPayload()->get('action', ''));
-            return $event->setParam(
-                'isDispatchable',
-                $this->assets->get('dispatch')->isDispatchable()
-            );
-        }
-    }
-
-    /**
-     * Listen for a route.exhuasted Event.
-     *
-     * If triggered, dispatch a very standard default 404
-     *
-     * @param Proem\Routing\Signal\Event\RouteMatch $e
-     */
-    public function routesExhausted($e)
-    {
-        if ($this->assets->has('response')) {
-            $this->assets->get('response')
-                ->setHttpStatus(404)
-                ->appendToBody('<h3>404 - Page Not Found</h3>');
-        }
     }
 }

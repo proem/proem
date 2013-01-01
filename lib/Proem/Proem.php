@@ -3,7 +3,7 @@
 /**
  * The MIT License
  *
- * Copyright (c) 2010 - 2012 Tony R Quilkey <trq@proemframework.org>
+ * Copyright (c) 2010 - 2013 Tony R Quilkey <trq@proemframework.org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ class Proem
     /**
      * Store the framework version.
      */
-    const VERSION = '0.10.0-alpha2';
+    const VERSION = '0.10.0-alpha3';
 
     /**
      * Store the asset manager.

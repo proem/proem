@@ -18,11 +18,11 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "proem-components/service": "0.10.0-alpha2",
-    "proem-components/signal": "0.10.0-alpha2",
-    "proem-components/filter": "0.10.0-alpha2",
-    "proem-components/routing": "0.10.0-alpha2",
-    "proem-components/http": "0.10.0-alpha2"
+    "proem-components/service": "0.10.0-alpha3",
+    "proem-components/signal": "0.10.0-alpha3",
+    "proem-components/filter": "0.10.0-alpha3",
+    "proem-components/routing": "0.10.0-alpha3",
+    "proem-components/http": "0.10.0-alpha3"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*",

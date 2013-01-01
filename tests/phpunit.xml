@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit color="true" bootstrap="bootstrap.php">
+<phpunit color="true">
     <testsuites>
         <testsuite name="Proem Framework Test Suite">
             <directory>./</directory>

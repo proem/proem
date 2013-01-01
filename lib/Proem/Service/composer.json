@@ -19,7 +19,7 @@
   "require": {
     "php": ">=5.4.0",
     "ext-reflection": "*",
-    "proem-components/util-structure": "0.10.0-alpha2"
+    "proem-components/util-structure": "0.10.0-alpha3"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*",

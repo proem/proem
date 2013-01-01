@@ -21,14 +21,14 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "symfony/http-foundation": "2.1.*",
-    "symfony/http-kernel": "2.1.*"
+    "symfony/http-foundation": "2.2.*",
+    "symfony/http-kernel": "2.2.*"
   },
   "require-dev": {
     "jaz303/phake": "dev-master",
     "phpunit/phpunit": "3.7.*",
-    "mockery/mockery": "dev-master",
-    "squizlabs/php_codesniffer": "dev-master"
+    "mockery/mockery": "0.7.*",
+    "squizlabs/php_codesniffer": "1.4.*"
   },
   "replace": {
     "proem-components/bootstrap": "self.version",

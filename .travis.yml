@@ -17,4 +17,3 @@ branches:
   only:
     - master
     - develop
-    - wip-0.10.0

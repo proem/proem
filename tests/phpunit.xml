@@ -4,8 +4,8 @@
     <testsuites>
         <testsuite name="Proem Framework Test Suite">
             <directory>./</directory>
-            <directory>../lib/Proem/*/tests/</directory>
-            <directory>../lib/Proem/Util/*/tests/</directory>
+            <directory>../lib/Proem/*/Tests/</directory>
+            <directory>../lib/Proem/Util/*/Tests/</directory>
         </testsuite>
     </testsuites>
     <listeners>
@@ -16,8 +16,8 @@
             <directory>../lib/Proem/</directory>
             <exclude>
                 <directory>./</directory>
-                <directory>../lib/Proem/*/tests/</directory>
-                <directory>../lib/Proem/Util/*/tests/</directory>
+                <directory>../lib/Proem/*/Tests/</directory>
+                <directory>../lib/Proem/Util/*/Tests/</directory>
             </exclude>
         </whitelist>
     </filter>

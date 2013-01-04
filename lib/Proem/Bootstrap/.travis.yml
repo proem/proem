@@ -3,8 +3,6 @@ language: php
 php:
   - 5.4
 
-# dirty hack to attempt to ensure the existence of dependant components.
-before_install: sleep 120
 install: composer --dev install
 script: ./vendor/bin/phpunit
 

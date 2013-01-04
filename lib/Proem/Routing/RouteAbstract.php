@@ -38,6 +38,13 @@ use Proem\Http\Request;
 abstract class RouteAbstract implements RouteInterface
 {
     /**
+     * Store this routes rule
+     *
+     * @var string $rule
+     */
+    protected $rule;
+
+    /**
      * Store options
      *
      * @var array $options
@@ -47,13 +54,25 @@ abstract class RouteAbstract implements RouteInterface
     /**
      * Instantiate this route
      *
-     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     * $options = ['targets', 'filters', 'method', 'callback'];
      *
+     * @param string $rule
      * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct($rule, array $options = [])
     {
+        $this->rule    = $rule;
         $this->options = $options;
+    }
+
+    /**
+     * Retreive route rule.
+     *
+     * @return string
+     */
+    public function getRule()
+    {
+        return $this->rule;
     }
 
     /**

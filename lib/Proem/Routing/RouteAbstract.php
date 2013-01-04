@@ -67,6 +67,17 @@ abstract class RouteAbstract implements RouteInterface
     }
 
     /**
+     * Set options.
+     *
+     * This will merge the options provided with this
+     * this routes existing options taking priority.
+     */
+    public function setOptions(array $options = [])
+    {
+        $this->options = array_merge($options, $this->options);
+    }
+
+    /**
      * Do we have a callback?
      *
      * @return bool

@@ -112,9 +112,6 @@ class Route extends RouteAbstract
         $rule              = str_replace('/', '/?', $this->rule);
         $targets           = isset($this->options['targets']) ? $this->options['targets'] : [];
         $customFilters     = isset($this->options['filters']) ? $this->options['filters'] : [];
-
-        $defaultTokens     = $this->defaultTokens;
-        $defaultFilters    = $this->defaultFilters;
         $url               = $request->getRequestUri();
 
         $tokens            = [];
@@ -124,11 +121,11 @@ class Route extends RouteAbstract
         // Build the main regular expression.
         $regex = '^' . preg_replace_callback(
             '@:[\w]+@',
-            function ($matches) use ($customFilters, $defaultTokens, $defaultFilters) {
+            function ($matches) use ($customFilters) {
                 $key = str_replace(':', '', $matches[0]);
                 if (isset($customFilters[$key])) {
-                    if (isset($defaultFilters[$customFilters[$key]])) {
-                        return '(' . $defaultFilters[$customFilters[$key]] . ')';
+                    if (isset($this->defaultFilters[$customFilters[$key]])) {
+                        return '(' . $this->defaultFilters[$customFilters[$key]] . ')';
                     } else {
                         if ($customFilters[$key]{0} == ':') {
                             throw new \RuntimeException(
@@ -139,10 +136,10 @@ class Route extends RouteAbstract
                             return '(' . $customFilters[$key] . ')';
                         }
                     }
-                } elseif (isset($defaultTokens[$key])) {
-                    return '(' . $defaultTokens[$key] . ')';
+                } elseif (isset($this->defaultTokens[$key])) {
+                    return '(' . $this->defaultTokens[$key] . ')';
                 } else {
-                    return '(' . $defaultFilters[':default'] . ')';
+                    return '(' . $this->defaultFilters[':default'] . ')';
                 }
             },
             $rule

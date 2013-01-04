@@ -52,17 +52,36 @@ abstract class RouteAbstract implements RouteInterface
     protected $options = [];
 
     /**
+     * Store this routes callback
+     *
+     * @var callable
+     */
+    protected $callback = null;
+
+    /**
      * Instantiate this route
      *
-     * $options = ['targets', 'filters', 'method', 'callback'];
+     * $options = ['targets', 'filters', 'method'];
      *
      * @param string $rule
-     * @param array $options
+     * @param array|callable $options
+     * @param callable $callback
      */
-    public function __construct($rule, array $options = [])
+    public function __construct($rule, $options = null, $callback = null)
     {
-        $this->rule    = $rule;
-        $this->options = $options;
+        $this->rule     = $rule;
+
+        if (is_array($options)) {
+            $this->options = $options;
+        }
+
+        if ($callback instanceof \Closure) {
+            $this->callback = $callback;
+        }
+
+        if ($options instanceof \Closure) {
+            $this->callback = $options;
+        }
     }
 
     /**
@@ -103,7 +122,7 @@ abstract class RouteAbstract implements RouteInterface
      */
     public function hasCallback()
     {
-        return isset($this->options['callback']);
+        return $this->callback !== null;
     }
 
     /**
@@ -111,9 +130,7 @@ abstract class RouteAbstract implements RouteInterface
      */
     public function getCallback()
     {
-        if (isset($this->options['callback'])) {
-            return $this->options['callback'];
-        }
+        return $this->callback;
     }
 
     /**

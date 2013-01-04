@@ -60,9 +60,9 @@ class Route extends RouteAbstract
      * @param string $rule
      * @param array $options
      */
-    public function __construct($rule, array $options = [])
+    public function __construct($rule, $options = null, $callback = null)
     {
-        parent::__construct($rule, $options);
+        parent::__construct($rule, $options, $callback);
 
         $this->defaultFilters = [
             ':default'  => '[a-zA-Z0-9_\+\-%]+',

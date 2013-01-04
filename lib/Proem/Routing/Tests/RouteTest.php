@@ -179,4 +179,28 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($route->process($request_with)));
         $this->assertTrue(is_array($route->process($request_without)));
     }
+
+    public function testCanPositionCallbackAsSecondArg()
+    {
+        $route = new Route('/', function() { return true; });
+        $this->assertTrue($route->hasCallback());
+        $callback = $route->getCallback();
+        $this->assertTrue($callback());
+    }
+
+    public function testCanPositionCallbackAsThirdArg()
+    {
+        $route = new Route('/', [], function() { return true; });
+        $this->assertTrue($route->hasCallback());
+        $callback = $route->getCallback();
+        $this->assertTrue($callback());
+    }
+
+    public function testSecondCallbackIgnored()
+    {
+        $route = new Route('/', function() { return true; }, function() { return false; });
+        $this->assertTrue($route->hasCallback());
+        $callback = $route->getCallback();
+        $this->assertTrue($callback());
+    }
 }

@@ -43,9 +43,10 @@ interface RouteInterface
      * $options = ['targets', 'filters', 'method', 'callback'];
      *
      * @param string $rule
-     * @param array $options
+     * @param array|callable $options
+     * @param callable $callback
      */
-    public function __construct($rule, array $options = []);
+    public function __construct($rule, $options = null, $callback = null);
 
     /**
      * Retreive route options.

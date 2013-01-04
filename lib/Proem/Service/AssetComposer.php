@@ -143,21 +143,18 @@ class AssetComposer implements AssetComposerInterface
     {
         $reflection = new \ReflectionClass($this->class);
 
-        $constructArgs  = $this->constructArgs;
-        $methodArgs     = $this->methodArgs;
-
         if ($single) {
             static $obj;
             if ($obj == null) {
                 $obj = (new Asset($this->class))->single(
-                    function () use ($reflection, $constructArgs, $methodArgs) {
-                        if ($constructArgs) {
-                            $object = $reflection->newInstanceArgs($constructArgs);
+                    function () use ($reflection) {
+                        if ($this->constructArgs) {
+                            $object = $reflection->newInstanceArgs($this->constructArgs);
                         } else {
                             $object = $reflection->newInstance();
                         }
 
-                        foreach ($methodArgs as $method => $params) {
+                        foreach ($this->methodArgs as $method => $params) {
                             if ($reflection->hasMethod($method)) {
                                 call_user_func_array([$object, $method], $params);
                             }
@@ -170,14 +167,14 @@ class AssetComposer implements AssetComposerInterface
         } else {
             return new Asset(
                 $this->class,
-                function () use ($reflection, $constructArgs, $methodArgs) {
-                    if ($constructArgs) {
-                        $object = $reflection->newInstanceArgs($constructArgs);
+                function () use ($reflection) {
+                    if ($this->constructArgs) {
+                        $object = $reflection->newInstanceArgs($this->constructArgs);
                     } else {
                         $object = $reflection->newInstance();
                     }
 
-                    foreach ($methodArgs as $method => $params) {
+                    foreach ($this->methodArgs as $method => $params) {
                         if ($reflection->hasMethod($method)) {
                             call_user_func_array([$object, $method], $params);
                         }

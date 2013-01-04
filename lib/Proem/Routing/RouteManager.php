@@ -68,6 +68,13 @@ class RouteManager implements RouteManagerInterface
     protected $interestedRoutes = null;
 
     /**
+     * Store a group of shared attributes
+     *
+     * @var array
+     */
+    protected $groupAttributes = null;
+
+    /**
      * Setup
      *
      * @param Proem\Http\Request $request
@@ -98,6 +105,20 @@ class RouteManager implements RouteManagerInterface
     }
 
     /**
+     * Group routes by attributes.
+     *
+     * @param array $attributes
+     * @param callable $callback
+     */
+    public function group(array $attributes, callable $callback)
+    {
+        $this->groupAttributes = $attributes;
+        $callback();
+        $this->groupAttributes = null;
+        return $this;
+    }
+
+    /**
      * Store route objects indexed by request method.
      *
      * @param string $name
@@ -105,6 +126,12 @@ class RouteManager implements RouteManagerInterface
      */
     public function attach($name, RouteInterface $route)
     {
+        if ($this->groupAttributes !== null) {
+            // This route is part of a group of routes that share common attributes.
+            // Merge those attributes with the existing options.
+            $route->setOptions($this->groupAttributes);
+        }
+
         $options = $route->getOptions();
         if (isset($options['method'])) {
             $this->routes[strtoupper($options['method'])][$name] = $route;
@@ -114,8 +141,6 @@ class RouteManager implements RouteManagerInterface
 
         return $this;
     }
-
-
 
     /**
      * Iterate through interested routes until a match is found.

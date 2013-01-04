@@ -27,6 +27,7 @@
 namespace Proem\Routing\Tests;
 
 use \Mockery as m;
+use Proem\Routing\Route;
 use Proem\Routing\RouteManager;
 
 class RouteManagerTest extends \PHPUnit_Framework_TestCase
@@ -275,5 +276,35 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $match  = $routeManager->route();
 
         $this->assertSame($match, $with);
+    }
+
+    public function testCanGroupByAttributes()
+    {
+        $request = m::mock('Proem\Http\Request');
+
+        $routeManager = new RouteManager($request);
+
+        $routeManager->group(['foo' => 'bar'], function() use ($routeManager) {
+            $routeManager->attach('r1', new \Proem\Routing\Route([]));
+            $routeManager->attach('r2', new \Proem\Routing\Route([]));
+        });
+
+        foreach ($routeManager->getRoutes()['*'] as $route) {
+            $this->assertEquals('bar', $route->getOptions()['foo']);
+        }
+    }
+
+    public function testCanGroupByMethodAttribute()
+    {
+        $request = m::mock('Proem\Http\Request');
+
+        $routeManager = new RouteManager($request);
+
+        $routeManager->group(['method' => 'GET'], function() use ($routeManager) {
+            $routeManager->attach('r1', new \Proem\Routing\Route([]));
+            $routeManager->attach('r2', new \Proem\Routing\Route([]));
+        });
+
+        $this->assertEquals(2, count($routeManager->getRoutes()['GET']));
     }
 }

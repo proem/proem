@@ -55,13 +55,14 @@ class Route extends RouteAbstract
     /**
      * Instantiate this route
      *
-     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     * $options = ['targets', 'filters', 'method', 'callback'];
      *
+     * @param string $rule
      * @param array $options
      */
-    public function __construct(array $options)
+    public function __construct($rule, array $options = [])
     {
-        parent::__construct($options);
+        parent::__construct($rule, $options);
 
         $this->defaultFilters = [
             ':default'  => '[a-zA-Z0-9_\+\-%]+',
@@ -107,13 +108,8 @@ class Route extends RouteAbstract
      */
     public function process(Request $request)
     {
-        // All routes must at least specify a rule.
-        if (!isset($this->options['rule'])) {
-            return false;
-        }
-
         // Setup.
-        $rule              = str_replace('/', '/?', $this->options['rule']);
+        $rule              = str_replace('/', '/?', $this->rule);
         $targets           = isset($this->options['targets']) ? $this->options['targets'] : [];
         $customFilters     = isset($this->options['filters']) ? $this->options['filters'] : [];
 

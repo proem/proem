@@ -40,36 +40,28 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testProcessReturnsfalseOnFailedMatch()
     {
         $request = Request::create('/foo');
-        $route = new Route([
-            'rule' => '/',
-        ]);
+        $route = new Route('/');
         $this->assertFalse($route->process($request));
     }
 
     public function testProcessReturnsResultsOnMatch()
     {
         $request = Request::create('/foo');
-        $route = new Route([
-            'rule' => '/foo',
-        ]);
+        $route = new Route('/foo');
         $this->assertTrue(is_array($route->process($request)));
     }
 
     public function testProcessComplextMatch()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route([
-            'rule' => '/:module/:controller/:action',
-        ]);
+        $route = new Route('/:module/:controller/:action');
         $this->assertTrue(is_array($route->process($request)));
     }
 
     public function testTokensAreReplaced()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route([
-            'rule' => '/:module/:controller/:action',
-        ]);
+        $route = new Route('/:module/:controller/:action');
         $results = $route->process($request);
 
         $this->assertTrue(is_array($results));
@@ -84,14 +76,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testTargetsAreReplaced()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route([
-            'rule'    => '/:module/:controller/:action',
-            'targets' => [
-                'module'     => 'thismodule',
-                'controller' => 'thiscontroller',
-                'action'     => 'thisaction',
+        $route = new Route(
+            '/:module/:controller/:action',
+            [
+                'targets' => [
+                    'module'     => 'thismodule',
+                    'controller' => 'thiscontroller',
+                    'action'     => 'thisaction',
+                ]
             ]
-        ]);
+        );
         $results = $route->process($request);
 
         $this->assertTrue(is_array($results));
@@ -106,9 +100,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testParamsAreExploded()
     {
         $request = Request::create('/a/b/c/d');
-        $route = new Route([
-            'rule' => '/:params',
-        ]);
+        $route = new Route('/:params');
         $results = $route->process($request);
 
         $this->assertTrue(is_array($results));
@@ -121,29 +113,35 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testDefaultFiltersMatch()
     {
         $request = Request::create('/foo/1/abc/a-b-c/a/b/c/d');
-        $route = new Route([
-            'rule' => '/:default/:int/:alpha/:slug/:params',
-        ]);
+        $route = new Route('/:default/:int/:alpha/:slug/:params');
         $this->assertTrue(is_array($route->process($request)));
     }
 
     public function testCustomFilterMatches()
     {
         $request = Request::create('/200');
-        $route = new Route([
-            'rule'    => '/:custom',
-            'filters' => ['custom' => '[0-9]{3}']
-        ]);
+        $route = new Route(
+            '/:custom',
+            [
+                'filters' => [
+                    'custom' => '[0-9]{3}'
+                ]
+            ]
+        );
         $this->assertTrue(is_array($route->process($request)));
     }
 
     public function testCustomFilterUsingDefaultFilter()
     {
         $request = Request::create('/200');
-        $route = new Route([
-            'rule'    => '/:custom',
-            'filters' => ['custom' => ':int']
-        ]);
+        $route = new Route(
+            '/:custom',
+            [
+                'filters' => [
+                    'custom' => ':int'
+                ]
+            ]
+        );
         $this->assertTrue(is_array($route->process($request)));
     }
 
@@ -153,10 +151,14 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testCustomFilterUsingUndefinedDefaultFilter()
     {
         $request = Request::create('/200');
-        $route = new Route([
-            'rule'    => '/:custom',
-            'filters' => ['custom' => ':foo']
-        ]);
+        $route = new Route(
+            '/:custom',
+            [
+                'filters' => [
+                    'custom' => ':foo'
+                ]
+            ]
+        );
         $this->assertTrue(is_array($route->process($request)));
     }
 
@@ -164,9 +166,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request_with    = Request::create('/foo');
         $request_without = Request::create('/');
-        $route = new Route([
-            'rule'    => '/:controller?'
-        ]);
+        $route = new Route('/:controller?');
         $this->assertTrue(is_array($route->process($request_with)));
         $this->assertTrue(is_array($route->process($request_without)));
     }
@@ -175,9 +175,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request_with    = Request::create('/foo/bar/bob');
         $request_without = Request::create('/foo/bob');
-        $route = new Route([
-            'rule'    => '/:module/:controller?/:action'
-        ]);
+        $route = new Route('/:module/:controller?/:action');
         $this->assertTrue(is_array($route->process($request_with)));
         $this->assertTrue(is_array($route->process($request_without)));
     }

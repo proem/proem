@@ -94,7 +94,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->andReturn(true);
         $route->shouldReceive('getOptions')
             ->once()
-            ->andReturn(['rule' => '/']);
+            ->andReturn([]);
 
         $routeManager = new RouteManager($request);
 
@@ -115,16 +115,14 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(true);
         $route->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $route2 = m::mock('Proem\Routing\RouteInterface');
         $route2->shouldReceive('process')
             ->once()
             ->andReturn(true);
         $route2->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $routeManager = new RouteManager($request);
 
@@ -151,32 +149,28 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(true); // match
         $route->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $route2 = m::mock('Proem\Routing\RouteInterface');
         $route2->shouldReceive('process')
             ->once()
             ->andReturn(false); // fail
         $route2->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $route3 = m::mock('Proem\Routing\RouteInterface');
         $route3->shouldReceive('process')
             ->once()
             ->andReturn(true); // match
         $route3->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $route4 = m::mock('Proem\Routing\RouteInterface');
         $route4->shouldReceive('process')
             ->once()
             ->andReturn(false); // fail
         $route4->shouldReceive('getOptions')
-            ->once()
-            ->andReturn(['rule' => '/']);
+            ->once();
 
         $routeManager = new RouteManager($request);
 
@@ -207,15 +201,14 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->andReturn(true);
         $with->shouldReceive('getOptions')
             ->twice()
-            ->andReturn(['rule' => '/', 'method' => 'GET']);
+            ->andReturn(['method' => 'GET']);
 
         $without = m::mock('Proem\Routing\RouteInterface');
         $without->shouldReceive('process')
             ->twice()
             ->andReturn(true);
         $without->shouldReceive('getOptions')
-            ->twice()
-            ->andReturn(['rule' => '/']);
+            ->twice();
 
         $routeManager = new RouteManager($request);
 
@@ -254,7 +247,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->andReturn(true);
         $with->shouldReceive('getOptions')
             ->twice()
-            ->andReturn(['rule' => '/', 'method' => 'GET']);
+            ->andReturn(['method' => 'GET']);
 
         $without = m::mock('Proem\Routing\RouteInterface');
         $without->shouldReceive('getOptions');

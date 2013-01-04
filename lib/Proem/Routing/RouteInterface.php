@@ -40,11 +40,12 @@ interface RouteInterface
     /**
      * Instantiate this route
      *
-     * $options = ['rule', 'targets', 'filters', 'method', 'callback'];
+     * $options = ['targets', 'filters', 'method', 'callback'];
      *
+     * @param string $rule
      * @param array $options
      */
-    public function __construct(array $options);
+    public function __construct($rule, array $options = []);
 
     /**
      * Retreive route options.

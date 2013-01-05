@@ -65,18 +65,18 @@ class Route extends RouteAbstract
         parent::__construct($rule, $options, $callback);
 
         $this->defaultFilters = [
-            ':default'  => '[a-zA-Z0-9_\+\-%]+',
-            ':gobble'   => '[a-zA-Z0-9_\+\-%\/]+',
-            ':int'      => '[0-9]+',
-            ':alpha'    => '[a-zA-Z]+',
-            ':slug'     => '[a-zA-Z0-9_-]+'
+            '{:default}'  => '[a-zA-Z0-9_\+\-%]+',
+            '{:gobble}'   => '[a-zA-Z0-9_\+\-%\/]+',
+            '{:int}'      => '[0-9]+',
+            '{:alpha}'    => '[a-zA-Z]+',
+            '{:slug}'     => '[a-zA-Z0-9_-]+'
         ];
 
         $this->defaultTokens = [
-            'module'     => $this->defaultFilters[':default'],
-            'controller' => $this->defaultFilters[':default'],
-            'action'     => $this->defaultFilters[':default'],
-            'params'     => $this->defaultFilters[':gobble']
+            'module'     => $this->defaultFilters['{:default}'],
+            'controller' => $this->defaultFilters['{:default}'],
+            'action'     => $this->defaultFilters['{:default}'],
+            'params'     => $this->defaultFilters['{:gobble}']
         ];
     }
 
@@ -109,7 +109,7 @@ class Route extends RouteAbstract
     public function process(Request $request)
     {
         // Setup.
-        $rule              = str_replace('/', '/?', $this->rule);
+        $rule              = $this->rule;//str_replace('/', '/?', $this->rule);
         $targets           = isset($this->options['targets']) ? $this->options['targets'] : [];
         $customFilters     = isset($this->options['filters']) ? $this->options['filters'] : [];
         $url               = $request->getRequestUri();
@@ -120,9 +120,9 @@ class Route extends RouteAbstract
 
         // Build the main regular expression.
         $regex = '^' . preg_replace_callback(
-            '@:[\w]+@',
+            '@{[\w]+}@',
             function ($matches) use ($customFilters) {
-                $key = str_replace(':', '', $matches[0]);
+                $key = str_replace(['{','}'], '', $matches[0]);
                 if (isset($customFilters[$key])) {
                     if (isset($this->defaultFilters[$customFilters[$key]])) {
                         return '(' . $this->defaultFilters[$customFilters[$key]] . ')';
@@ -139,14 +139,16 @@ class Route extends RouteAbstract
                 } elseif (isset($this->defaultTokens[$key])) {
                     return '(' . $this->defaultTokens[$key] . ')';
                 } else {
-                    return '(' . $this->defaultFilters[':default'] . ')';
+                    return '(' . $this->defaultFilters['{:default}'] . ')';
                 }
             },
             $rule
         ) . '/?$';
 
+        var_dump($regex);
+
         // Find all tokens.
-        preg_match_all('@:([\w]+)@', $rule, $tokens, PREG_PATTERN_ORDER);
+        preg_match_all('@{:?([\w]+)}@', $rule, $tokens, PREG_PATTERN_ORDER);
         $tokens = $tokens[0];
 
         // Test the main regular expression against the url.
@@ -158,7 +160,8 @@ class Route extends RouteAbstract
             // Match tokens to values
             foreach ($tokens as $index => $value) {
                 if (isset($values[$index])) {
-                    $results[substr($value, 1)] = urldecode($values[$index]);
+                    //$results[substr($value, 1)] = urldecode($values[$index]);
+                    $results[str_replace(['{','}',':'], '', $value)] = urldecode($values[$index]);
                 }
             }
 

@@ -113,7 +113,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testDefaultFiltersMatch()
     {
         $request = Request::create('/foo/1/abc/a-b-c/a/b/c/d');
-        $route = new Route('/{:default}/{:int}/{:alpha}/{:slug}/{:params}');
+        $route = new Route('/{default}/{int}/{alpha}/{slug}/{params}');
         $this->assertTrue(is_array($route->process($request)));
     }
 
@@ -121,7 +121,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('/200');
         $route = new Route(
-            '/{:custom}',
+            '/{custom}',
             [
                 'filters' => [
                     'custom' => '[0-9]{3}'
@@ -135,10 +135,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('/200');
         $route = new Route(
-            '/{:custom}',
+            '/{custom}',
             [
                 'filters' => [
-                    'custom' => ':int'
+                    'custom' => '{int}'
                 ]
             ]
         );
@@ -152,10 +152,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('/200');
         $route = new Route(
-            '/{:custom}',
+            '/{custom}',
             [
                 'filters' => [
-                    'custom' => ':foo'
+                    'custom' => '{foo}'
                 ]
             ]
         );

@@ -65,18 +65,18 @@ class Route extends RouteAbstract
         parent::__construct($rule, $options, $callback);
 
         $this->defaultFilters = [
-            '{:default}'  => '[a-zA-Z0-9_\+\-%]+',
-            '{:gobble}'   => '[a-zA-Z0-9_\+\-%\/]+',
-            '{:int}'      => '[0-9]+',
-            '{:alpha}'    => '[a-zA-Z]+',
-            '{:slug}'     => '[a-zA-Z0-9_-]+'
+            '{default}'  => '[a-zA-Z0-9_\+\-%]+',
+            '{gobble}'   => '[a-zA-Z0-9_\+\-%\/]+',
+            '{int}'      => '[0-9]+',
+            '{alpha}'    => '[a-zA-Z]+',
+            '{slug}'     => '[a-zA-Z0-9_-]+'
         ];
 
         $this->defaultTokens = [
-            'module'     => $this->defaultFilters['{:default}'],
-            'controller' => $this->defaultFilters['{:default}'],
-            'action'     => $this->defaultFilters['{:default}'],
-            'params'     => $this->defaultFilters['{:gobble}']
+            'module'     => $this->defaultFilters['{default}'],
+            'controller' => $this->defaultFilters['{default}'],
+            'action'     => $this->defaultFilters['{default}'],
+            'params'     => $this->defaultFilters['{gobble}']
         ];
     }
 
@@ -161,7 +161,7 @@ class Route extends RouteAbstract
             foreach ($tokens as $index => $value) {
                 if (isset($values[$index])) {
                     //$results[substr($value, 1)] = urldecode($values[$index]);
-                    $results[str_replace(['{','}',':'], '', $value)] = urldecode($values[$index]);
+                    $results[str_replace(['{', '}'], '', $value)] = urldecode($values[$index]);
                 }
             }
 

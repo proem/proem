@@ -206,8 +206,8 @@ class Route extends RouteAbstract
 
         // Test hostname rule.
         if (isset($this->options['hostname'])) {
-            $regex  = $this->compileRegex($this->options['hostname']);
-            $tokens = $this->compileTokens($this->options['hostname']);
+            $regex           = $this->compileRegex($this->options['hostname']);
+            $tokens          = $this->compileTokens($this->options['hostname']);
             $hostnameResults = $this->compileResults($regex, $tokens, $request->getHttpHost());
 
             if ($hostnameResults === false) {

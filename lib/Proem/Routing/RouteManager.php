@@ -168,7 +168,7 @@ class RouteManager implements RouteManagerInterface
             next($this->interestedRoutes);
 
             // If match found, return matching route.
-            if ($route->process($this->request)) {
+            if ($route->process($this->request) !== false) {
                 return $route;
             } else {
                 // Recurse through the next route.

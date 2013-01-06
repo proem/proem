@@ -53,6 +53,13 @@ class Route extends RouteAbstract
     protected $defaultFilters = [];
 
     /**
+     * Store custom filters.
+     *
+     * @var array
+     */
+    protected $customFilters = [];
+
+    /**
      * Instantiate this route
      *
      * $options = ['targets', 'filters', 'method', 'callback'];
@@ -64,12 +71,16 @@ class Route extends RouteAbstract
     {
         parent::__construct($rule, $options, $callback);
 
+        if (isset($this->options['filters'])) {
+            $this->customFilters = $this->options['filters'];
+        }
+
         $this->defaultFilters = [
-            '{default}'  => '[a-zA-Z0-9_\+\-%]+',
-            '{gobble}'   => '[a-zA-Z0-9_\+\-%\/]+',
-            '{int}'      => '[0-9]+',
-            '{alpha}'    => '[a-zA-Z]+',
-            '{slug}'     => '[a-zA-Z0-9_-]+'
+            '{default}' => '[a-zA-Z0-9_\+\-%]+',
+            '{gobble}'  => '[a-zA-Z0-9_\+\-%\/]+',
+            '{int}'     => '[0-9]+',
+            '{alpha}'   => '[a-zA-Z]+',
+            '{slug}'    => '[a-zA-Z0-9_-]+'
         ];
 
         $this->defaultTokens = [
@@ -81,64 +92,35 @@ class Route extends RouteAbstract
     }
 
     /**
-     * Process the supplied url.
+     * Build a regular expression from the given rule.
      *
-     * This route takes a simplified series of patterns such as :controller and
-     * replaces them with more complex regular expressions which are then used
-     * within a preg_match_callback to match against the given uri.
-     *
-     * If a 'filter' regex is set within the $options array that regex will be
-     * used within the preg_match_callback. Otherwise a default regex of
-     * ([a-zA-Z0-9_\+\-%]+) is used.
-     *
-     * If one of the 'simplified' patterns within the rule is :results, this is
-     * treated specially and uses a ([a-zA-Z0-9_\+\-%\/]+) regex which will match
-     * the same as the default as well as / .
-     *
-     * This causes the pattern to match entire sections of uri's. Allowing a
-     * simple pattern like the default /:controller/:action/:results to match
-     * uri's like /foo/bar/a/b/c/d/e/f/g/h and cause everything after /foo/bar
-     * to be added to the Payload object as results (which are in turn transformed
-     * into key => value pairs).
-     *
-     * TODO: A lot of this fluffing around could (and likely should) be moved into
-     * the __construct and other protected internal methods.
-     *
-     * @param Proem\Http\Request $request
+     * @param string $rule
      */
-    public function process(Request $request)
+    protected function compileRegex($rule)
     {
-        // Setup.
-        $rule              = $this->rule;
-        $targets           = isset($this->options['targets']) ? $this->options['targets'] : [];
-        $customFilters     = isset($this->options['filters']) ? $this->options['filters'] : [];
-        $url               = $request->getRequestUri();
-
-        $tokens            = [];
-        $values            = [];
-        $results           = [];
-
-        // Build the main regular expression.
         $regex = '^' . preg_replace_callback(
             '@\{[\w]+\??\}@',
-            function ($matches) use ($customFilters) {
+            function ($matches) {
                 $optional = false;
                 $key = str_replace(['{', '}'], '', $matches[0]);
                 if (substr($key, -1) == '?') {
                     // Flag this token as optional.
                     $optional = true;
                 }
-                if (isset($customFilters[$key])) {
-                    if (isset($this->defaultFilters[$customFilters[$key]])) {
-                        return '(' . $this->defaultFilters[$customFilters[$key]] . ')' . (($optional) ? '?' : '');
+                if (isset($this->customFilters[$key])) {
+                    if (isset($this->defaultFilters[$this->customFilters[$key]])) {
+                        return '(' . $this->defaultFilters[$this->customFilters[$key]] . ')' . (($optional) ? '?' : '');
                     } else {
-                        if (substr($customFilters[$key], 0, 1) == '{' && substr($customFilters[$key], -1) == '}') {
+                        if (
+                            substr($this->customFilters[$key], 0, 1) == '{' &&
+                            substr($this->customFilters[$key], -1) == '}'
+                        ) {
                             throw new \RuntimeException(
                                 "The custom filter named \"{$key}\" references a
-                                non-existent builtin filter named \"{$customFilters[$key]}\"."
+                                non-existent builtin filter named \"{$this->customFilters[$key]}\"."
                             );
                         } else {
-                            return '(' . $customFilters[$key] . ')' . (($optional) ? '?' : '');
+                            return '(' . $this->customFilters[$key] . ')' . (($optional) ? '?' : '');
                         }
                     }
                 } elseif (isset($this->defaultTokens[$key])) {
@@ -148,32 +130,50 @@ class Route extends RouteAbstract
                 }
             },
             $rule
-        ) . '/?$';
+        ) . '$';
 
         // Fix slash delimeters in regards to optional handling.
         $regex = str_replace(['?/', '??'], ['?/?', '?'], $regex);
 
-        // Find all tokens.
-        preg_match_all('@\{([\w]+)\??\}@', $rule, $tokens, PREG_PATTERN_ORDER);
-        $tokens = $tokens[0];
+        return $regex;
+    }
 
-        // Test the main regular expression against the url.
-        if (preg_match('@^' . $regex . '$@', $url, $values)) {
+    /**
+     * Find tokens within given rule.
+     *
+     * @param string $rule
+     */
+    protected function compileTokens($rule)
+    {
+        $tokens = [];
+        preg_match_all('@\{([\w]+)\??\}@', $rule, $tokens, PREG_PATTERN_ORDER);
+        return $tokens[0];
+    }
+
+    /**
+     * Match a regular expression against a given *haystack* string. Return the resulting matches
+     * indexed by the values of the given tokens.
+     *
+     * @param string $regex
+     * @param array $tokens
+     * @param string $haystack
+     */
+    protected function compileResults($regex, $tokens, $haystack)
+    {
+        $values  = [];
+        $results = [];
+
+        // Test the regular expression against the supplied *haystack* string.
+        if (preg_match('@^' . $regex . '$@', $haystack, $values)) {
 
             // Discard *all* matches index.
             array_shift($values);
 
-            // Match tokens to values
+            // Match tokens to values found by the regex.
             foreach ($tokens as $index => $value) {
                 if (isset($values[$index])) {
-                    //$results[substr($value, 1)] = urldecode($values[$index]);
                     $results[str_replace(['{', '}'], '', $value)] = urldecode($values[$index]);
                 }
-            }
-
-            // Replace any results with specific targets..
-            foreach ($targets as $key => $value) {
-                $results[$key] = $value;
             }
 
             // If the current $key is "params" & the string within $value looks
@@ -184,10 +184,34 @@ class Route extends RouteAbstract
                 unset($results['params']);
             }
 
-            // Route has matched, return results.
             return $results;
         }
 
         return false;
+    }
+
+    /**
+     * Process this route.
+     *
+     * Takes a simplified series of patterns such as {controller} and
+     * replaces them with more complex regular expressions which are then used
+     * to match against a given *haystack* string.
+     *
+     * @param Proem\Http\Request $request
+     * @return false|array False on fail to match, otherwise array of results.
+     */
+    public function process(Request $request)
+    {
+        // Test the main url rule.
+        $regex   = $this->compileRegex($this->rule);
+        $tokens  = $this->compileTokens($this->rule);
+        $results = $this->compileResults($regex, $tokens, $request->getRequestUri());
+
+        // Merge any predefined *targets* into the results array.
+        if (isset($this->options['targets'])) {
+            $results = array_merge($results, $this->options['targets']);
+        }
+
+        return $results;
     }
 }

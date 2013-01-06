@@ -203,4 +203,28 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $callback = $route->getCallback();
         $this->assertTrue($callback());
     }
+
+    public function testSimpleHostnameFail()
+    {
+        $request = Request::create('http://localhost');
+        $route   = new Route('/', ['hostname' => 'foo']);
+        $this->assertFalse($route->process($request));
+    }
+
+    public function testSimpleHostnameMatch()
+    {
+        $request = Request::create('http://foo');
+        $route   = new Route('/', ['hostname' => 'foo']);
+        $this->assertTrue(is_array($route->process($request)));
+    }
+
+    public function testComplexHostnameMatch()
+    {
+        $request = Request::create('http://trq.domain.com');
+        $route   = new Route('/', ['hostname' => '{username}.domain.com']);
+        $results = $route->process($request);
+
+        $this->assertTrue(is_array($results));
+        $this->assertEquals('trq', $results['username']);
+    }
 }

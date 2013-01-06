@@ -202,12 +202,32 @@ class Route extends RouteAbstract
      */
     public function process(Request $request)
     {
-        // Test the main url rule.
-        $regex   = $this->compileRegex($this->rule);
-        $tokens  = $this->compileTokens($this->rule);
-        $results = $this->compileResults($regex, $tokens, $request->getRequestUri());
+        $results = [];
 
-        // Merge any predefined *targets* into the results array.
+        // Test hostname rule.
+        if (isset($this->options['hostname'])) {
+            $regex  = $this->compileRegex($this->options['hostname']);
+            $tokens = $this->compileTokens($this->options['hostname']);
+            $hostnameResults = $this->compileResults($regex, $tokens, $request->getHttpHost());
+
+            if ($hostnameResults === false) {
+                return false;
+            } else {
+                $results = array_merge($results, $hostnameResults);
+            }
+        }
+
+        // Test the main url rule.
+        $regex      = $this->compileRegex($this->rule);
+        $tokens     = $this->compileTokens($this->rule);
+        $urlResults = $this->compileResults($regex, $tokens, $request->getRequestUri());
+
+        if ($urlResults === false) {
+            return false;
+        } else {
+            $results = array_merge($results, $urlResults);
+        }
+
         if (isset($this->options['targets'])) {
             $results = array_merge($results, $this->options['targets']);
         }

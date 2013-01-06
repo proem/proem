@@ -278,8 +278,8 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $routeManager = new RouteManager($request);
 
         $routeManager->group(['foo' => 'bar'], function() use ($routeManager) {
-            $routeManager->attach('r1', new \Proem\Routing\Route([]));
-            $routeManager->attach('r2', new \Proem\Routing\Route([]));
+            $routeManager->attach('r1', new \Proem\Routing\Route('/'));
+            $routeManager->attach('r2', new \Proem\Routing\Route('/'));
         });
 
         foreach ($routeManager->getRoutes()['*'] as $route) {
@@ -294,10 +294,33 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $routeManager = new RouteManager($request);
 
         $routeManager->group(['method' => 'GET'], function() use ($routeManager) {
-            $routeManager->attach('r1', new \Proem\Routing\Route([]));
-            $routeManager->attach('r2', new \Proem\Routing\Route([]));
+            $routeManager->attach('r1', new \Proem\Routing\Route('/'));
+            $routeManager->attach('r2', new \Proem\Routing\Route('/'));
         });
 
         $this->assertEquals(2, count($routeManager->getRoutes()['GET']));
+    }
+
+    public function testCanGroupByHostname()
+    {
+        $request = \Proem\Http\Request::create('http://domain.com');
+
+        $routeManager = new RouteManager($request);
+
+        $routeManager->group(['hostname' => 'domain.com'], function() use ($routeManager) {
+            $routeManager->attach('r1', new \Proem\Routing\Route('/'));
+            $routeManager->attach('r2', new \Proem\Routing\Route('/'));
+        });
+
+        $routeManager->attach('r3', new \Proem\Routing\Route('/', ['hostname' => 'sub.domain.com']));
+
+        $matchCount = 0;
+
+        while ($routeManager->route()) {
+            $matchCount++;
+        }
+
+        $this->assertEquals(2, $matchCount);
+
     }
 }

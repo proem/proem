@@ -30,5 +30,10 @@
     "psr-0": { "Proem\\Util\\Loader": "" }
   },
   "target-dir": "Proem/Util/Loader",
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
 }

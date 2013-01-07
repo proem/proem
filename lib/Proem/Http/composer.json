@@ -27,5 +27,10 @@
     "psr-0": { "Proem\\Http": "" }
   },
   "target-dir": "Proem/Http",
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
 }

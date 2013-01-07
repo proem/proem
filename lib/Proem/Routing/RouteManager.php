@@ -75,22 +75,40 @@ class RouteManager implements RouteManagerInterface
     protected $groupAttributes = null;
 
     /**
+     * Default scheme
+     *
+     * @var string
+     */
+    protected $defaultScheme;
+
+    /**
      * Setup
      *
      * @param Proem\Http\Request $request
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, $scheme = 'http')
     {
-        $this->request = $request;
+        $this->request       = $request;
+        $this->defaultScheme = $scheme;
 
         // Store routes index by request method.
         $this->routes  = [
-            '*'      => [],
-            'GET'    => [],
-            'POST'   => [],
-            'PUT'    => [],
-            'DELETE' => [],
-            'PATCH'  => [],
+            'http' => [
+                '*'      => [],
+                'GET'    => [],
+                'POST'   => [],
+                'PUT'    => [],
+                'DELETE' => [],
+                'PATCH'  => []
+            ],
+            'https' => [
+                '*'      => [],
+                'GET'    => [],
+                'POST'   => [],
+                'PUT'    => [],
+                'DELETE' => [],
+                'PATCH'  => []
+            ]
         ];
     }
 
@@ -133,11 +151,9 @@ class RouteManager implements RouteManagerInterface
         }
 
         $options = $route->getOptions();
-        if (isset($options['method'])) {
-            $this->routes[strtoupper($options['method'])][$name] = $route;
-        } else {
-            $this->routes['*'][$name] = $route;
-        }
+        $method  = isset($options['method']) ? strtoupper($options['method']) : '*';
+        $scheme  = isset($options['scheme']) ? $options['scheme'] : $this->defaultScheme;
+        $this->routes[$scheme][$method][$name] = $route;
 
         return $this;
     }
@@ -157,10 +173,12 @@ class RouteManager implements RouteManagerInterface
     {
         // Build array of routes to iterate.
         if ($this->interestedRoutes === null) {
-            if (isset($this->routes[$this->request->getMethod()])) {
-                $this->interestedRoutes = $this->routes[$this->request->getMethod()] + $this->routes['*'];
+            $scheme = $this->request->getScheme();
+            $method = $this->request->getMethod();
+            if (isset($this->routes[$scheme][$method])) {
+                $this->interestedRoutes = $this->routes[$scheme][$method] + $this->routes[$scheme]['*'];
             } else {
-                $this->interestedRoutes = $this->routes['*'];
+                $this->interestedRoutes = $this->routes[$scheme]['*'];
             }
         }
 

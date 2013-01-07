@@ -53,7 +53,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $routeManager->attach('b', $b);
         $routeManager->attach('c', $c);
 
-        $this->assertEquals(3, count($routeManager->getRoutes()['*']));
+        $this->assertEquals(3, count($routeManager->getRoutes()['http']['*']));
     }
 
     public function testCanAttachRoutesToDifferentMethods()
@@ -76,9 +76,9 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $routeManager->attach('b', $b);
         $routeManager->attach('c', $c);
 
-        $this->assertEquals(1, count($routeManager->getRoutes()['*']));
-        $this->assertEquals(1, count($routeManager->getRoutes()['GET']));
-        $this->assertEquals(1, count($routeManager->getRoutes()['POST']));
+        $this->assertEquals(1, count($routeManager->getRoutes()['http']['*']));
+        $this->assertEquals(1, count($routeManager->getRoutes()['http']['GET']));
+        $this->assertEquals(1, count($routeManager->getRoutes()['http']['POST']));
     }
 
     public function testSingleRoute()
@@ -87,6 +87,10 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $request->shouldReceive('getMethod')
             ->once();
+
+        $request->shouldReceive('getScheme')
+            ->once()
+            ->andReturn('http');
 
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
@@ -109,6 +113,10 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $request->shouldReceive('getMethod')
             ->once();
+
+        $request->shouldReceive('getScheme')
+            ->once()
+            ->andReturn('http');
 
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
@@ -143,6 +151,10 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $request->shouldReceive('getMethod')
             ->once();
+
+        $request->shouldReceive('getScheme')
+            ->once()
+            ->andReturn('http');
 
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
@@ -192,8 +204,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $request = m::mock('Proem\Http\Request');
 
         $request->shouldReceive('getMethod')
-            ->times(4)
+            ->times(2)
             ->andReturn('GET');
+
+        $request->shouldReceive('getScheme')
+            ->times(2)
+            ->andReturn('http');
 
         $with = m::mock('Proem\Routing\RouteInterface');
         $with->shouldReceive('process')
@@ -238,8 +254,12 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $request = m::mock('Proem\Http\Request');
 
         $request->shouldReceive('getMethod')
-            ->times(4)
+            ->times(2)
             ->andReturn('GET');
+
+        $request->shouldReceive('getScheme')
+            ->times(2)
+            ->andReturn('http');
 
         $with = m::mock('Proem\Routing\RouteInterface');
         $with->shouldReceive('process')
@@ -282,7 +302,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             $routeManager->attach('r2', new \Proem\Routing\Route('/'));
         });
 
-        foreach ($routeManager->getRoutes()['*'] as $route) {
+        foreach ($routeManager->getRoutes()['http']['*'] as $route) {
             $this->assertEquals('bar', $route->getOptions()['foo']);
         }
     }
@@ -298,7 +318,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             $routeManager->attach('r2', new \Proem\Routing\Route('/'));
         });
 
-        $this->assertEquals(2, count($routeManager->getRoutes()['GET']));
+        $this->assertEquals(2, count($routeManager->getRoutes()['http']['GET']));
     }
 
     public function testCanGroupByHostname()
@@ -322,5 +342,41 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $matchCount);
 
+    }
+
+    public function testScheme()
+    {
+        $request = \Proem\Http\Request::create('https://domain.com');
+        $result  = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/'))
+            ->route();
+
+        $this->assertFalse($result);
+
+        $result  = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/', ['scheme' => 'https']))
+            ->route();
+
+        $this->assertInstanceOf('\Proem\Routing\Route', $result);
+    }
+
+    public function testSchemeDefault()
+    {
+        $request = \Proem\Http\Request::create('http://domain.com');
+        $result  = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/'))
+            ->route();
+
+        $this->assertInstanceOf('\Proem\Routing\Route', $result);
+    }
+
+    public function testCanSwitchSchemeDefault()
+    {
+        $request = \Proem\Http\Request::create('https://domain.com');
+        $result  = (new RouteManager($request, 'https'))
+            ->attach('r1', new \Proem\Routing\Route('/'))
+            ->route();
+
+        $this->assertInstanceOf('\Proem\Routing\Route', $result);
     }
 }

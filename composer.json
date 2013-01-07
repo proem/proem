@@ -42,5 +42,10 @@
     "proem-components/util-structure": "self.version",
     "proem-components/util-loader": "self.version"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
 }

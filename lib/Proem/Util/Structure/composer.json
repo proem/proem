@@ -27,5 +27,10 @@
     "psr-0": { "Proem\\Util\\Structure": "" }
   },
   "target-dir": "Proem/Util/Structure",
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
 }

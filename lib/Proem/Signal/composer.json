@@ -18,7 +18,7 @@
   },
   "require": {
     "php": ">=5.4.0",
-    "proem-components/util-structure": "0.10.0-alpha6"
+    "proem-components/util-structure": "0.10.*@dev"
   },
   "require-dev": {
     "phpunit/phpunit": "3.7.*"
@@ -27,5 +27,10 @@
     "psr-0": { "Proem\\Signal": "" }
   },
   "target-dir": "Proem/Signal",
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
 }

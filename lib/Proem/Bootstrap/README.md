@@ -1,3 +1,3 @@
-[![Build Status](https://secure.travis-ci.org/proem-components/bootstrap.png)](http://travis-ci.org/proem-components/bootstrap)
+[![Build Status](https://secure.travis-ci.org/proem/proem.png)](http://travis-ci.org/proem/proem)
 
 This is the Bootstrap component of the Proem Framework.

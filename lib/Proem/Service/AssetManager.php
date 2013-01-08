@@ -58,12 +58,24 @@ class AssetManager implements AssetManagerInterface
     use DataCollectionTrait;
 
     /**
+     * Store any *resolver* config
+     *
+     * @var array
+     */
+    protected $resolverConfig;
+
+    /**
      * Store an array containing information about what
      * Assets this manager provides.
      *
      * @var array
      */
     protected $provides = [];
+
+    public function __construct(array $resolverConfig = [])
+    {
+        $this->resolverConfig = $resolverConfig;
+    }
 
     /**
      * Store an Asset container by named index.
@@ -74,8 +86,8 @@ class AssetManager implements AssetManagerInterface
      */
     public function set($index, AssetInterface $asset)
     {
-        $this->data[$index] = $asset;
-        $this->provides[]   = $asset->is();
+        $this->data[$index]     = $asset;
+        $this->provides[$index] = $asset->is();
         return $this;
     }
 
@@ -127,5 +139,47 @@ class AssetManager implements AssetManagerInterface
                 return $this->data[$index]->is($provides);
             }
         }
+    }
+
+    /**
+     * If the asset manager provides an object of a specific type, return
+     * the asset providing that object type.
+     *
+     * @param string $object The complete object name (namespaced).
+     */
+    public function getProvided($object)
+    {
+        if ($this->provides($object)) {
+            return $this->data[array_flip($this->provides)[$object]];
+        }
+    }
+
+    /**
+     * If the asset manager provides an object of a specific type, return
+     * the asset providing that object type. Otherwise, attempt to compose
+     * the asset.
+     *
+     * @param string $object The complete object name (namespaced).
+     */
+    public function resolve($object, array $args = [])
+    {
+        if ($this->has($object)) {
+            // Resolve by name?
+            return $this->get($object, $args);
+
+        } elseif ($asset = $this->getProvided($object)) {
+            // Resolve by type?
+            return $asset;
+
+        } else {
+            // Go and create.
+            $asset = (new AssetResolver($this->resolverConfig))->resolve($object, $args);
+            $name  = strtolower(str_replace('\\', '.', ltrim($asset->is(), '\\')));
+            if (!isset($this->data[$name])) {
+                $this->set($name, $asset);
+            }
+        }
+
+        return $asset;
     }
 }

@@ -33,6 +33,17 @@ group('dev', function() {
         }
     });
 
+    desc('View loc stats');
+    task('loc', function() {
+        system('./vendor/bin/phploc lib/');
+    });
+
+    desc('Serve the coverage report');
+    task('sc', function() {
+        echo "\nhttp://127.0.0.1:8080\n";
+        system('php -S 127.0.0.1:8080 -t tests/log/report/');
+    });
+
     desc('Sniff code for PSR-1/2');
     task('sniff', function ($args) {
         chdir(realpath(__DIR__));

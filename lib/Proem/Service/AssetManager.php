@@ -72,6 +72,13 @@ class AssetManager implements AssetManagerInterface
      */
     protected $provides = [];
 
+    /**
+     * Setup.
+     *
+     * Optionaly pass in and then pass on the asset resolver configuration.
+     *
+     * @param array $resolverConfig
+     */
     public function __construct(array $resolverConfig = [])
     {
         $this->resolverConfig = $resolverConfig;
@@ -92,22 +99,26 @@ class AssetManager implements AssetManagerInterface
     }
 
     /**
-     * Retrieve an asset.
-     *
-     * Returns an instantiated obejct by default or optionaly the
-     * asset container itself.
+     * Retrieve an object from an asset.
      *
      * @param string $index The index the asset is referenced by
      * @param array $params Allow last minute setting of parameters.
-     * @param bool Wether or not to return the asset's object or container
      * @return object The object provided by the asset container
      */
-    public function get($index, array $params = [], $asAsset = false)
+    public function get($index, array $params = [])
     {
-        if (!$asAsset) {
-            return isset($this->data[$index]) ? $this->data[$index]->fetch($params, $this) : null;
-        }
+        return isset($this->data[$index]) ? $this->data[$index]->fetch($params, $this) : null;
+    }
 
+    /**
+     * Retrieve an asset.
+     *
+     * @param string $index The index the asset is referenced by
+     * @param array $params Allow last minute setting of parameters.
+     * @return object The object provided by the asset container
+     */
+    public function getAsset($index, array $params = [])
+    {
         return isset($this->data[$index]) ? $this->data[$index] : null;
     }
 

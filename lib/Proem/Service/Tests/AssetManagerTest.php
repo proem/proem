@@ -71,6 +71,20 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($am->provides('foo', 'stdClass'));
     }
 
+    public function testCanGetProvided()
+    {
+        $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
+        $asset
+            ->shouldReceive('is')
+            ->once()
+            ->andReturn('stdClass');
+
+        $am = new AssetManager;
+        $am->set('foo', $asset);
+
+        $this->assertInstanceOf('\Proem\Service\Asset', $am->getProvided('stdClass'));
+    }
+
     /**
      * TODO: Should have a better look at mocking the Mail & Transport classes.
      */

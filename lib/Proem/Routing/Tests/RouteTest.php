@@ -40,43 +40,44 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testProcessReturnsfalseOnFailedMatch()
     {
         $request = Request::create('/foo');
-        $route = new Route('/');
+        $route   = new Route('/');
         $this->assertFalse($route->process($request));
     }
 
-    public function testProcessReturnsResultsOnMatch()
+    public function testProcessReturnsTrueOnMatch()
     {
         $request = Request::create('/foo');
-        $route = new Route('/foo');
-        $this->assertTrue(is_array($route->process($request)));
+        $route   = new Route('/foo');
+        $this->assertTrue($route->process($request));
     }
 
     public function testProcessComplextMatch()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route('/{module}/{controller}/{action}');
-        $this->assertTrue(is_array($route->process($request)));
+        $route   = new Route('/{module}/{controller}/{action}');
+        $this->assertTrue($route->process($request));
     }
 
     public function testTokensAreReplaced()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route('/{module}/{controller}/{action}');
+        $route   = new Route('/{module}/{controller}/{action}');
         $results = $route->process($request);
+        $payload = $route->getPayload();
 
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(isset($results['module']));
-        $this->assertTrue($results['module'] == 'somemodule');
-        $this->assertTrue(isset($results['controller']));
-        $this->assertTrue($results['controller'] == 'somecontroller');
-        $this->assertTrue(isset($results['action']));
-        $this->assertTrue($results['action'] == 'someaction');
+        $this->assertTrue($results);
+        $this->assertTrue(isset($payload['module']));
+        $this->assertTrue($payload['module'] == 'somemodule');
+        $this->assertTrue(isset($payload['controller']));
+        $this->assertTrue($payload['controller'] == 'somecontroller');
+        $this->assertTrue(isset($payload['action']));
+        $this->assertTrue($payload['action'] == 'someaction');
     }
 
     public function testTargetsAreReplaced()
     {
         $request = Request::create('/somemodule/somecontroller/someaction');
-        $route = new Route(
+        $route   = new Route(
             '/{module}/{controller}/{action}',
             [
                 'targets' => [
@@ -87,40 +88,42 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $results = $route->process($request);
+        $payload = $route->getPayload();
 
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(isset($results['module']));
-        $this->assertTrue($results['module'] == 'thismodule');
-        $this->assertTrue(isset($results['controller']));
-        $this->assertTrue($results['controller'] == 'thiscontroller');
-        $this->assertTrue(isset($results['action']));
-        $this->assertTrue($results['action'] == 'thisaction');
+        $this->assertTrue($results);
+        $this->assertTrue(isset($payload['module']));
+        $this->assertTrue($payload['module'] == 'thismodule');
+        $this->assertTrue(isset($payload['controller']));
+        $this->assertTrue($payload['controller'] == 'thiscontroller');
+        $this->assertTrue(isset($payload['action']));
+        $this->assertTrue($payload['action'] == 'thisaction');
     }
 
     public function testParamsAreExploded()
     {
         $request = Request::create('/a/b/c/d');
-        $route = new Route('/{params}');
+        $route   = new Route('/{params}');
         $results = $route->process($request);
+        $payload = $route->getPayload();
 
-        $this->assertTrue(is_array($results));
-        $this->assertTrue(isset($results['a']));
-        $this->assertTrue($results['a'] == 'b');
-        $this->assertTrue(isset($results['c']));
-        $this->assertTrue($results['c'] == 'd');
+        $this->assertTrue($results);
+        $this->assertTrue(isset($payload['a']));
+        $this->assertTrue($payload['a'] == 'b');
+        $this->assertTrue(isset($payload['c']));
+        $this->assertTrue($payload['c'] == 'd');
     }
 
     public function testDefaultFiltersMatch()
     {
         $request = Request::create('/foo/1/abc/a-b-c/a/b/c/d');
-        $route = new Route('/{default}/{int}/{alpha}/{slug}/{params}');
-        $this->assertTrue(is_array($route->process($request)));
+        $route   = new Route('/{default}/{int}/{alpha}/{slug}/{params}');
+        $this->assertTrue($route->process($request));
     }
 
     public function testCustomFilterMatches()
     {
         $request = Request::create('/200');
-        $route = new Route(
+        $route   = new Route(
             '/{custom}',
             [
                 'filters' => [
@@ -128,13 +131,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $this->assertTrue(is_array($route->process($request)));
+        $this->assertTrue($route->process($request));
     }
 
     public function testCustomFilterUsingDefaultFilter()
     {
         $request = Request::create('/200');
-        $route = new Route(
+        $route   = new Route(
             '/{custom}',
             [
                 'filters' => [
@@ -142,7 +145,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $this->assertTrue(is_array($route->process($request)));
+        $this->assertTrue($route->process($request));
     }
 
     /**
@@ -151,7 +154,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testCustomFilterUsingUndefinedDefaultFilter()
     {
         $request = Request::create('/200');
-        $route = new Route(
+        $route   = new Route(
             '/{custom}',
             [
                 'filters' => [
@@ -159,25 +162,27 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
-        $this->assertTrue(is_array($route->process($request)));
+        $route->process($request);
     }
 
     public function testOptionalSwitchMatches()
     {
         $request_with    = Request::create('/foo');
         $request_without = Request::create('/');
-        $route = new Route('/{controller?}');
-        $this->assertTrue(is_array($route->process($request_with)));
-        $this->assertTrue(is_array($route->process($request_without)));
+        $route           = new Route('/{controller?}');
+
+        $this->assertTrue($route->process($request_with));
+        $this->assertTrue($route->process($request_without));
     }
 
     public function testOptionalSwitchMatchesCenter()
     {
         $request_with    = Request::create('/foo/bar/bob');
         $request_without = Request::create('/foo/bob');
-        $route = new Route('/{module}/{controller?}/{action}');
-        $this->assertTrue(is_array($route->process($request_with)));
-        $this->assertTrue(is_array($route->process($request_without)));
+        $route           = new Route('/{module}/{controller?}/{action}');
+
+        $this->assertTrue($route->process($request_with));
+        $this->assertTrue($route->process($request_without));
     }
 
     public function testCanPositionCallbackAsSecondArg()
@@ -215,7 +220,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $request = Request::create('http://foo');
         $route   = new Route('/', ['hostname' => 'foo']);
-        $this->assertTrue(is_array($route->process($request)));
+        $this->assertTrue($route->process($request));
     }
 
     public function testComplexHostnameMatch()
@@ -224,7 +229,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route   = new Route('/', ['hostname' => '{username}.domain.com']);
         $results = $route->process($request);
 
-        $this->assertTrue(is_array($results));
-        $this->assertEquals('trq', $results['username']);
+        $this->assertTrue($results);
+        $this->assertEquals('trq', $route->getPayload()['username']);
     }
 }

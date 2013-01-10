@@ -60,6 +60,13 @@ class Route extends RouteAbstract
     protected $customFilters = [];
 
     /**
+     * Store payload data.
+     *
+     * @var array
+     */
+    protected $payload = [];
+
+    /**
      * Instantiate this route
      *
      * $options = ['targets', 'filters', 'method', 'callback'];
@@ -191,6 +198,16 @@ class Route extends RouteAbstract
     }
 
     /**
+     * Retrieve payload data
+     *
+     * @return array
+     */
+    public function getPayload()
+    {
+        return $this->payload;
+    }
+
+    /**
      * Process this route.
      *
      * Takes a simplified series of patterns such as {controller} and
@@ -232,6 +249,7 @@ class Route extends RouteAbstract
             $results = array_merge($results, $this->options['targets']);
         }
 
-        return $results;
+        $this->payload = $results;
+        return true;
     }
 }

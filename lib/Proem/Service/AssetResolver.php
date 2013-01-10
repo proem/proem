@@ -65,12 +65,22 @@ class AssetResolver implements AssetResolverInterface
      * other method.
      *
      * @param string $object The complete (namespaced) object type
-     * @param array $args Any arguments that need to be passed to the asset.
+     * @param array $constructArgs Any arguments that need to be passed as the construct arg.
+     * @param array $methodArgs Any arguments that need to be passed as the methods arg.
      * @see \Proem\Service\AssetComposer
      */
-    public function resolve($object, array $args = [])
+    public function resolve($object, $constructArgs = null, $methodArgs = null)
     {
         $object = str_replace(['Interface', 'Abstract'], '', $object);
+        $args   = [];
+
+        if ($constructArgs) {
+            $args['construct'] = (array) $constructArgs;
+        }
+
+        if ($methodArgs) {
+            $args['methods'] = (array) $methodArgs;
+        }
 
         // Interface and Abstract configs should be merged first.
         foreach (['Interface', 'Abstract'] as $type) {

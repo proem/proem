@@ -50,7 +50,7 @@ class AssetResolverTest extends \PHPUnit_Framework_TestCase
     public function testCanResolveComplex()
     {
         $result = (new AssetResolver)
-            ->resolve('\ResolverFixtures\BarInterface', ['construct' => ['some-data']]);
+            ->resolve('\ResolverFixtures\BarInterface', 'some-data');
 
         $this->assertInstanceOf('\ResolverFixtures\Bar', $result->fetch());
         $this->assertEquals('some-data', $result->fetch()->getData());

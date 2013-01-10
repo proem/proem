@@ -172,7 +172,7 @@ class AssetManager implements AssetManagerInterface
      *
      * @param string $object The complete object name (namespaced).
      */
-    public function resolve($object, array $args = [])
+    public function resolve($object, $constructArgs = null, $methodArgs = null)
     {
         if ($this->has($object)) {
             // Resolve by name?
@@ -184,8 +184,8 @@ class AssetManager implements AssetManagerInterface
 
         } else {
             // Go and create.
-            $asset = (new AssetResolver($this->resolverConfig))->resolve($object, $args);
-            $name  = strtolower(str_replace('\\', '.', ltrim($asset->is(), '\\')));
+            $asset = (new AssetResolver($this->resolverConfig))->resolve($object, $constructArgs, $methodArgs);
+            $name  = $asset->is();
             if (!isset($this->data[$name])) {
                 $this->set($name, $asset);
             }

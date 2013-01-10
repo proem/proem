@@ -185,7 +185,7 @@ class AssetManager implements AssetManagerInterface
         } else {
             // Go and create.
             $asset = (new AssetResolver($this->resolverConfig))->resolve($object, $constructArgs, $methodArgs);
-            $name  = strtolower(str_replace('\\', '.', ltrim($asset->is(), '\\')));
+            $name  = $asset->is();
             if (!isset($this->data[$name])) {
                 $this->set($name, $asset);
             }

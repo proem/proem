@@ -2,8 +2,9 @@ language: php
 
 php:
   - 5.4
+  - 5.5
 
-before_script: composer --dev install
+before_script: composer --prefer-source --dev install
 script: ./vendor/bin/phake dev:tests
 
 notifications:

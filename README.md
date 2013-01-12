@@ -33,6 +33,6 @@ http://proemframework.org/docs/current
 5. Create new Pull Request
 
 ## FEEDS & IRC
-Proem now has a dedicated twitter feed http://twitter.com/proem which will automatically post any commits as well as news. If you plan on helping out, you should follow this.
+Proem has a dedicated twitter feed http://twitter.com/proem which will automatically post any commits as well as news. If you plan on helping out, you should follow this.
 
-Also available now is an irc channel (#proem) on freenode. Join if you have any questions.
+Also available is an irc channel (#proem) on freenode. Join if you have any questions.

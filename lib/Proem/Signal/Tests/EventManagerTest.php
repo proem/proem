@@ -53,6 +53,18 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('yep', $r->out);
     }
 
+    public function testCanTriggerWithoutEventObject()
+    {
+        $r = new \StdClass;
+        $r->out = '';
+        (new EventManager)
+            ->attach('do', function($e) use ($r) {
+                $r->out .= 'yep';
+            })->trigger('do');
+
+        $this->assertEquals('yep', $r->out);
+    }
+
     public function testCanRemoveEvent()
     {
         $r = new \StdClass;

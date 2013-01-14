@@ -30,6 +30,7 @@
 namespace Proem\Signal;
 
 use Proem\Util\Structure\PriorityQueue;
+use Proem\Signal\Event;
 use Proem\Signal\EventInterface;
 use Proem\Signal\EventManagerInterface;
 
@@ -241,12 +242,17 @@ class EventManager implements EventManagerInterface
     /**
      * Trigger the execution of all event listeners attached to a named event.
      *
-     * @param Proem\Signal\Event\Standard $event The event being triggered.
+     * @param Proem\Signal\Event\Standard|string $event The event being triggered.
      * @param closure $callback A callback that can be used to respond to any response sent back from a listener.
      */
-    public function trigger(EventInterface $event, \Closure $callback = null)
+    public function trigger($event, \Closure $callback = null)
     {
         $results = [];
+
+        if (!$event instanceof EventInterface) {
+            $event = new Event($event);
+        }
+
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
                 if ($result = call_user_func($listener, $event)) {

@@ -86,25 +86,52 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $r = new \StdClass;
         $r->out = '';
-        (new EventManager)->attach('do', function($e) use ($r) {
+        $em = (new EventManager)->attach('do', function($e) use ($r) {
             $r->out .= 'Yes';
-        })
-        ->trigger(new Event('do'))
-        ->trigger(new Event('do'));
+        });
+        $em->trigger(new Event('do'));
+        $em->trigger(new Event('do'));
 
         $this->assertEquals('YesYes', $r->out);
+    }
+
+    public function testMultipleListenersReturnMultipleResults()
+    {
+        $r = new \StdClass;
+        $r->out = '';
+        $em = new EventManager;
+        $em->attach('do', function($e) use ($r) {
+            $e->set('a', 1);
+            $r->out .= 'Yes';
+            return $e;
+        })
+        ->attach('do', function($e) use ($r) {
+            $e->set('a', 2);
+            $r->out .= 'Yes';
+            return $e;
+        });
+
+        $results = $em->trigger(new Event('do'));
+
+        $total = 0;
+        foreach ($results as $result) {
+            $total += $result->get('a');
+        }
+
+        $this->assertEquals('YesYes', $r->out);
+        $this->assertEquals(3, $total);
     }
 
     public function testListenerCanListenToMultipleEvents()
     {
         $r = new \StdClass;
         $r->out = 0;
-        (new EventManager)->attach(['a', 'b', 'c'], function($e) use ($r) {
+        $em = (new EventManager)->attach(['a', 'b', 'c'], function($e) use ($r) {
             $r->out++;
-        })
-        ->trigger(new Event('a'))
-        ->trigger(new Event('b'))
-        ->trigger(new Event('c'));
+        });
+        $em->trigger(new Event('a'));
+        $em->trigger(new Event('b'));
+        $em->trigger(new Event('c'));
 
         $this->assertEquals(3, $r->out);
     }
@@ -149,12 +176,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $r = new \StdClass;
         $r->out = 0;
-        (new EventManager)->attach('.*', function($e) use ($r) {
+        $em = (new EventManager)->attach('.*', function($e) use ($r) {
             $r->out++;
-        })
-        ->trigger(new Event('a'))
-        ->trigger(new Event('b'))
-        ->trigger(new Event('c'));
+        });
+        $em->trigger(new Event('a'));
+        $em->trigger(new Event('b'));
+        $em->trigger(new Event('c'));
 
         $this->assertEquals(3, $r->out);
     }

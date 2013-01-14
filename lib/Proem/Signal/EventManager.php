@@ -246,10 +246,14 @@ class EventManager implements EventManagerInterface
      */
     public function trigger(EventInterface $event, \Closure $callback = null)
     {
+        $results = [];
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
                 if ($result = call_user_func($listener, $event)) {
                     if ($result instanceof EventInterface) {
+                        // Save result
+                        $results[] = clone $result;
+
                         // Was the queue halted early ?
                         if ($result->isQueueHaltedEarly()) {
                             return $this;
@@ -271,7 +275,10 @@ class EventManager implements EventManagerInterface
                 }
             }
         }
+        if ($results) {
+            return $results;
+        }
 
-        return $this;
+        return false;
     }
 }

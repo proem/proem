@@ -38,8 +38,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testCanTriggerEvent()
     {
-        // Handle Event
-
         $eventManager = m::mock('Proem\Signal\EventManagerInterface');
         $eventManager
             ->shouldReceive('trigger')
@@ -47,62 +45,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             ->once();
 
         $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
 
         $assetManager
-            ->shouldReceive('get')
+            ->shouldReceive('resolve')
             ->with('eventManager')
             ->once()
             ->andReturn($eventManager);
-
-        // Event Done
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Routing\RouteManagerInterface')
-            ->once()
-            ->andReturn(true);
-
-        $route = new Route;
-        $route->in($assetManager);
-    }
-
-    public function testCanSetDefaultRouteAsset()
-    {
-        $event = m::mock('Proem\Signal\EventInterface', ['proem.in.route']);
-        $eventManager = m::mock('Proem\Signal\EventManagerInterface');
-        $eventManager
-            ->shouldReceive('trigger')
-            ->with('Proem\Signal\EventInterface', 'closure')
-            ->once();
-
-        $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
-
-        $assetManager
-            ->shouldReceive('get')
-            ->with('eventManager')
-            ->once()
-            ->andReturn($eventManager);
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Routing\RouteManagerInterface')
-            ->once()
-            ->andReturn(false);
-
-        $assetManager
-            ->shouldReceive('set')
-            ->with('routeManager', 'Proem\Service\AssetInterface')
-            ->once();
 
         $route = new Route;
         $route->in($assetManager);

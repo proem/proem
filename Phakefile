@@ -15,7 +15,7 @@ group('proem', function() {
 group('dev', function() {
 
     desc('Default tasks to execute before commit');
-    task('pre-commit', 'tests', 'sniff', function() {});
+    task('pre-commit', 'tests', function() {});
 
     desc('Run the unit tests');
     task('tests', function($args) {
@@ -44,10 +44,10 @@ group('dev', function() {
         system('php -S 127.0.0.1:8080 -t tests/log/report/');
     });
 
-    desc('Sniff code for PSR-1/2');
+    desc('Sniff code for PSR-1');
     task('sniff', function ($args) {
         chdir(realpath(__DIR__));
-        system('vendor/bin/phpcs -a --ignore=/Tests/* --standard=PSR2 lib/');
+        system('vendor/bin/phpcs -a --ignore=/Tests/* --standard=PSR1 lib/');
     });
 
     desc('Build the Phar archive');

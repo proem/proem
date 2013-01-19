@@ -34,50 +34,44 @@ use Proem\Service\AssetInterface;
 /**
  * Interface that all asset managers must implement.
  */
-interface AssetManagerInterface extends \Iterator, \Serializable, \Countable
+interface AssetManagerInterface
 {
     /**
-     * Store an Asset container by named index.
+     * Alias a class to a simpler name or an interface/abstract to an implementation.
      *
-     * @param string $index The index the asset will be referenced by.
-     * @param Proem\Service\AssetInterface $asset
-     * @return Proem\Service\AssetManagerInterface
+     * @param string $type
+     * @param string $alias
+     * @param bool $force Optionally override existing index.
      */
-    public function set($index, AssetInterface $asset);
+    public function alias($type, $alias = null, $force = false);
 
     /**
-     * Retrieve an object from an asset.
+     * Attach an asset to the service manager.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @return object The object provided by the asset container
+     * Assets can be provided by a *type* Asset object, a closure providing
+     * the asst or an actual instance of an object.
+     *
+     * Setting the bool $single to true will force any asset provided via a closure
+     * to be wrapped within another closure which will cache the results. This makes
+     * asset return the same instance on each call. (A singleton).
+     *
+     * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
+     * @param Proem\Service\Asset|closure|object $type
+     * @param bool $single
      */
-    public function get($index, array $params = []);
+    public function attach($name, $type = null, $single = false);
 
     /**
-     * Retrieve an asset.
+     * Return an asset by index.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @return object The object provided by the asset container
-     */
-    public function getAsset($index, array $params = []);
-
-    /**
-     * Check to see if this manager has a specific asset by index.
+     * First map any alias, then check to see if we already have an instance of this
+     * type cached, if so, return it. If not, check to see if we have any assets indexed
+     * by this name, if so, execute it's closure and return the results.
      *
-     * @param string $index The index the asset is referenced by
-     * @return bool
-     */
-    public function has($index);
-
-    /**
-     * Check to see if this manager provides a specifically named
-     * asset and (optionally) that asset is a specific type.
+     * If the above fails, we start the auto resolve process. This attempts to resolve to
+     * instantiate the requested object and any dependencies that it may require to do so.
      *
-     * @param string $index
-     * @param string $provides
-     * @return bool
+     * @param string $name
      */
-    public function provides($index, $provides = null);
+    public function resolve($name);
 }

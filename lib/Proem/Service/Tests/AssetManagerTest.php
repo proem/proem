@@ -38,57 +38,139 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Proem\Service\AssetManagerInterface', $am);
     }
 
-    public function testCanStoreAndRetreive()
+    public function testCanAttachAndRetreiveClosure()
+    {
+        $am = new AssetManager;
+        $am->attach('foo', function() { return new \stdClass; });
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+    }
+
+    public function testCanAttachAndRetreiveInstance()
+    {
+        $am = new AssetManager;
+        $am->attach('foo', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+    }
+
+    public function testCanStoreAndRetreiveAssetObject()
     {
         $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
         $asset
-            ->shouldReceive('is')
-            ->once()
-            ->andReturn('stdClass');
-        $asset
-            ->shouldReceive('fetch')
+            ->shouldReceive('__invoke')
             ->once()
             ->andReturn(new \stdClass);
 
         $am = new AssetManager;
-        $am->set('foo', $asset);
+        $am->attach('foo', $asset);
 
-        $this->assertInstanceOf('\stdClass', $am->get('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
     }
 
-    public function testProvides()
+    public function testCanAttachAndRetreiveClosureSingleton()
     {
-        $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
-        $asset
-            ->shouldReceive('is')
-            ->twice()
-            ->andReturn(true);
+        $am = new AssetManager;
+        $am->attach('foo', function() { return new \stdClass; }, true);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertSame($am->resolve('foo'), $am->resolve('foo'));
+    }
+
+    public function testInstanceIsSingleton()
+    {
+        $am = new AssetManager;
+        $am->attach('foo', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertSame($am->resolve('foo'), $am->resolve('foo'));
+    }
+
+    public function testCanAlias()
+    {
+        $am = new AssetManager;
+        $am->alias('stdClass', 'foo');
+        $am->attach('foo', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
+    public function testCanAliasOnAttach()
+    {
+        $am = new AssetManager;
+        $am->attach(['foo' => 'stdClass'], new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
+    public function testCanAutoResolveSimple()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('Bar', $am->resolve('Bar'));
+    }
+
+    public function testCanAutoResolveWithDeps()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Foo.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('Foo', $am->resolve('Foo'));
+        $this->assertInstanceOf('Bar', $am->resolve('Foo')->getBar());
+    }
+
+    public function testCanAutoResolveAliased()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+        $am->alias('Bar', 'thisisbar');
+
+        $this->assertInstanceOf('Bar', $am->resolve('thisisbar'));
+    }
+
+    public function testCanAutoResolveAliasedDependency()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Foo.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar2.php';
+        $am = new AssetManager;
+        $am->alias('Bar2', 'Bar');
+
+        $this->assertInstanceOf('Bar2', $am->resolve('Foo')->getBar());
+    }
+
+    public function testCanAutoResolveWithDependencyRequiringInterface()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/NeedsInterface.php';
+        require_once __DIR__ . '/AssetManagerFixtures/SomeInterface.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Some.php';
 
         $am = new AssetManager;
-        $am->set('foo', $asset);
+        $am->alias('Some', 'SomeInterface');
 
-        $this->assertTrue($am->provides('stdClass'));
-        $this->assertTrue($am->provides('foo', 'stdClass'));
+        $this->assertInstanceOf('NeedsInterface', $am->resolve('NeedsInterface'));
     }
 
-    public function testCanGetProvided()
+    public function testCanRemapAnAlias()
     {
-        $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
-        $asset
-            ->shouldReceive('is')
-            ->once()
-            ->andReturn('stdClass');
+        require_once __DIR__ . '/AssetManagerFixtures/NeedsInterface.php';
+        require_once __DIR__ . '/AssetManagerFixtures/SomeInterface.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Some.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Someother.php';
 
         $am = new AssetManager;
-        $am->set('foo', $asset);
+        $am->alias('Some', 'SomeInterface');
 
-        $this->assertInstanceOf('\Proem\Service\Asset', $am->getProvided('stdClass'));
+        $am->attach('Some', function() { return new \Someother; });
+
+        $this->assertInstanceOf('NeedsInterface', $am->resolve('NeedsInterface'));
+        $this->assertEquals('someother', $am->resolve('NeedsInterface')->getBar()->doSomething());
     }
 
-    /**
-     * TODO: Should have a better look at mocking the Mail & Transport classes.
-     */
-    public function testCanBuildComplexDependencies()
+    public function testCanBuildComplexServices()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Transport.php';
         require_once __DIR__ . '/AssetManagerFixtures/Mail.php';
@@ -106,19 +188,19 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $mail = new Asset('Mail', function($asset, $assetManager) {
-            return new \Mail($assetManager->get('transport'));
+            return new \Mail($assetManager->resolve('transport'));
         });
 
         $assetManager = new AssetManager;
-        $assetManager->set('transport', $transport);
-        $assetManager->set('mail', $mail);
+        $assetManager->attach('transport', $transport);
+        $assetManager->attach('mail', $mail);
 
-        $this->assertInstanceOf('\Transport', $assetManager->get('transport'));
-        $this->assertInstanceOf('\Mail', $assetManager->get('mail'));
-        $this->assertInstanceOf('\Transport', $assetManager->get('mail')->transport);
+        $this->assertInstanceOf('\Transport', $assetManager->resolve('transport'));
+        $this->assertInstanceOf('\Mail', $assetManager->resolve('mail'));
+        $this->assertInstanceOf('\Transport', $assetManager->resolve('mail')->transport);
 
-        $this->assertEquals('smtp.foo.com', $assetManager->get('mail')->transport->server);
-        $this->assertEquals('username', $assetManager->get('mail')->transport->username);
-        $this->assertEquals('password', $assetManager->get('mail')->transport->password);
+        $this->assertEquals('smtp.foo.com', $assetManager->resolve('mail')->transport->server);
+        $this->assertEquals('username', $assetManager->resolve('mail')->transport->username);
+        $this->assertEquals('password', $assetManager->resolve('mail')->transport->password);
     }
 }

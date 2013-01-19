@@ -55,24 +55,14 @@ class Route extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
-        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
-            $assetManager->get('eventManager')->trigger(
-                new Event('proem.in.route'),
-                function ($responseEvent) use ($assetManager) {
-                    if (
-                        $responseEvent->has('routeManagerAsset') &&
-                        $responseEvent->get('routeManagerAsset') instanceof AssetInterface &&
-                        $responseEvent->get('routeManagerAsset')->provides('Proem\Routing\RouteManagerInterface')
-                    ) {
-                        $assetManager->set('routeManager', $responseEvent->get('routeManagerAsset'));
-                    }
+        $assetManager->resolve('eventManager')->trigger(
+            new Event('proem.in.route'),
+            function ($responseEvent) use ($assetManager) {
+                if ($responseEvent->has('routeManagerAsset')) {
+                    $assetManager->attach('routeManager', $responseEvent->get('routeManagerAsset'));
                 }
-            );
-        }
-
-        if (!$assetManager->provides('Proem\Routing\RouteManagerInterface')) {
-            $assetManager->set('routeManager', (new AssetComposer('Proem\Routing\RouteManager'))->compose(true));
-        }
+            }
+        );
     }
 
     /**

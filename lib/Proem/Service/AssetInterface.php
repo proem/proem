@@ -61,7 +61,7 @@ interface AssetInterface extends DataCollectionInterface
      * @param array $params Allow last minute setting of parameters.
      * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function fetch(array $params = [], AssetManagerInterface $assetManager = null);
+    public function __invoke(array $params = [], AssetManagerInterface $assetManager = null);
 
     /**
      * Store an asset in such a way that when it is retrieved it will always return

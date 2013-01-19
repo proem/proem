@@ -59,15 +59,16 @@ class Proem
      */
     public function __construct(AssetManagerInterface $assetManager = null)
     {
-        if ($assetManager !== null) {
-            $this->assetManager = $assetManager;
-        } else {
+        if ($assetManager === null) {
             $this->assetManager = new AssetManager;
+        } else {
+            $this->assetManager = $assetManager;
         }
 
-        if (!$this->assetManager->provides('Proem\Signal\EventManagerInterface')) {
-            $this->assetManager->set('eventManager', (new AssetComposer('Proem\Signal\EventManager'))->compose(true));
-        }
+        $this->assetManager->alias([
+            'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
+            'Proem\Signal\EventManager'          => 'eventManager'
+        ]);
     }
 
     /**
@@ -81,7 +82,7 @@ class Proem
             $initEvent = new Event('proem.init');
         }
 
-        $this->assetManager->get('eventManager')->trigger($initEvent);
+        $this->assetManager->resolve('eventManager')->trigger($initEvent);
 
         return $this;
     }

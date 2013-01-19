@@ -45,29 +45,12 @@ class DispatchTest extends \PHPUnit_Framework_TestCase
             ->once();
 
         $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
 
         $assetManager
-            ->shouldReceive('get')
+            ->shouldReceive('resolve')
             ->with('eventManager')
             ->once()
             ->andReturn($eventManager);
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Dispatch\Dispatcher')
-            ->once()
-            ->andReturn(true);
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Dispatch\Stage')
-            ->once()
-            ->andReturn(true);
 
         $stage = m::mock('Proem\Dispatch\Stage');
         $stage
@@ -76,7 +59,7 @@ class DispatchTest extends \PHPUnit_Framework_TestCase
             ->andReturn(true);
 
         $assetManager
-            ->shouldReceive('get')
+            ->shouldReceive('resolve')
             ->with('stage')
             ->once()
             ->andReturn($stage);

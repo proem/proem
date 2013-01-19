@@ -47,62 +47,12 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ->once();
 
         $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
 
         $assetManager
-            ->shouldReceive('get')
+            ->shouldReceive('resolve')
             ->with('eventManager')
             ->once()
             ->andReturn($eventManager);
-
-        // Event Done
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Http\Request')
-            ->once()
-            ->andReturn(true);
-
-        $request = new Request;
-        $request->in($assetManager);
-    }
-
-    public function testCanSetDefaultRequestAsset()
-    {
-        $event = m::mock('Proem\Signal\EventInterface', ['proem.in.request']);
-        $eventManager = m::mock('Proem\Signal\EventManagerInterface');
-        $eventManager
-            ->shouldReceive('trigger')
-            ->with('Proem\Signal\EventInterface', 'closure')
-            ->once();
-
-        $assetManager = m::mock('Proem\Service\AssetManagerInterface');
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('eventManager', 'Proem\Signal\EventManagerInterface')
-            ->once()
-            ->andReturn(true);
-
-        $assetManager
-            ->shouldReceive('get')
-            ->with('eventManager')
-            ->once()
-            ->andReturn($eventManager);
-
-        $assetManager
-            ->shouldReceive('provides')
-            ->with('Proem\Http\Request')
-            ->once()
-            ->andReturn(false);
-
-        $assetManager
-            ->shouldReceive('set')
-            ->with('request', 'Proem\Service\AssetInterface')
-            ->once();
 
         $request = new Request;
         $request->in($assetManager);

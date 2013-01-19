@@ -55,24 +55,14 @@ class Request extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
-        if ($assetManager->provides('eventManager', 'Proem\Signal\EventManagerInterface')) {
-            $assetManager->get('eventManager')->trigger(
-                new Event('proem.in.request'),
-                function ($responseEvent) use ($assetManager) {
-                    if (
-                        $responseEvent->has('requestAsset') &&
-                        $responseEvent->get('requestAsset') instanceof AssetInterface &&
-                        $responseEvent->get('requestAsset')->provides('Proem\Http\Request')
-                    ) {
-                        $assetManager->set('request', $responseEvent->get('requestAsset'));
-                    }
+        $assetManager->resolve('eventManager')->trigger(
+            new Event('proem.in.request'),
+            function ($responseEvent) use ($assetManager) {
+                if ($responseEvent->has('requestAsset')) {
+                    $assetManager->attach('request', $responseEvent->get('requestAsset'));
                 }
-            );
-        }
-
-        if (!$assetManager->provides('Proem\Http\Request')) {
-            $assetManager->set('request', (new AssetComposer('Proem\Http\Request'))->compose(true));
-        }
+            }
+        );
     }
 
     /**

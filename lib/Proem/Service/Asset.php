@@ -137,7 +137,7 @@ class Asset implements AssetInterface
      * @param array $params Allow last minute setting of parameters.
      * @param Proem\Service\AssetManagerInterface $assetManager
      */
-    public function fetch(array $params = [], AssetManagerInterface $assetManager = null)
+    public function __invoke(array $params = [], AssetManagerInterface $assetManager = null)
     {
         $asset = $this->asset;
 
@@ -155,12 +155,9 @@ class Asset implements AssetInterface
      * that whenever this Asset is retrieved it will always return the same instance.
      *
      * <code>
-     * $foo = new Asset(
-     *     'Foo',
-     *     Asset::single(function() {
-     *         return new Foo;
-     *     })
-     * );
+     * $foo = (new Asset('Foo'))->single(function() {
+     *     return new Foo;
+     * });
      * </code>
      *
      * @param closure $closure

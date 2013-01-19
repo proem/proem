@@ -29,168 +29,186 @@
  */
 namespace Proem\Service;
 
-use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetInterface;
-use Proem\Util\Structure\DataCollectionTrait;
+use Proem\Service\Asset;
 
 /**
  * A collection of assets.
  *
- * Within the manager itself assets are stored in a hash of key values where each
- * value is an asset container.
+ * Within the manager itself assets are stored in a hash of key value pairs where each
+ * value is an asset container of some sort. These containers can be simple closures, or
+ * objects of type \Proem\Service\Asset.a
  *
- * These containers contain the parameters required to instantiate an asset as
- * well as a closure capable of returning a configured and instantiated asset.
- *
- * While this class looks very similar to the DataCollectionInterface it does *NOT* implement
- * it. In fact, if you look closer you will note that the methods defined within the AssetManagerInterface
- * are slight variants of the DataCollectionInterface's set(), get() and has().
- *
- * @see Proem\Service\Asset
+ * These containers are capable of returning an instantiated object of the type requested.
  */
 class AssetManager implements AssetManagerInterface
 {
     /**
-     * Use the generic DataCollectionTrait trait.
-     *
-     * This provides implementations for the Iterator and Serializable
-     */
-    use DataCollectionTrait;
-
-    /**
-     * Store any *resolver* config
+     * Store our assets.
      *
      * @var array
      */
-    protected $resolverConfig;
+    protected $assets = [];
 
     /**
-     * Store an array containing information about what
-     * Assets this manager provides.
+     * Store any instances.
      *
      * @var array
      */
-    protected $provides = [];
+    protected $instances = [];
 
     /**
-     * Setup.
+     * Store alias mappings.
      *
-     * Optionaly pass in and then pass on the asset resolver configuration.
-     *
-     * @param array $resolverConfig
+     * @var array
      */
-    public function __construct(array $resolverConfig = [])
+    protected $aliases = [];
+
+    /**
+     * Alias a class to a simpler name or an interface/abstract to an implementation.
+     *
+     * @param string $type
+     * @param string $alias
+     * @param bool $force Optionally override existing index.
+     */
+    public function alias($type, $alias = null, $force = false)
     {
-        $this->resolverConfig = $resolverConfig;
+        if (is_array($type)) {
+            foreach ($type as $asset => $alias) {
+                $this->setParam('aliases', $alias, $asset, $force);
+            }
+        } else {
+            $this->setParam('aliases', $alias, $type, $force);
+        }
     }
 
     /**
-     * Store an Asset container by named index.
+     * Attach an asset to the service manager if it doesn't already exist.
      *
-     * @param string $index The index the asset will be referenced by.
-     * @param Proem\Service\AssetInterface $asset
-     * @return Proem\Service\AssetManagerInterface
+     * Assets can be provided by a *type* Asset object, a closure providing
+     * the asst or an actual instance of an object.
+     *
+     * Setting the bool $single to true will force any asset provided via a closure
+     * to be wrapped within another closure which will cache the results. This makes
+     * asset return the same instance on each call. (A singleton).
+     *
+     * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
+     * @param Proem\Service\Asset|closure|object $type
+     * @param bool $single
+     * @param bool $force Optionally override existing (@see force).
      */
-    public function set($index, AssetInterface $asset)
+    public function attach($name, $type = null, $single = false, $force = false)
     {
-        $this->data[$index]     = $asset;
-        $this->provides[$index] = $asset->is();
-        return $this;
+        if (is_array($name)) {
+            $alias = key($name);
+            $type  = current($name);
+            $this->alias($type, $alias, $force);
+        }
+
+        if ($type instanceof \Closure && $single) {
+            $this->setParam('assets', $name, function($params) use ($type) {
+                static $obj;
+
+                if ($obj === null) {
+                    $obj = $type($params, $this);
+                }
+                return $obj;
+            }, $force);
+
+        } elseif ($type instanceof \Closure || $type instanceof Asset) {
+            $this->setParam('assets', $name, $type, $force);
+
+        } elseif (is_object($type)) {
+            $this->setParam('instances', $name, $type, $force);
+        }
     }
 
     /**
-     * Retrieve an object from an asset.
+     * Attach an asset to the service manager overriding any existing of the same index.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @return object The object provided by the asset container
+     * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
+     * @param Proem\Service\Asset|closure|object $type
+     * @param bool $single
      */
-    public function get($index, array $params = [])
-    {
-        return isset($this->data[$index]) ? $this->data[$index]->fetch($params, $this) : null;
+    public function force($name, $type = null, $single = false) {
+        $this->attach($name, $type, $single, true);
     }
 
     /**
-     * Retrieve an asset.
+     * Return an asset by index.
      *
-     * @param string $index The index the asset is referenced by
-     * @param array $params Allow last minute setting of parameters.
-     * @return object The object provided by the asset container
+     * First map any alias, then check to see if we already have an instance of this
+     * type cached, if so, return it. If not, check to see if we have any assets indexed
+     * by this name, if so, execute it's closure and return the results.
+     *
+     * If the above fails, we start the auto resolve process. This attempts to resolve to
+     * instantiate the requested object and any dependencies that it may require to do so.
+     *
+     * @param string $name
+     * @param array $params Any extra paremeters to pass along to a closure|Asset|object
      */
-    public function getAsset($index, array $params = [])
+    public function resolve($name, $params = [])
     {
-        return isset($this->data[$index]) ? $this->data[$index] : null;
+        if (isset($this->aliases[$name])) {
+            $name = $this->aliases[$name];
+        }
+
+        if (isset($this->instances[$name])) {
+            return $this->instances[$name];
+        }
+
+        if (isset($this->assets[$name])) {
+            return $this->assets[$name]($params, $this);
+
+        } else {
+            $reflection = new \ReflectionClass($name);
+            if ($reflection->isInstantiable()) {
+                $construct = $reflection->getConstructor();
+                if ($construct === null) {
+                    $object = new $name;
+                } else {
+                    $dependencies = $this->getDependencies($construct->getParameters());
+                    $object = $reflection->newInstanceArgs($dependencies);
+                }
+
+                if (method_exists($object, 'setParams')) {
+                    $object->setParams($params);
+                }
+
+                return $object;
+            }
+        }
     }
 
     /**
-     * Check to see if this manager has a specific asset by index.
+     * A helper used to set aliases, assets and instances.
      *
-     * @param string $index The index the asset is referenced by
-     * @return bool
-     */
-    public function has($index)
-    {
-        return isset($this->data[$index]);
-    }
-
-    /**
-     * Check to see if this manager provides a specifically named
-     * asset and (optionally) that asset is a specific type.
+     * Not pretty! But hey?
      *
+     * @param string $type
      * @param string $index
-     * @param string $provides
-     * @return bool
+     * @param mixed $value
+     * @param bool force override
      */
-    public function provides($index, $provides = null)
-    {
-        if ($provides === null) {
-            return in_array($index, $this->provides);
-        } else {
-            if ($this->has($index)) {
-                return $this->data[$index]->is($provides);
-            }
+    protected function setParam($type, $index, $value, $force = false) {
+        if ($force) {
+            $this->{$type}[$index] = $value;
+        } else if (!isset($this->{$type}[$index])) {
+            $this->{$type}[$index] = $value;
         }
     }
 
     /**
-     * If the asset manager provides an object of a specific type, return
-     * the asset providing that object type.
-     *
-     * @param string $object The complete object name (namespaced).
+     * A simple helper to resolve an assets dependencies.
      */
-    public function getProvided($object)
+    protected function getDependencies($params)
     {
-        if ($this->provides($object)) {
-            return $this->data[array_flip($this->provides)[$object]];
-        }
-    }
-
-    /**
-     * If the asset manager provides an object of a specific type, return
-     * the asset providing that object type. Otherwise, attempt to compose
-     * the asset.
-     *
-     * @param string $object The complete object name (namespaced).
-     */
-    public function resolve($object, $constructArgs = null, $methodArgs = null)
-    {
-        if ($this->has($object)) {
-            // Resolve by name?
-            return $this->get($object, $args);
-
-        } elseif ($asset = $this->getProvided($object)) {
-            // Resolve by type?
-            return $asset;
-
-        } else {
-            // Go and create.
-            $asset = (new AssetResolver($this->resolverConfig))->resolve($object, $constructArgs, $methodArgs);
-            $name  = $asset->is();
-            if (!isset($this->data[$name])) {
-                $this->set($name, $asset);
+        $deps = [];
+        foreach ($params as $param) {
+            $dependency = $param->getClass();
+            if ($dependency !== null) {
+                $deps[] = $this->resolve($dependency->name);
             }
         }
-
-        return $asset;
+        return $deps;
     }
 }

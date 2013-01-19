@@ -35,10 +35,12 @@ class ProemTest extends \PHPUnit_Framework_TestCase
     {
         $assetManager = \Mockery::mock('\Proem\Service\AssetManagerInterface');
         $assetManager
-            ->shouldReceive('provides')
+            ->shouldReceive('alias')
             ->once()
-            ->with('Proem\Signal\EventManagerInterface')
-            ->andReturn(true);
+            ->with([
+                'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
+                'Proem\Signal\EventManager'          => 'eventManager'
+            ]);
 
         $this->assertInstanceOf('Proem\Proem', new Proem($assetManager));
     }
@@ -51,20 +53,17 @@ class ProemTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->with('\Proem\Signal\EventInterface');
 
-        $assetManager = m::mock('\Proem\Service\AssetManagerInterface');
+        $assetManager = \Mockery::mock('\Proem\Service\AssetManagerInterface');
         $assetManager
-            ->shouldReceive('provides')
+            ->shouldReceive('alias')
             ->once()
-            ->with('Proem\Signal\EventManagerInterface')
-            ->andReturn(false);
+            ->with([
+                'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
+                'Proem\Signal\EventManager'          => 'eventManager'
+            ]);
 
         $assetManager
-            ->shouldReceive('set')
-            ->once()
-            ->with('eventManager', 'Proem\Service\Asset');
-
-        $assetManager
-            ->shouldReceive('get')
+            ->shouldReceive('resolve')
             ->once()
             ->with('eventManager')
             ->andReturn($eventManager);

@@ -42,7 +42,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return new \stdClass;
         });
 
-        $this->assertInstanceOf('\stdClass', $asset->fetch());
+        $this->assertInstanceOf('\stdClass', $asset());
     }
 
     public function testCanMakeWithParamsParam()
@@ -51,7 +51,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return new \stdClass;
         });
 
-        $this->assertInstanceOf('\stdClass', $asset->fetch());
+        $this->assertInstanceOf('\stdClass', $asset());
     }
 
     /**
@@ -59,9 +59,10 @@ class AssetTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidAsset()
     {
-        (new Asset('Foo', function() {
+        $asset = new Asset('Foo', function() {
             return new \stdClass;
-        }))->fetch();
+        });
+        $asset();
     }
 
     public function testAssetType()
@@ -82,7 +83,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return $class;
         });
 
-        $this->assertEquals('bar', $asset->fetch()->foo);
+        $this->assertEquals('bar', $asset()->foo);
     }
 
     public function testReturnsDifferentInstance()
@@ -91,7 +92,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return new \StdClass;
         });
 
-        $this->assertNotSame($asset->fetch(), $asset->fetch());
+        $this->assertNotSame($asset(), $asset());
     }
 
     public function testReturnsSingleton()
@@ -100,7 +101,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return new \StdClass;
         });
 
-        $this->assertSame($asset->fetch(), $asset->fetch());
+        $this->assertSame($asset(), $asset());
     }
 
     public function testReturnsSingletonWithParams()
@@ -111,8 +112,8 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return $class;
         });
 
-        $this->assertSame($asset->fetch(), $asset->fetch());
-        $this->assertEquals('bar', $asset->fetch()->foo);
+        $this->assertSame($asset(), $asset());
+        $this->assertEquals('bar', $asset()->foo);
     }
 
     public function testCanPassParamsAtFetch()
@@ -123,6 +124,6 @@ class AssetTest extends \PHPUnit_Framework_TestCase
             return $class;
         });
 
-        $this->assertEquals('bar', $asset->fetch(['foo' => 'bar'])->foo);
+        $this->assertEquals('bar', $asset(['foo' => 'bar'])->foo);
     }
 }

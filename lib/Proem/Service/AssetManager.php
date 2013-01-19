@@ -99,9 +99,9 @@ class AssetManager implements AssetManagerInterface
     public function attach($name, $type = null, $single = false, $force = false)
     {
         if (is_array($name)) {
-            $alias = key($name);
             $type  = current($name);
-            $this->alias($type, $alias, $force);
+            $name  = key($name);
+            $this->alias($type, $name, $force);
         }
 
         if ($type instanceof \Closure && $single) {
@@ -148,34 +148,46 @@ class AssetManager implements AssetManagerInterface
      */
     public function resolve($name, $params = [])
     {
-        if (isset($this->aliases[$name])) {
-            $name = $this->aliases[$name];
+        $debug = false;
+        if (isset($params['debug'])) {
+            $debug = true;
+        }
+
+        if (isset($this->assets[$name])) {
+            return $this->assets[$name]($params, $this);
         }
 
         if (isset($this->instances[$name])) {
             return $this->instances[$name];
         }
 
+        if (isset($this->aliases[$name])) {
+            $name = $this->aliases[$name];
+        }
+
         if (isset($this->assets[$name])) {
             return $this->assets[$name]($params, $this);
+        }
 
-        } else {
-            $reflection = new \ReflectionClass($name);
-            if ($reflection->isInstantiable()) {
-                $construct = $reflection->getConstructor();
-                if ($construct === null) {
-                    $object = new $name;
-                } else {
-                    $dependencies = $this->getDependencies($construct->getParameters());
-                    $object = $reflection->newInstanceArgs($dependencies);
-                }
+        if (isset($this->instances[$name])) {
+            return $this->instances[$name];
+        }
 
-                if (method_exists($object, 'setParams')) {
-                    $object->setParams($params);
-                }
-
-                return $object;
+        $reflection = new \ReflectionClass($name);
+        if ($reflection->isInstantiable()) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
             }
+
+            if (method_exists($object, 'setParams')) {
+                $object->setParams($params);
+            }
+
+            return $object;
         }
     }
 

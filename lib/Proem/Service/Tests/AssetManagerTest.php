@@ -170,6 +170,34 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('someother', $am->resolve('NeedsInterface')->getBar()->doSomething());
     }
 
+    public function testAliasAndAttachedResolveToSame()
+    {
+        $class = new \StdClass;
+        $am    = new AssetManager;
+
+        $am->alias('stdClass', 'foo'); // Any time we call foo, call stdClass
+        $am->attach('foo', $class); // Attach foo to $class.
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+
+        $this->assertSame($class, $am->resolve('foo'));
+        $this->assertNotSame($class, $am->resolve('stdClass'));
+
+        $class = new \StdClass;
+        $am    = new AssetManager;
+
+        $am->alias('foo', 'stdClass'); // Any time we call stdClass, call foo
+        $am->attach('foo', $class); // Attach foo to $class.
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+
+        $this->assertSame($class, $am->resolve('foo'));
+        $this->assertSame($class, $am->resolve('stdClass'));
+
+    }
+
     public function testCanBuildComplexServices()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Transport.php';

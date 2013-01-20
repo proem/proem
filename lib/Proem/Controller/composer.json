@@ -1,0 +1,35 @@
+{
+  "name": "proem-components/controller",
+  "description": "The Controller component of the Proem Framework.",
+  "keywords": ["MVC","Framework"],
+  "homepage": "http://proemframework.org",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tony R Quilkey",
+      "email": "trq@proemframework.org",
+      "homepage": "http://thorpesystems.com"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/proem/proem/issues",
+    "irc": "irc://irc.freenode.net/proem"
+  },
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*"
+  },
+  "autoload": {
+    "psr-0": { "Proem\\Controller": "" }
+  },
+  "target-dir": "Proem/Controller",
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-develop": "0.10.x-dev"
+    }
+  }
+}

@@ -68,16 +68,16 @@ class AssetManager implements AssetManagerInterface
      *
      * @param string $type
      * @param string $alias
-     * @param bool $force Optionally override existing index.
+     * @param bool $override Optionally override existing index.
      */
-    public function alias($type, $alias = null, $force = false)
+    public function alias($type, $alias = null, $override = false)
     {
         if (is_array($type)) {
             foreach ($type as $asset => $alias) {
-                $this->setParam('aliases', $alias, $asset, $force);
+                $this->setParam('aliases', $alias, $asset, $override);
             }
         } else {
-            $this->setParam('aliases', $alias, $type, $force);
+            $this->setParam('aliases', $alias, $type, $override);
         }
     }
 
@@ -87,21 +87,21 @@ class AssetManager implements AssetManagerInterface
      * Assets can be provided by a *type* Asset object, a closure providing
      * the asst or an actual instance of an object.
      *
-     * Setting the bool $single to true will force any asset provided via a closure
+     * Setting the bool $single to true will override any asset provided via a closure
      * to be wrapped within another closure which will cache the results. This makes
      * asset return the same instance on each call. (A singleton).
      *
      * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
      * @param Proem\Service\Asset|closure|object $type
      * @param bool $single
-     * @param bool $force Optionally override existing (@see force).
+     * @param bool $override Optionally override existing (@see override).
      */
-    public function attach($name, $type = null, $single = false, $force = false)
+    public function attach($name, $type = null, $single = false, $override = false)
     {
         if (is_array($name)) {
             $type  = current($name);
             $name  = key($name);
-            $this->alias($type, $name, $force);
+            $this->alias($type, $name, $override);
         }
 
         if ($type instanceof \Closure && $single) {
@@ -112,13 +112,13 @@ class AssetManager implements AssetManagerInterface
                     $obj = $type($params, $this);
                 }
                 return $obj;
-            }, $force);
+            }, $override);
 
         } elseif ($type instanceof \Closure || $type instanceof Asset) {
-            $this->setParam('assets', $name, $type, $force);
+            $this->setParam('assets', $name, $type, $override);
 
         } elseif (is_object($type)) {
-            $this->setParam('instances', $name, $type, $force);
+            $this->setParam('instances', $name, $type, $override);
         }
     }
 
@@ -129,7 +129,7 @@ class AssetManager implements AssetManagerInterface
      * @param Proem\Service\Asset|closure|object $type
      * @param bool $single
      */
-    public function force($name, $type = null, $single = false) {
+    public function override($name, $type = null, $single = false) {
         $this->attach($name, $type, $single, true);
     }
 
@@ -199,10 +199,10 @@ class AssetManager implements AssetManagerInterface
      * @param string $type
      * @param string $index
      * @param mixed $value
-     * @param bool force override
+     * @param bool override override
      */
-    protected function setParam($type, $index, $value, $force = false) {
-        if ($force) {
+    protected function setParam($type, $index, $value, $override = false) {
+        if ($override) {
             $this->{$type}[$index] = $value;
         } else if (!isset($this->{$type}[$index])) {
             $this->{$type}[$index] = $value;

@@ -198,6 +198,40 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testCanForceInstance()
+    {
+        $am = new AssetManager;
+
+        $class = new \stdClass;
+
+        $am->attach('foo', $class);
+
+        $this->assertSame($am->resolve('foo'), $am->resolve('foo'));
+
+        $f = $am->resolve('foo');
+
+        $am->force('foo', new \stdClass);
+
+        $this->assertNotSame($am->resolve('foo'), $f);
+    }
+
+    public function testCanForceAsset()
+    {
+        $am = new AssetManager;
+
+        $asset = (new Asset('stdClass'))->single(function() { return new \stdClass; });
+
+        $am->attach('foo', $asset);
+
+        $this->assertSame($am->resolve('foo'), $am->resolve('foo'));
+
+        $f = $am->resolve('foo');
+
+        $am->force('foo', (new Asset('stdClass'))->single(function() { return new \stdClass; }));
+
+        $this->assertNotSame($am->resolve('foo'), $f);
+    }
+
     public function testCanBuildComplexServices()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Transport.php';

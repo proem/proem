@@ -210,7 +210,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
         $f = $am->resolve('foo');
 
-        $am->force('foo', new \stdClass);
+        $am->override('foo', new \stdClass);
 
         $this->assertNotSame($am->resolve('foo'), $f);
     }
@@ -227,7 +227,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
         $f = $am->resolve('foo');
 
-        $am->force('foo', (new Asset('stdClass'))->single(function() { return new \stdClass; }));
+        $am->override('foo', (new Asset('stdClass'))->single(function() { return new \stdClass; }));
 
         $this->assertNotSame($am->resolve('foo'), $f);
     }

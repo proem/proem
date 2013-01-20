@@ -41,9 +41,9 @@ interface AssetManagerInterface
      *
      * @param string $type
      * @param string $alias
-     * @param bool $force Optionally override existing index.
+     * @param bool $override Optionally override existing index.
      */
-    public function alias($type, $alias = null, $force = false);
+    public function alias($type, $alias = null, $override = false);
 
     /**
      * Attach an asset to the service manager.
@@ -51,7 +51,7 @@ interface AssetManagerInterface
      * Assets can be provided by a *type* Asset object, a closure providing
      * the asst or an actual instance of an object.
      *
-     * Setting the bool $single to true will force any asset provided via a closure
+     * Setting the bool $single to true will override any asset provided via a closure
      * to be wrapped within another closure which will cache the results. This makes
      * asset return the same instance on each call. (A singleton).
      *

@@ -50,7 +50,7 @@ interface DataCollectionInterface extends \Iterator, \Serializable, \Countable
      * @param mixed $default
      * @return mixed
      */
-    public function get($index, $default);
+    public function get($index, $default = null);
 
     /**
      * Retreive all properties

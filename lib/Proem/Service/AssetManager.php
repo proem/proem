@@ -104,7 +104,9 @@ class AssetManager implements AssetManagerInterface
             $this->alias($type, $name, $override);
         }
 
-        if ($type instanceof \Closure && $single) {
+        if ($name instanceof Asset) {
+            $this->setParam('assets', $name->is(), $name, $override);
+        } elseif ($type instanceof \Closure && $single) {
             $this->setParam('assets', $name, function($params) use ($type) {
                 static $obj;
 

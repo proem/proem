@@ -68,6 +68,24 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
     }
 
+    public function testCanStoreAndRetreiveUnnamedAssetObject()
+    {
+        $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
+        $asset
+            ->shouldReceive('is')
+            ->once()
+            ->andReturn('stdClass');
+        $asset
+            ->shouldReceive('__invoke')
+            ->once()
+            ->andReturn(new \stdClass);
+
+        $am = new AssetManager;
+        $am->attach($asset);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
     public function testCanAttachAndRetreiveClosureSingleton()
     {
         $am = new AssetManager;

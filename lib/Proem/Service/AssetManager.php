@@ -170,6 +170,10 @@ class AssetManager implements AssetManagerInterface
             return $this->instances[$name];
         }
 
+        if ($params instanceof \Closure) {
+            return $params();
+        }
+
         $reflection = new \ReflectionClass($name);
         if ($reflection->isInstantiable()) {
             $construct = $reflection->getConstructor();

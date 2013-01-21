@@ -123,6 +123,27 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
+    public function testCanHotResolve()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('Bar', $am->resolve('whatever', function() {
+            return new \Bar;
+        }));
+    }
+
+    public function testHotResolveLastIsLastResort()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+        $am->attach('whatever', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('whatever', function() {
+            return new \Bar;
+        }));
+    }
+
     public function testCanAutoResolveSimple()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Bar.php';

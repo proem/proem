@@ -227,6 +227,50 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Goodbye Cruel World', $response);
     }
 
+    public function testMethodListCalled()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $bar = $am->resolve('Bar', ['methods' => ['a', 'b', 'c']]);
+
+        $this->assertInstanceOf('Bar', $bar);
+        $this->assertEquals(3, $bar->getV());
+    }
+
+    public function testMethodListResolvesDeps()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ADependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $bar = $am->resolve('Bar', ['methods' => ['a', 'b', 'c', 'd']]);
+
+        $this->assertInstanceOf('Bar', $bar);
+        $this->assertEquals(103, $bar->getV());
+    }
+
+    public function testInvokeMethod()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $result = $am->resolve('Bar', ['invoke' => 'hello']);
+
+        $this->assertEquals('Hello World', $result);
+    }
+
+    public function testInvokeMethodWithDep()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ADependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $result = $am->resolve('Bar', ['invoke' => 'goodbye']);
+
+        $this->assertEquals('Goodbye Cruel World', $result);
+    }
+
     public function testCanAutoResolveSimple()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Bar.php';

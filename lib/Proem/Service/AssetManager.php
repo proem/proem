@@ -194,6 +194,21 @@ class AssetManager implements AssetManagerInterface
                 $method->invokeArgs($object, $params);
             } catch (\ReflectionException $e) {}
 
+            // Allow a list of methods to be executed.
+            if (isset($params['methods'])) {
+                foreach ($params['methods'] as $method) {
+                    $method = $reflection->getMethod($method);
+                    $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+                }
+            }
+
+            // If this single method is invoked, its results will be returned.
+            if (isset($params['invoke'])) {
+                $method = $params['invoke'];
+                $method = $reflection->getMethod($method);
+                return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+            }
+
             return $object;
         }
     }

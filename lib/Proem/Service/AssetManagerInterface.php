@@ -74,4 +74,11 @@ interface AssetManagerInterface
      * @param string $name
      */
     public function resolve($name);
+
+    /**
+     * A simple helper to resolve dependencies given an array of dependents.
+     *
+     * @param array $dependencies
+     */
+    public function getDependencies($params);
 }

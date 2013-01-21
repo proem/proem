@@ -124,6 +124,16 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
+    public function testCanComplexAlias()
+    {
+        $am = new AssetManager;
+
+        $am->alias(['abc' => 'xyz']);
+        $am->alias(['xyz' => 'stdClass']);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('abc'));
+    }
+
     public function testCanAliasMultiple()
     {
         $am = new AssetManager;
@@ -150,20 +160,71 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
         $am = new AssetManager;
 
-        $this->assertInstanceOf('Bar', $am->resolve('whatever', function() {
+        $this->assertInstanceOf('Bar', $am->resolve('whatever', ['resolver' => function() {
             return new \Bar;
-        }));
+        }]));
     }
 
-    public function testHotResolveLastIsLastResort()
+    public function testHotResolveIsPassedArgs()
     {
-        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
         $am = new AssetManager;
-        $am->attach('whatever', new \stdClass);
 
-        $this->assertInstanceOf('\stdClass', $am->resolve('whatever', function() {
-            return new \Bar;
-        }));
+        list($reflection, $name) = $am->resolve('stdClass', ['reflector' => function($reflection, $name) {
+            return [$reflection, $name];
+        }]);
+
+        $this->assertInstanceOf('\ReflectionClass', $reflection);
+        $this->assertEquals('stdClass', $name);
+    }
+
+    public function testCanUseHotResolveToDispatchAction()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/FooController.php';
+        $am = new AssetManager;
+
+        $response = $am->resolve('FooController', ['reflector' => function($reflection, $name) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
+            }
+
+            try {
+                $method = $reflection->getMethod('hello');
+                return $method->invoke($object);
+            } catch (\ReflectionException $e) {}
+
+        }]);
+
+        $this->assertEquals('Hello World', $response);
+    }
+
+    public function testCanUseHotResolveToDispatchActionWithDependency()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ControllerDependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/FooController.php';
+        $am = new AssetManager;
+
+        $response = $am->resolve('FooController', ['reflector' => function($reflection, $name) use ($am) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
+            }
+
+            try {
+                $method = $reflection->getMethod('goodbye');
+                $dependencies = $am->getDependencies($method->getParameters());
+                return $method->invokeArgs($object, $dependencies);
+            } catch (\ReflectionException $e) {}
+
+        }]);
+
+        $this->assertEquals('Goodbye Cruel World', $response);
     }
 
     public function testCanAutoResolveSimple()

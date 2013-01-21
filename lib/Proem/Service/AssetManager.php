@@ -150,11 +150,6 @@ class AssetManager implements AssetManagerInterface
      */
     public function resolve($name, $params = [])
     {
-        $debug = false;
-        if (isset($params['debug'])) {
-            $debug = true;
-        }
-
         if (isset($this->assets[$name])) {
             return $this->assets[$name]($params, $this);
         }

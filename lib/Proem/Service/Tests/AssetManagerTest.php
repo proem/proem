@@ -68,6 +68,24 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
     }
 
+    public function testCanStoreAndRetreiveUnnamedAssetObject()
+    {
+        $asset = m::mock('\Proem\Service\Asset', ['stdClass']);
+        $asset
+            ->shouldReceive('is')
+            ->once()
+            ->andReturn('stdClass');
+        $asset
+            ->shouldReceive('__invoke')
+            ->once()
+            ->andReturn(new \stdClass);
+
+        $am = new AssetManager;
+        $am->attach($asset);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
     public function testCanAttachAndRetreiveClosureSingleton()
     {
         $am = new AssetManager;
@@ -96,6 +114,38 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
+    public function testCanAliasViaArray()
+    {
+        $am = new AssetManager;
+        $am->alias(['foo' => 'stdClass']);
+        $am->attach('foo', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
+    public function testCanComplexAlias()
+    {
+        $am = new AssetManager;
+
+        $am->alias(['abc' => 'xyz']);
+        $am->alias(['xyz' => 'stdClass']);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('abc'));
+    }
+
+    public function testCanAliasMultiple()
+    {
+        $am = new AssetManager;
+        $am->alias([
+            'a' => 'stdClass',
+            'b' => 'stdClass'
+        ]);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('a'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('b'));
+    }
+
     public function testCanAliasOnAttach()
     {
         $am = new AssetManager;
@@ -103,6 +153,122 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
+    public function testCanHotResolve()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('Bar', $am->resolve('whatever', ['resolver' => function() {
+            return new \Bar;
+        }]));
+    }
+
+    public function testHotResolveIsPassedArgs()
+    {
+        $am = new AssetManager;
+
+        list($reflection, $name) = $am->resolve('stdClass', ['reflector' => function($reflection, $name) {
+            return [$reflection, $name];
+        }]);
+
+        $this->assertInstanceOf('\ReflectionClass', $reflection);
+        $this->assertEquals('stdClass', $name);
+    }
+
+    public function testCanUseHotResolveToDispatchAction()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/FooController.php';
+        $am = new AssetManager;
+
+        $response = $am->resolve('FooController', ['reflector' => function($reflection, $name) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
+            }
+
+            try {
+                $method = $reflection->getMethod('hello');
+                return $method->invoke($object);
+            } catch (\ReflectionException $e) {}
+
+        }]);
+
+        $this->assertEquals('Hello World', $response);
+    }
+
+    public function testCanUseHotResolveToDispatchActionWithDependency()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ControllerDependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/FooController.php';
+        $am = new AssetManager;
+
+        $response = $am->resolve('FooController', ['reflector' => function($reflection, $name) use ($am) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
+            }
+
+            try {
+                $method = $reflection->getMethod('goodbye');
+                $dependencies = $am->getDependencies($method->getParameters());
+                return $method->invokeArgs($object, $dependencies);
+            } catch (\ReflectionException $e) {}
+
+        }]);
+
+        $this->assertEquals('Goodbye Cruel World', $response);
+    }
+
+    public function testMethodListCalled()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $bar = $am->resolve('Bar', ['methods' => ['a', 'b', 'c']]);
+
+        $this->assertInstanceOf('Bar', $bar);
+        $this->assertEquals(3, $bar->getV());
+    }
+
+    public function testMethodListResolvesDeps()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ADependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $bar = $am->resolve('Bar', ['methods' => ['a', 'b', 'c', 'd']]);
+
+        $this->assertInstanceOf('Bar', $bar);
+        $this->assertEquals(103, $bar->getV());
+    }
+
+    public function testInvokeMethod()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $result = $am->resolve('Bar', ['invoke' => 'hello']);
+
+        $this->assertEquals('Hello World', $result);
+    }
+
+    public function testInvokeMethodWithDep()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/ADependency.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $result = $am->resolve('Bar', ['invoke' => 'goodbye']);
+
+        $this->assertEquals('Goodbye Cruel World', $result);
     }
 
     public function testCanAutoResolveSimple()

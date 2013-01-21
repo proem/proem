@@ -53,12 +53,12 @@ class Dispatch extends ChainEventAbstract
             function ($responseEvent) use ($assetManager) {
                 // Check for a customized Dispatch\Dispatcher.
                 if ($responseEvent->has('dispatcherAsset')) {
-                    $assetManager->attach('dispatcher', $responseEvent->get('dispatcherAsset'));
+                    $assetManager->override('dispatcher', $responseEvent->get('dispatcherAsset'));
                 }
 
                 // Check for a customized Dispatch\Staging
                 if ($responseEvent->has('stageAsset')) {
-                    $assetManager->attach('stage', $responseEvent->get('stageAsset'));
+                    $assetManager->override('stage', $responseEvent->get('stageAsset'));
                 }
             }
         );

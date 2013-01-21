@@ -73,7 +73,7 @@ class AssetManager implements AssetManagerInterface
     public function alias($type, $alias = null, $override = false)
     {
         if (is_array($type)) {
-            foreach ($type as $asset => $alias) {
+            foreach ($type as $alias => $asset) {
                 $this->setParam('aliases', $alias, $asset, $override);
             }
         } else {
@@ -104,7 +104,9 @@ class AssetManager implements AssetManagerInterface
             $this->alias($type, $name, $override);
         }
 
-        if ($type instanceof \Closure && $single) {
+        if ($name instanceof Asset) {
+            $this->setParam('assets', $name->is(), $name, $override);
+        } elseif ($type instanceof \Closure && $single) {
             $this->setParam('assets', $name, function($params) use ($type) {
                 static $obj;
 
@@ -136,11 +138,13 @@ class AssetManager implements AssetManagerInterface
     /**
      * Return an asset by index.
      *
-     * First map any alias, then check to see if we already have an instance of this
-     * type cached, if so, return it. If not, check to see if we have any assets indexed
-     * by this name, if so, execute it's closure and return the results.
+     * First, if we have a closure as a second argument, use it to resolve our asset (or at least return
+     * whatever it returns).
      *
-     * If the above fails, we start the auto resolve process. This attempts to resolve to
+     * Otherwise if we have an asset stored under  this index, return it. Failing that, check for
+     * an instance at this index and return that. Failing that, resolve any aliases recursively.
+     *
+     * If all of the above fails, we start the auto resolve process. This attempts to resolve to
      * instantiate the requested object and any dependencies that it may require to do so.
      *
      * @param string $name
@@ -148,9 +152,17 @@ class AssetManager implements AssetManagerInterface
      */
     public function resolve($name, $params = [])
     {
-        $debug = false;
-        if (isset($params['debug'])) {
-            $debug = true;
+        // Allow hot resolving. eg; pass a closure to the resolve() method.
+        if (isset($params['resolver']) && $params['resolver'] instanceof \Closure) {
+            return $params['resolver']();
+        }
+
+        // Allow custom reflection resolutions.
+        if (isset($params['reflector']) && $params['reflector'] instanceof \Closure) {
+            $reflection = new \ReflectionClass($name);
+            if ($reflection->isInstantiable()) {
+                return $params['reflector']($reflection, $name);
+            }
         }
 
         if (isset($this->assets[$name])) {
@@ -161,16 +173,10 @@ class AssetManager implements AssetManagerInterface
             return $this->instances[$name];
         }
 
+        // Recurse back through resolve().
+        // This allows complex alias mappings.
         if (isset($this->aliases[$name])) {
-            $name = $this->aliases[$name];
-        }
-
-        if (isset($this->assets[$name])) {
-            return $this->assets[$name]($params, $this);
-        }
-
-        if (isset($this->instances[$name])) {
-            return $this->instances[$name];
+            return $this->resolve($this->aliases[$name]);
         }
 
         $reflection = new \ReflectionClass($name);
@@ -183,12 +189,45 @@ class AssetManager implements AssetManagerInterface
                 $object = $reflection->newInstanceArgs($dependencies);
             }
 
-            if (method_exists($object, 'setParams')) {
-                $object->setParams($params);
+            try {
+                $method = $reflection->getMethod('setParams');
+                $method->invokeArgs($object, $params);
+            } catch (\ReflectionException $e) {}
+
+            // Allow a list of methods to be executed.
+            if (isset($params['methods'])) {
+                foreach ($params['methods'] as $method) {
+                    $method = $reflection->getMethod($method);
+                    $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+                }
+            }
+
+            // If this single method is invoked, its results will be returned.
+            if (isset($params['invoke'])) {
+                $method = $params['invoke'];
+                $method = $reflection->getMethod($method);
+                return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
             }
 
             return $object;
         }
+    }
+
+    /**
+     * A simple helper to resolve dependencies given an array of dependents.
+     *
+     * @param array $dependencies
+     */
+    public function getDependencies($params)
+    {
+        $deps = [];
+        foreach ($params as $param) {
+            $dependency = $param->getClass();
+            if ($dependency !== null) {
+                $deps[] = $this->resolve($dependency->name);
+            }
+        }
+        return $deps;
     }
 
     /**
@@ -207,20 +246,5 @@ class AssetManager implements AssetManagerInterface
         } else if (!isset($this->{$type}[$index])) {
             $this->{$type}[$index] = $value;
         }
-    }
-
-    /**
-     * A simple helper to resolve an assets dependencies.
-     */
-    protected function getDependencies($params)
-    {
-        $deps = [];
-        foreach ($params as $param) {
-            $dependency = $param->getClass();
-            if ($dependency !== null) {
-                $deps[] = $this->resolve($dependency->name);
-            }
-        }
-        return $deps;
     }
 }

@@ -59,7 +59,7 @@ class Request extends ChainEventAbstract
             new Event('proem.in.request'),
             function ($responseEvent) use ($assetManager) {
                 if ($responseEvent->has('requestAsset')) {
-                    $assetManager->attach('request', $responseEvent->get('requestAsset'));
+                    $assetManager->override('request', $responseEvent->get('requestAsset'));
                 }
             }
         );

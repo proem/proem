@@ -114,6 +114,28 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
+    public function testCanAliasViaArray()
+    {
+        $am = new AssetManager;
+        $am->alias(['foo' => 'stdClass']);
+        $am->attach('foo', new \stdClass);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+    }
+
+    public function testCanAliasMultiple()
+    {
+        $am = new AssetManager;
+        $am->alias([
+            'a' => 'stdClass',
+            'b' => 'stdClass'
+        ]);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('a'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('b'));
+    }
+
     public function testCanAliasOnAttach()
     {
         $am = new AssetManager;

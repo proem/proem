@@ -124,11 +124,11 @@ class AssetManager implements AssetManagerInterface
         } elseif (is_object($type)) {
             $this->setParam('instances', $name, $type, $override);
 
-        /*} elseif ($single) {
+        } elseif (($type === null) && $single) {
             $this->setParam('instances', $name, $name, $override);
 
-        } else {
-            $this->setParam('assets', $name, $name, $override);*/
+        } elseif ($type === null) {
+            $this->setParam('assets', $name, $name, $override);
         }
 
         return $this;
@@ -178,18 +178,18 @@ class AssetManager implements AssetManagerInterface
         }
 
         if (isset($this->assets[$name])) {
-            //if (is_callable($this->assets)) {
+            if (is_callable($this->assets[$name])) {
                 return $this->assets[$name]($params, $this);
-            //}
+            }
         }
 
         if (isset($this->instances[$name])) {
-            //if (is_object($this->instances[$name])) {
+            if (is_object($this->instances[$name])) {
                 return $this->instances[$name];
-            //} else {
-                //$object = $this->autoResolve($name);
-                //$this->setParam('instances', $name, $object, true);
-            //}
+            } else {
+                $object = $this->autoResolve($name, $params);
+                $this->setParam('instances', $name, $object, true);
+            }
         }
 
         // Recurse back through resolve().
@@ -198,40 +198,7 @@ class AssetManager implements AssetManagerInterface
             return $this->resolve($this->aliases[$name]);
         }
 
-        $reflection = new \ReflectionClass($name);
-        if ($reflection->isInstantiable()) {
-            $construct = $reflection->getConstructor();
-            if ($construct === null) {
-                $object = new $name;
-            } else {
-                $dependencies = $this->getDependencies($construct->getParameters());
-                $object = $reflection->newInstanceArgs($dependencies);
-            }
-
-            try {
-                $method = $reflection->getMethod('setParams');
-                $method->invokeArgs($object, $params);
-            } catch (\ReflectionException $e) {}
-
-            // Allow a list of methods to be executed.
-            if (isset($params['methods'])) {
-                foreach ($params['methods'] as $method) {
-                    $method = $reflection->getMethod($method);
-                    $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
-                }
-            }
-
-            // If this single method is invoked, its results will be returned.
-            if (isset($params['invoke'])) {
-                $method = $params['invoke'];
-                $method = $reflection->getMethod($method);
-                return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
-            }
-
-            return $object;
-        }
-
-        //return $this->autoResolve($name);
+        return $this->autoResolve($name, $params);
     }
 
     /**
@@ -269,7 +236,7 @@ class AssetManager implements AssetManagerInterface
         }
     }
 
-    protected function autoResolve($name)
+    protected function autoResolve($name, $params)
     {
         $reflection = new \ReflectionClass($name);
         if ($reflection->isInstantiable()) {

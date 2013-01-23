@@ -29,6 +29,7 @@ namespace Proem\Service\Tests;
 use \Mockery as m;
 use Proem\Service\AssetManager;
 use Proem\Service\Asset;
+use Proem\Service\Tests;
 
 class AssetManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -168,8 +169,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
-    /*
-    public function testUnattachedReturnsSingleton()
+    public function testCanReturnAnAutoResolvingSingleton()
     {
         $am = new AssetManager;
         $am->attach('stdClass', null, true);
@@ -177,7 +177,6 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
         $this->assertSame($am->resolve('stdClass'), $am->resolve('stdClass'));
     }
-     */
 
     public function testCanHotResolve()
     {

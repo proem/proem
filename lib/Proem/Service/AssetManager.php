@@ -94,40 +94,40 @@ class AssetManager implements AssetManagerInterface
      * asset return the same instance on each call. (A singleton).
      *
      * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
-     * @param Proem\Service\Asset|closure|object $type
+     * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
      * @param bool $single
      * @param bool $override Optionally override existing (@see override).
      */
-    public function attach($name, $type = null, $single = false, $override = false)
+    public function attach($name, $resolver = null, $single = false, $override = false)
     {
         if (is_array($name)) {
-            $type  = current($name);
+            $resolver  = current($name);
             $name  = key($name);
-            $this->alias($type, $name, $override);
+            $this->alias($resolver, $name, $override);
         }
 
         if ($name instanceof Asset) {
             $this->setParam('assets', $name->is(), $name, $override);
-        } elseif ($type instanceof \Closure && $single) {
-            $this->setParam('assets', $name, function($params) use ($type) {
+        } elseif ($resolver instanceof \Closure && $single) {
+            $this->setParam('assets', $name, function($params) use ($resolver) {
                 static $obj;
 
                 if ($obj === null) {
-                    $obj = $type($params, $this);
+                    $obj = $resolver($params, $this);
                 }
                 return $obj;
             }, $override);
 
-        } elseif ($type instanceof \Closure || $type instanceof Asset) {
-            $this->setParam('assets', $name, $type, $override);
+        } elseif ($resolver instanceof \Closure || $resolver instanceof Asset) {
+            $this->setParam('assets', $name, $resolver, $override);
 
-        } elseif (is_object($type)) {
-            $this->setParam('instances', $name, $type, $override);
+        } elseif (is_object($resolver)) {
+            $this->setParam('instances', $name, $resolver, $override);
 
-        } elseif (($type === null) && $single) {
+        } elseif (($resolver === null) && $single) {
             $this->setParam('instances', $name, $name, $override);
 
-        } elseif ($type === null) {
+        } elseif ($resolver === null) {
             $this->setParam('assets', $name, $name, $override);
         }
 
@@ -146,11 +146,11 @@ class AssetManager implements AssetManagerInterface
      * Attach an asset to the service manager overriding any existing of the same index.
      *
      * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
-     * @param Proem\Service\Asset|closure|object $type
+     * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
      * @param bool $single
      */
-    public function override($name, $type = null, $single = false) {
-        $this->attach($name, $type, $single, true);
+    public function override($name, $resolver = null, $single = false) {
+        $this->attach($name, $resolver, $single, true);
 
         return $this;
     }

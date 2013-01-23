@@ -343,6 +343,15 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NeedsInterface', $am->resolve('NeedsInterface'));
     }
 
+    public function testCanAutoResolveWithAssetManagerDependency()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/DepsOnAssetManager.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('\DepsOnAssetManager', $am->resolve('DepsOnAssetManager'));
+        $this->assertInstanceOf('\Proem\Service\AssetManagerInterface', $am->resolve('DepsOnAssetManager')->getAssetManager());
+    }
+
     public function testCanRemapAnAlias()
     {
         require_once __DIR__ . '/AssetManagerFixtures/NeedsInterface.php';

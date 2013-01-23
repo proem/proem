@@ -212,7 +212,11 @@ class AssetManager implements AssetManagerInterface
         foreach ($params as $param) {
             $dependency = $param->getClass();
             if ($dependency !== null) {
-                $deps[] = $this->resolve($dependency->name);
+                if ($dependency->name == 'AssetManager' || $dependency->name == 'AssetManagerInterface') {
+                    $deps[] = $this;
+                } else {
+                    $deps[] = $this->resolve($dependency->name);
+                }
             }
         }
         return $deps;

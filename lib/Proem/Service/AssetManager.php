@@ -236,6 +236,16 @@ class AssetManager implements AssetManagerInterface
         }
     }
 
+    /**
+     * Method to do the heavy lifting in relation to reolution of assets.
+     *
+     * In most cases this method returns an asset (object) or null. It can however be
+     * coherced into returning the results of a call to a method on the asst (object)
+     * itself by passing a method name along within the $params array indexed by "invoke".
+     *
+     * @param string $name
+     * @param array @params Any extra parameters.
+     */
     protected function autoResolve($name, $params)
     {
         $reflection = new \ReflectionClass($name);

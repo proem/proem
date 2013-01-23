@@ -136,6 +136,10 @@ class AssetManager implements AssetManagerInterface
 
     /**
      * A convenience method for adding a singleton.
+     *
+     * @param string name
+     * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
+     * @param bool
      */
     public function singleton($name, $resolver = null, $override = false)
     {
@@ -153,6 +157,18 @@ class AssetManager implements AssetManagerInterface
         $this->attach($name, $resolver, $single, true);
 
         return $this;
+    }
+
+    /**
+     * A convenience method for overriding an existing singleton.
+     *
+     * @param string name
+     * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
+     * @param bool
+     */
+    public function overrideSingleton($name, $resolver = null)
+    {
+        $this->singleton($name, $resolver, true, true);
     }
 
     /**

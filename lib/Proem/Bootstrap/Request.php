@@ -31,10 +31,8 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
-use Proem\Service\AssetComposer;
 
 /**
  * The default "Request" filter chain event.
@@ -55,6 +53,10 @@ class Request extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        // Setup defaults.
+        $assetManager->alias(['request' => 'Proem\Http\Request'])->singleton('request');
+
+        // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
             new Event('proem.in.request'),
             function ($responseEvent) use ($assetManager) {

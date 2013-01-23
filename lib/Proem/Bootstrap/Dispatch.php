@@ -48,6 +48,12 @@ class Dispatch extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        //$assetManager->alias([
+        //    'Proem\Dispatch\DispatcherInterface' => 'Proem\Dispatch\Dispatcher',
+        //    'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface'
+        //])->attach('dispatcher', function() { return new Dispatcher; }, true);
+
+
         $assetManager->resolve('eventManager')->trigger(
             new Event('proem.in.dispatch'),
             function ($responseEvent) use ($assetManager) {

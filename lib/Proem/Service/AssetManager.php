@@ -79,6 +79,8 @@ class AssetManager implements AssetManagerInterface
         } else {
             $this->setParam('aliases', $alias, $type, $override);
         }
+
+        return $this;
     }
 
     /**
@@ -121,7 +123,15 @@ class AssetManager implements AssetManagerInterface
 
         } elseif (is_object($type)) {
             $this->setParam('instances', $name, $type, $override);
+
+        /*} elseif ($single) {
+            $this->setParam('instances', $name, $name, $override);
+
+        } else {
+            $this->setParam('assets', $name, $name, $override);*/
         }
+
+        return $this;
     }
 
     /**
@@ -133,6 +143,8 @@ class AssetManager implements AssetManagerInterface
      */
     public function override($name, $type = null, $single = false) {
         $this->attach($name, $type, $single, true);
+
+        return $this;
     }
 
     /**
@@ -166,11 +178,18 @@ class AssetManager implements AssetManagerInterface
         }
 
         if (isset($this->assets[$name])) {
-            return $this->assets[$name]($params, $this);
+            //if (is_callable($this->assets)) {
+                return $this->assets[$name]($params, $this);
+            //}
         }
 
         if (isset($this->instances[$name])) {
-            return $this->instances[$name];
+            //if (is_object($this->instances[$name])) {
+                return $this->instances[$name];
+            //} else {
+                //$object = $this->autoResolve($name);
+                //$this->setParam('instances', $name, $object, true);
+            //}
         }
 
         // Recurse back through resolve().
@@ -211,6 +230,8 @@ class AssetManager implements AssetManagerInterface
 
             return $object;
         }
+
+        //return $this->autoResolve($name);
     }
 
     /**
@@ -245,6 +266,42 @@ class AssetManager implements AssetManagerInterface
             $this->{$type}[$index] = $value;
         } else if (!isset($this->{$type}[$index])) {
             $this->{$type}[$index] = $value;
+        }
+    }
+
+    protected function autoResolve($name)
+    {
+        $reflection = new \ReflectionClass($name);
+        if ($reflection->isInstantiable()) {
+            $construct = $reflection->getConstructor();
+            if ($construct === null) {
+                $object = new $name;
+            } else {
+                $dependencies = $this->getDependencies($construct->getParameters());
+                $object = $reflection->newInstanceArgs($dependencies);
+            }
+
+            try {
+                $method = $reflection->getMethod('setParams');
+                $method->invokeArgs($object, $params);
+            } catch (\ReflectionException $e) {}
+
+            // Allow a list of methods to be executed.
+            if (isset($params['methods'])) {
+                foreach ($params['methods'] as $method) {
+                    $method = $reflection->getMethod($method);
+                    $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+                }
+            }
+
+            // If this single method is invoked, its results will be returned.
+            if (isset($params['invoke'])) {
+                $method = $params['invoke'];
+                $method = $reflection->getMethod($method);
+                return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+            }
+
+            return $object;
         }
     }
 }

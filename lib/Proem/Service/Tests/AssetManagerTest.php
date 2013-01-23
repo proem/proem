@@ -124,7 +124,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
-    public function testCanComplexAlias()
+    public function testComplexAlias()
     {
         $am = new AssetManager;
 
@@ -132,6 +132,19 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $am->alias(['xyz' => 'stdClass']);
 
         $this->assertInstanceOf('\stdClass', $am->resolve('abc'));
+    }
+
+    public function testComplexAliasWithSingleton()
+    {
+        $am = new AssetManager;
+        $am->alias([
+            'abcObjectInterface' => 'abcObject',
+            'abcAlias'           => 'abcObjectInterface'
+        ])->attach('abcObjectInterface', function() { return new \stdClass; }, true);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('abcAlias'));
+        $this->assertSame($am->resolve('abcAlias'), $am->resolve('abcAlias'));
+        $this->assertSame($am->resolve('abcAlias'), $am->resolve('abcObjectInterface'));
     }
 
     public function testCanAliasMultiple()
@@ -154,6 +167,17 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
+
+    /*
+    public function testUnattachedReturnsSingleton()
+    {
+        $am = new AssetManager;
+        $am->attach('stdClass', null, true);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+        $this->assertSame($am->resolve('stdClass'), $am->resolve('stdClass'));
+    }
+     */
 
     public function testCanHotResolve()
     {

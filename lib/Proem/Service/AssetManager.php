@@ -135,6 +135,14 @@ class AssetManager implements AssetManagerInterface
     }
 
     /**
+     * A convenience method for adding a singleton.
+     */
+    public function singleton($name, $resolver = null, $override = false)
+    {
+        $this->attach($name, $resolver, true, $override);
+    }
+
+    /**
      * Attach an asset to the service manager overriding any existing of the same index.
      *
      * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.

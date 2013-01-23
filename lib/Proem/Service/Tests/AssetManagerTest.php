@@ -105,6 +105,15 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($am->resolve('foo'), $am->resolve('foo'));
     }
 
+    public function testSingleton()
+    {
+        $am = new AssetManager;
+        $am->singleton('stdClass');
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
+        $this->assertSame($am->resolve('stdClass'), $am->resolve('stdClass'));
+    }
+
     public function testCanAlias()
     {
         $am = new AssetManager;

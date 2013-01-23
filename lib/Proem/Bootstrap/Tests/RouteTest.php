@@ -47,6 +47,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $assetManager = m::mock('Proem\Service\AssetManagerInterface');
 
         $assetManager
+            ->shouldReceive('alias')
+            ->once()
+            ->andReturn($assetManager);
+
+        $assetManager
+            ->shouldReceive('singleton')
+            ->once()
+            ->andReturn($assetManager);
+
+        $assetManager
             ->shouldReceive('resolve')
             ->with('eventManager')
             ->once()

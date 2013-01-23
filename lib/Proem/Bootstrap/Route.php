@@ -55,6 +55,13 @@ class Route extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
+        // Setup defaults.
+        $assetManager->alias([
+            'Proem\Routing\RouteManagerInterface' => 'Proem\Routing\RouteManager',
+            'routeManager'                        => 'Proem\Routing\RouteManagerInterface',
+        ])->singleton('routeManager');
+
+        // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
             new Event('proem.in.route'),
             function ($responseEvent) use ($assetManager) {

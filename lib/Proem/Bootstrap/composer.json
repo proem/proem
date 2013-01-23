@@ -21,6 +21,7 @@
     "proem-components/service": "0.10.*@dev",
     "proem-components/signal": "0.10.*@dev",
     "proem-components/filter": "0.10.*@dev",
+    "proem-components/dispatch": "0.10.*@dev",
     "proem-components/routing": "0.10.*@dev",
     "proem-components/http": "0.10.*@dev"
   },

@@ -31,7 +31,6 @@
 namespace Proem\Bootstrap;
 
 use Proem\Service\AssetManagerInterface;
-use Proem\Service\AssetInterface;
 use Proem\Filter\ChainEventAbstract;
 use Proem\Signal\Event;
 
@@ -48,27 +47,33 @@ class Dispatch extends ChainEventAbstract
      */
     public function in(AssetManagerInterface $assetManager)
     {
-        //$assetManager->alias([
-        //    'Proem\Dispatch\DispatcherInterface' => 'Proem\Dispatch\Dispatcher',
-        //    'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface'
-        //])->attach('dispatcher', function() { return new Dispatcher; }, true);
+        // Setup defaults.
+        $assetManager->alias([
+            'Proem\Dispatch\DispatcherInterface' => 'Proem\Dispatch\Dispatcher',
+            'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface',
+            'Proem\Dispatch\StageInterface'      => 'Proem\Dispatch\Stage',
+            'stage'                              => 'Proem\Dispatch\StageInterface'
+        ])
+        ->singleton('dispatcher')
+        ->singleton('stage');
 
-
+        // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
             new Event('proem.in.dispatch'),
             function ($responseEvent) use ($assetManager) {
                 // Check for a customized Dispatch\Dispatcher.
                 if ($responseEvent->has('dispatcherAsset')) {
-                    $assetManager->override('dispatcher', $responseEvent->get('dispatcherAsset'));
+                    $assetManager->overrideAsSingleton('dispatcher', $responseEvent->get('dispatcherAsset'));
                 }
 
                 // Check for a customized Dispatch\Staging
                 if ($responseEvent->has('stageAsset')) {
-                    $assetManager->override('stage', $responseEvent->get('stageAsset'));
+                    $assetManager->overrideAsSingleton('stage', $responseEvent->get('stageAsset'));
                 }
             }
         );
 
+        // Dispatch this request.
         $assetManager->resolve('stage')->process();
     }
 

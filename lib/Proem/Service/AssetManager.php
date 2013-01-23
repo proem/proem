@@ -143,7 +143,7 @@ class AssetManager implements AssetManagerInterface
      */
     public function singleton($name, $resolver = null, $override = false)
     {
-        $this->attach($name, $resolver, true, $override);
+        return $this->attach($name, $resolver, true, $override);
     }
 
     /**
@@ -154,9 +154,7 @@ class AssetManager implements AssetManagerInterface
      * @param bool $single
      */
     public function override($name, $resolver = null, $single = false) {
-        $this->attach($name, $resolver, $single, true);
-
-        return $this;
+        return $this->attach($name, $resolver, $single, true);
     }
 
     /**
@@ -168,7 +166,7 @@ class AssetManager implements AssetManagerInterface
      */
     public function overrideSingleton($name, $resolver = null)
     {
-        $this->singleton($name, $resolver, true, true);
+        return $this->singleton($name, $resolver, true, true);
     }
 
     /**
@@ -262,6 +260,8 @@ class AssetManager implements AssetManagerInterface
         } else if (!isset($this->{$type}[$index])) {
             $this->{$type}[$index] = $value;
         }
+
+        return $this;
     }
 
     /**

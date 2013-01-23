@@ -164,7 +164,7 @@ class AssetManager implements AssetManagerInterface
      * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
      * @param bool
      */
-    public function overrideSingleton($name, $resolver = null)
+    public function overrideAsSingleton($name, $resolver = null)
     {
         return $this->singleton($name, $resolver, true, true);
     }

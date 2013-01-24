@@ -49,8 +49,20 @@ class ControllerBase
      *
      * @param Proem\Http\Request
      */
-    public function __construct(Request $request)
+    final function __construct(Request $request)
     {
         $this->request = $request;
+        $this->init();
+    }
+
+    /**
+     * Method called on object instantiation.
+     *
+     * Extend and use this method to pass dependencies into the
+     * controller, or setup whatever you need.
+     */
+    public function init()
+    {
+
     }
 }

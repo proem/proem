@@ -66,7 +66,7 @@ class Dispatch extends ChainEventAbstract
         );
 
         // Dispatch this request.
-        $assetManager->resolve('dispatcher')->process($assetManager->resolve('request'));
+        $assetManager->resolve('dispatcher')->handle($assetManager->resolve('request'));
     }
 
     /**

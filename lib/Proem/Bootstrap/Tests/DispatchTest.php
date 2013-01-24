@@ -53,7 +53,7 @@ class DispatchTest extends \PHPUnit_Framework_TestCase
 
         $assetManager
             ->shouldReceive('singleton')
-            ->twice()
+            ->once()
             ->andReturn($assetManager);
 
         $assetManager
@@ -62,17 +62,26 @@ class DispatchTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn($eventManager);
 
-        $stage = m::mock('Proem\Dispatch\Stage');
-        $stage
-            ->shouldReceive('process')
+        $request = m::mock('Proem\Http\Request');
+
+        $dispatcher = m::mock('Proem\Dispatch\Dispatcher');
+        $dispatcher
+            ->shouldReceive('handle')
+            ->with($request)
             ->once()
             ->andReturn(true);
 
         $assetManager
             ->shouldReceive('resolve')
-            ->with('stage')
+            ->with('dispatcher')
             ->once()
-            ->andReturn($stage);
+            ->andReturn($dispatcher);
+
+        $assetManager
+            ->shouldReceive('resolve')
+            ->with('request')
+            ->once()
+            ->andReturn($request);
 
         $dispatch = new Dispatch;
         $dispatch->in($assetManager);

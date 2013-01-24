@@ -50,12 +50,9 @@ class Dispatch extends ChainEventAbstract
         // Setup defaults.
         $assetManager->alias([
             'Proem\Dispatch\DispatcherInterface' => 'Proem\Dispatch\Dispatcher',
-            'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface',
-            'Proem\Dispatch\StageInterface'      => 'Proem\Dispatch\Stage',
-            'stage'                              => 'Proem\Dispatch\StageInterface'
+            'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface'
         ])
-        ->singleton('dispatcher')
-        ->singleton('stage');
+        ->singleton('dispatcher');
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
@@ -65,16 +62,11 @@ class Dispatch extends ChainEventAbstract
                 if ($responseEvent->has('dispatcherAsset')) {
                     $assetManager->overrideAsSingleton('dispatcher', $responseEvent->get('dispatcherAsset'));
                 }
-
-                // Check for a customized Dispatch\Staging
-                if ($responseEvent->has('stageAsset')) {
-                    $assetManager->overrideAsSingleton('stage', $responseEvent->get('stageAsset'));
-                }
             }
         );
 
         // Dispatch this request.
-        $assetManager->resolve('stage')->process();
+        $assetManager->resolve('dispatcher')->process($assetManager->resolve('request'));
     }
 
     /**

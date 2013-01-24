@@ -245,16 +245,15 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Callback', $r->out);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testInvalidReturnTriggersException()
+    public function testCanReturnArbitrary()
     {
         $r = new \StdClass;
         $r->out = '';
         (new EventManager)->attach('do', function($e) {
             return new \StdClass;
         })
-        ->trigger(new Event('do'));
+        ->trigger(new Event('do'), function($result) use ($r) { $r->result = $result; });
+
+        $this->assertInstanceOf('\stdClass', $r->result);
     }
 }

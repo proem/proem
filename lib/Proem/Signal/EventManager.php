@@ -255,28 +255,27 @@ class EventManager implements EventManagerInterface
 
         if ($listeners = $this->getListeners($event->getName())) {
             foreach ($listeners as $listener) {
-                if ($result = call_user_func($listener, $event)) {
-                    if ($result instanceof EventInterface) {
-                        // Save result
-                        $results[] = clone $result;
+                $result = call_user_func($listener, $event);
+                if ($result instanceof EventInterface) {
+                    // Save result
+                    $results[] = clone $result;
 
-                        // Was the queue halted early ?
-                        if ($result->isQueueHaltedEarly()) {
-                            return $this;
-                        }
+                    // Was the queue halted early ?
+                    if ($result->isQueueHaltedEarly()) {
+                        return $this;
+                    }
 
-                        if ($callback !== null) {
-                            call_user_func($callback, $result);
-                        }
+                    if ($callback !== null) {
+                        call_user_func($callback, $result);
+                    }
 
-                        // Was the queue halted ?
-                        if ($result->isQueueHalted()) {
-                            return $this;
-                        }
-                    } else {
-                        throw new \RuntimeException(
-                            'Value returned from an Event Callback must be of type Proem\Signal\EventInterface'
-                        );
+                    // Was the queue halted ?
+                    if ($result->isQueueHalted()) {
+                        return $this;
+                    }
+                } else {
+                    if ($callback !== null) {
+                        call_user_func($callback, $result);
                     }
                 }
             }

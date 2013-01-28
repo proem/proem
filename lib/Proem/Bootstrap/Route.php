@@ -63,7 +63,7 @@ class Route extends ChainEventAbstract
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.route'),
+            new Event('proem.in.setup.route'),
             function ($responseEvent) use ($assetManager) {
                 if ($responseEvent->has('routeManagerAsset')) {
                     $assetManager->override('routeManager', $responseEvent->get('routeManagerAsset'));

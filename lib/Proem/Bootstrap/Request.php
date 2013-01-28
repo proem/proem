@@ -58,7 +58,7 @@ class Request extends ChainEventAbstract
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.request'),
+            new Event('proem.in.setup.request'),
             function ($responseEvent) use ($assetManager) {
                 if ($responseEvent->has('requestAsset')) {
                     $assetManager->override('request', $responseEvent->get('requestAsset'));

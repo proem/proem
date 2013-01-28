@@ -56,7 +56,7 @@ class Dispatch extends ChainEventAbstract
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.dispatch'),
+            new Event('proem.in.setup.dispatch'),
             function ($responseEvent) use ($assetManager) {
                 // Check for a customized Dispatch\Dispatcher.
                 if ($responseEvent->has('dispatcherAsset')) {
@@ -65,8 +65,20 @@ class Dispatch extends ChainEventAbstract
             }
         );
 
-        // Dispatch this request.
-        $assetManager->resolve('dispatcher')->handle($assetManager->resolve('request'));
+        // Trigger an event allowing client code to override the way the dispatcher is called.
+        $assetManager->resolve('eventManager')->trigger(
+            new Event('proem.in.dispatch'),
+            function ($responseEvent) use ($assetManager) {
+                // Check for a customised dispatch handler.
+                if ($responseEvent->has('dispatchHandler') && $responseEvent->get('dispatcherHandler') instanceof \Closure) {
+                    $action = $responseEvent->get('dispatcherHandler');
+                    $action($assetManager->resolve('request'));
+                } else {
+                    // Dispatch using the default handler.
+                    $assetManager->resolve('dispatcher')->process($assetManager->resolve('request'));
+                }
+            }
+        );
     }
 
     /**

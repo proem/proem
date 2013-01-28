@@ -321,6 +321,16 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Bar', $am->resolve('Foo')->getBar());
     }
 
+    public function testCanAutoResolveDepsWithDefaultValues()
+    {
+        require_once __DIR__ . '/AssetManagerFixtures/Foo.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
+        $am = new AssetManager;
+
+        $this->assertInstanceOf('Foo', $am->resolve('Foo'));
+        $this->assertEquals('thisiswhat', $am->resolve('Foo')->getWhat());
+    }
+
     public function testCanAutoResolveAliased()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Bar.php';

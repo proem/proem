@@ -239,6 +239,10 @@ class AssetManager implements AssetManagerInterface
                 } else {
                     $deps[] = $this->resolve($dependency->name);
                 }
+            } else {
+                if ($param->isDefaultValueAvailable()) {
+                    $deps[] = $param->getDefaultValue();
+                }
             }
         }
         return $deps;

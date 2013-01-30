@@ -55,6 +55,14 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
     }
 
+    /**
+     * @expectedException LogicException
+     */
+    public function testNonExistent()
+    {
+        (new AssetManager)->resolve('idonotexist');
+    }
+
     public function testCanStoreAndRetreiveAssetObject()
     {
         $asset = m::mock('\Proem\Service\Asset', ['stdClass']);

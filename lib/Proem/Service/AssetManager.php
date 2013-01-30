@@ -280,37 +280,43 @@ class AssetManager implements AssetManagerInterface
      */
     protected function autoResolve($name, $params)
     {
-        $reflection = new \ReflectionClass($name);
-        if ($reflection->isInstantiable()) {
-            $construct = $reflection->getConstructor();
-            if ($construct === null) {
-                $object = new $name;
-            } else {
-                $dependencies = $this->getDependencies($construct->getParameters());
-                $object = $reflection->newInstanceArgs($dependencies);
-            }
-
-            try {
-                $method = $reflection->getMethod('setParams');
-                $method->invokeArgs($object, $params);
-            } catch (\ReflectionException $e) {}
-
-            // Allow a list of methods to be executed.
-            if (isset($params['methods'])) {
-                foreach ($params['methods'] as $method) {
-                    $method = $reflection->getMethod($method);
-                    $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+        try {
+            $reflection = new \ReflectionClass($name);
+            if ($reflection->isInstantiable()) {
+                $construct = $reflection->getConstructor();
+                if ($construct === null) {
+                    $object = new $name;
+                } else {
+                    $dependencies = $this->getDependencies($construct->getParameters());
+                    $object = $reflection->newInstanceArgs($dependencies);
                 }
-            }
 
-            // If this single method is invoked, its results will be returned.
-            if (isset($params['invoke'])) {
-                $method = $params['invoke'];
-                $method = $reflection->getMethod($method);
-                return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
-            }
+                try {
+                    $method = $reflection->getMethod('setParams');
+                    $method->invokeArgs($object, $params);
 
-            return $object;
+                // Do nothing. This method may very well not exist.
+                } catch (\ReflectionException $e) {}
+
+                // Allow a list of methods to be executed.
+                if (isset($params['methods'])) {
+                    foreach ($params['methods'] as $method) {
+                        $method = $reflection->getMethod($method);
+                        $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+                    }
+                }
+
+                // If this single method is invoked, its results will be returned.
+                if (isset($params['invoke'])) {
+                    $method = $params['invoke'];
+                    $method = $reflection->getMethod($method);
+                    return $method->invokeArgs($object, $this->getDependencies($method->getParameters()));
+                }
+
+                return $object;
+            }
+        } catch (\ReflectionException $e) {
+           throw new \LogicException("Unable to resolve '{$name}'");
         }
     }
 }

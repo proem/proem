@@ -31,12 +31,18 @@ namespace Proem\Dispatch;
 
 use \Symfony\Component\HttpFoundation\Request;
 use Proem\Service\AssetManagerInterface;
+use Proem\Routing\RouteManagerInterface;
 
 /**
  * The default dispatcher.
  */
 class Dispatcher implements DispatcherInterface
 {
+    /**
+     * Store the class mapping string
+     */
+    protected $mapping = "\\Module\\{:module}\\Controller\\{:controller}";
+
     /**
      * Store the asset manager.
      *
@@ -45,36 +51,36 @@ class Dispatcher implements DispatcherInterface
     protected $assetManager;
 
     /**
-     * Store the current payload.
+     * Store the router.
      *
-     * @var array $payload
+     * @var Proem\Routing\RouteManagerInterface
      */
-    protected $payload;
+    protected $routeManager;
+
+    /**
+     * Store any failures
+     *
+     * @var array
+     */
+    protected $failures;
 
     /**
      * Setup the dispatcher
      */
-    public function __construct(AssetManagerInterface $assetManager)
+    public function __construct(AssetManagerInterface $assetManager, RouteManagerInterface $routeManager)
     {
         $this->assetManager = $assetManager;
+        $this->routeManager = $routeManager;
     }
 
     /**
-     * Set the current payload data.
-     */
-    public function setPayload(array $payload = [])
-    {
-        $this->payload  = $payload;
-    }
-
-    /**
-     * Test to see if the current payload is dispatchable.
+     * Return any failed routes.
      *
-     * @return bool
+     * @return array
      */
-    public function isDispatchable()
+    public function getFailures()
     {
-
+        return $this->failures;
     }
 
     /**
@@ -84,6 +90,20 @@ class Dispatcher implements DispatcherInterface
      */
     public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-
+        while ($route = $this->router->route($request)) {
+            $module     = $route->getPayload()['module'];
+            $controller = $route->getPayload()['controller'];
+            $action     = $route->getPayload()['action'];
+            $class      = str_replace(
+                ['{:module}', '{:controller}'],
+                [$module, $controller],
+                $this->mapping
+            );
+            try {
+                return $this->assetManager->resolve($class, ['invoke' => $action]);
+            } catch (\LogicException $e) {
+                $this->failures[] = ['route' => $route, 'exception' => $e];
+            }
+        }
     }
 }

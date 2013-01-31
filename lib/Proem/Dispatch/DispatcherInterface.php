@@ -32,6 +32,7 @@ namespace Proem\Dispatch;
 use \Symfony\Component\HttpKernel\HttpKernelInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use Proem\Service\AssetManagerInterface;
+use Proem\Routing\RouteManagerInterface;
 
 /**
  * Interface all dispatchers must implement.
@@ -41,19 +42,14 @@ interface DispatcherInterface extends HttpKernelInterface
     /**
      * Setup the dispatcher
      */
-    public function __construct(AssetManagerInterface $assetManager);
+    public function __construct(AssetManagerInterface $assetManager, RouteManagerInterface $routeManager);
 
     /**
-     * Set the current payload data.
-     */
-    public function setPayload(array $payload = []);
-
-    /**
-     * Test to see if the current payload is dispatchable.
+     * Return any failed routes.
      *
-     * @return bool
+     * @return array
      */
-    public function isDispatchable();
+    public function getFailures();
 
     /**
      * Handles a Request, converting it to a Response.

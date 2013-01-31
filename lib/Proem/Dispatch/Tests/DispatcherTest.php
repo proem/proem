@@ -32,14 +32,16 @@ use Proem\Dispatch\Dispatcher;
 class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
     protected $asssetManager;
+    protected $routeManager;
 
     public function setUp()
     {
         $this->assetManager = m::mock('\Proem\Service\AssetManagerInterface');
+        $this->routeManager = m::mock('\Proem\Routing\RouteManagerInterface');
     }
 
     public function testCanInstantiate()
     {
-        $this->assertInstanceOf('Proem\Dispatch\DispatcherInterface', new Dispatcher($this->assetManager));
+        $this->assertInstanceOf('Proem\Dispatch\DispatcherInterface', new Dispatcher($this->assetManager, $this->routeManager));
     }
 }

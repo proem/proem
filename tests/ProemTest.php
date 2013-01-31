@@ -33,13 +33,15 @@ class ProemTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanInstantiateProem()
     {
-        $assetManager = \Mockery::mock('\Proem\Service\AssetManagerInterface');
+        $assetManager = m::mock('\Proem\Service\AssetManagerInterface');
         $assetManager
             ->shouldReceive('alias')
             ->once()
             ->with([
                 'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'Proem\Signal\EventManager'          => 'eventManager'
+                'Proem\Signal\EventManager'          => 'eventManager',
+                'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
+                'Proem\Filter\ChainManager'          => 'chainManager'
             ]);
 
         $this->assertInstanceOf('Proem\Proem', new Proem($assetManager));
@@ -47,26 +49,60 @@ class ProemTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadsDefaultEventManager()
     {
+        $request  = m::mock('Proem\Bootstrap\Request');
+        $route    = m::mock('Proem\Bootstrap\Route');
+        $dispatch = m::mock('Proem\Bootstrap\Dispatch');
+
         $eventManager = m::mock('\Proem\Signal\EventManagerInterface');
         $eventManager
             ->shouldReceive('trigger')
             ->once()
             ->with('\Proem\Signal\EventInterface');
 
-        $assetManager = \Mockery::mock('\Proem\Service\AssetManagerInterface');
+        $chainManager = m::mock('\Proem\Filter\ChainManagerInterface');
+        $chainManager
+            ->shouldReceive('attach')
+            ->times(3)
+            ->andReturn($chainManager)
+            ->shouldReceive('bootstrap')
+            ->once();
+
+        $assetManager = m::mock('\Proem\Service\AssetManagerInterface');
+
         $assetManager
             ->shouldReceive('alias')
             ->once()
             ->with([
                 'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'Proem\Signal\EventManager'          => 'eventManager'
-            ]);
+                'Proem\Signal\EventManager'          => 'eventManager',
+                'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
+                'Proem\Filter\ChainManager'          => 'chainManager'
+            ])
 
-        $assetManager
             ->shouldReceive('resolve')
             ->once()
             ->with('eventManager')
-            ->andReturn($eventManager);
+            ->andReturn($eventManager)
+
+            ->shouldReceive('resolve')
+            ->once()
+            ->with('chainManager')
+            ->andReturn($chainManager)
+
+            ->shouldReceive('resolve')
+            ->once()
+            ->with('Proem\Bootstrap\Request')
+            ->andReturn($request)
+
+            ->shouldReceive('resolve')
+            ->once()
+            ->with('Proem\Bootstrap\Route')
+            ->andReturn($route)
+
+            ->shouldReceive('resolve')
+            ->once()
+            ->with('Proem\Bootstrap\Dispatch')
+            ->andReturn($dispatch);
 
         (new Proem($assetManager))->bootstrap();
     }

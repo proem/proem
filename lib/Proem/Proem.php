@@ -67,7 +67,9 @@ class Proem
 
         $this->assetManager->alias([
             'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-            'Proem\Signal\EventManager'          => 'eventManager'
+            'Proem\Signal\EventManager'          => 'eventManager',
+            'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
+            'Proem\Filter\ChainManager'          => 'chainManager'
         ]);
     }
 
@@ -83,6 +85,12 @@ class Proem
         }
 
         $this->assetManager->resolve('eventManager')->trigger($initEvent);
+
+        $this->assetManager->resolve('chainManager')
+            ->attach($this->assetManager->resolve('Proem\Bootstrap\Request'))
+            ->attach($this->assetManager->resolve('Proem\Bootstrap\Route'))
+            ->attach($this->assetManager->resolve('Proem\Bootstrap\Dispatch'))
+            ->bootstrap();
 
         return $this;
     }

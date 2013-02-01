@@ -67,9 +67,9 @@ class Proem
 
         $this->assetManager->alias([
             'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-            'Proem\Signal\EventManager'          => 'eventManager',
+            'eventManager'                       => 'Proem\Signal\EventManagerInterface',
             'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-            'Proem\Filter\ChainManager'          => 'chainManager'
+            'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
         ]);
     }
 

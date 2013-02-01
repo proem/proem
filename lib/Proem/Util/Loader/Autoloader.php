@@ -83,6 +83,10 @@ class Autoloader
                 'Symfony\Component\HttpFoundation',
                 realpath(__DIR__ . '/../../../../vendor/symfony/http-foundation')
             );
+            $this->attachNamespace(
+                'Symfony\Component\HttpKernel',
+                realpath(__DIR__ . '/../../../../vendor/symfony/http-kernel')
+            );
         }
     }
 

@@ -39,9 +39,9 @@ class ProemTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->with([
                 'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'Proem\Signal\EventManager'          => 'eventManager',
+                'eventManager'                       => 'Proem\Signal\EventManagerInterface',
                 'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-                'Proem\Filter\ChainManager'          => 'chainManager'
+                'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
             ]);
 
         $this->assertInstanceOf('Proem\Proem', new Proem($assetManager));
@@ -74,9 +74,9 @@ class ProemTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->with([
                 'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'Proem\Signal\EventManager'          => 'eventManager',
+                'eventManager'                       => 'Proem\Signal\EventManagerInterface',
                 'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-                'Proem\Filter\ChainManager'          => 'chainManager'
+                'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
             ])
 
             ->shouldReceive('resolve')

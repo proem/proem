@@ -86,19 +86,24 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $request = m::mock('Proem\Http\Request');
 
         $request->shouldReceive('getMethod')
-            ->once();
+            ->once()
 
-        $request->shouldReceive('getScheme')
+            ->shouldReceive('getScheme')
             ->once()
             ->andReturn('http');
 
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
             ->once()
-            ->andReturn(true);
-        $route->shouldReceive('getOptions')
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
             ->once()
-            ->andReturn([]);
+            ->andReturn([])
+
+            ->shouldReceive('hasCallback')
+            ->once()
+            ->andReturn(false);
 
         $routeManager = new RouteManager($request);
 
@@ -121,16 +126,26 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
             ->once()
-            ->andReturn(true);
-        $route->shouldReceive('getOptions')
-            ->once();
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
+            ->once()
+
+            ->shouldReceive('hasCallback')
+            ->once()
+            ->andReturn(false);
 
         $route2 = m::mock('Proem\Routing\RouteInterface');
         $route2->shouldReceive('process')
             ->once()
-            ->andReturn(true);
-        $route2->shouldReceive('getOptions')
-            ->once();
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
+            ->once()
+
+            ->shouldReceive('hasCallback')
+            ->once()
+            ->andReturn(false);
 
         $routeManager = new RouteManager($request);
 
@@ -159,29 +174,41 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $route = m::mock('Proem\Routing\RouteInterface');
         $route->shouldReceive('process')
             ->once()
-            ->andReturn(true); // match
-        $route->shouldReceive('getOptions')
-            ->once();
+            ->andReturn(true) // match
+
+            ->shouldReceive('getOptions')
+            ->once()
+
+            ->shouldReceive('hasCallback')
+            ->once()
+            ->andReturn(false);
 
         $route2 = m::mock('Proem\Routing\RouteInterface');
         $route2->shouldReceive('process')
             ->once()
-            ->andReturn(false); // fail
-        $route2->shouldReceive('getOptions')
+            ->andReturn(false) // fail
+
+            ->shouldReceive('getOptions')
             ->once();
 
         $route3 = m::mock('Proem\Routing\RouteInterface');
         $route3->shouldReceive('process')
             ->once()
-            ->andReturn(true); // match
-        $route3->shouldReceive('getOptions')
-            ->once();
+            ->andReturn(true) // match
+
+            ->shouldReceive('getOptions')
+            ->once()
+
+            ->shouldReceive('hasCallback')
+            ->once()
+            ->andReturn(false);
 
         $route4 = m::mock('Proem\Routing\RouteInterface');
         $route4->shouldReceive('process')
             ->once()
-            ->andReturn(false); // fail
-        $route4->shouldReceive('getOptions')
+            ->andReturn(false) // fail
+
+            ->shouldReceive('getOptions')
             ->once();
 
         $routeManager = new RouteManager($request);
@@ -214,17 +241,27 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $with = m::mock('Proem\Routing\RouteInterface');
         $with->shouldReceive('process')
             ->twice()
-            ->andReturn(true);
-        $with->shouldReceive('getOptions')
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
             ->twice()
-            ->andReturn(['method' => 'GET']);
+            ->andReturn(['method' => 'GET'])
+
+            ->shouldReceive('hasCallback')
+            ->twice()
+            ->andReturn(false);
 
         $without = m::mock('Proem\Routing\RouteInterface');
         $without->shouldReceive('process')
             ->twice()
-            ->andReturn(true);
-        $without->shouldReceive('getOptions')
-            ->twice();
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
+            ->twice()
+
+            ->shouldReceive('hasCallback')
+            ->twice()
+            ->andReturn(false);
 
         $routeManager = new RouteManager($request);
 
@@ -264,10 +301,15 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
         $with = m::mock('Proem\Routing\RouteInterface');
         $with->shouldReceive('process')
             ->twice()
-            ->andReturn(true);
-        $with->shouldReceive('getOptions')
+            ->andReturn(true)
+
+            ->shouldReceive('getOptions')
             ->twice()
-            ->andReturn(['method' => 'GET']);
+            ->andReturn(['method' => 'GET'])
+
+            ->shouldReceive('hasCallback')
+            ->twice()
+            ->andReturn(false);
 
         $without = m::mock('Proem\Routing\RouteInterface');
         $without->shouldReceive('getOptions');
@@ -378,5 +420,56 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
             ->route();
 
         $this->assertInstanceOf('\Proem\Routing\Route', $result);
+    }
+
+    public function testCanHandleCallbackRoute()
+    {
+        $request = \Proem\Http\Request::create('/foo');
+        $result  = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/foo', [], function() { return "bar"; }))
+            ->route();
+
+        $this->assertEquals('bar', $result);
+    }
+
+    public function testCallbackGetsRequest()
+    {
+        $request = \Proem\Http\Request::create('/foo');
+        $result  = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/foo', [], function($req) { return $req; }))
+            ->route();
+
+        $this->assertInstanceOf('\Proem\Http\Request', $result);
+    }
+
+    public function testCallbackGetsNamedArgs()
+    {
+        $request = \Proem\Http\Request::create('/view/trq');
+        list($action, $username) = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route('/{action}/{username}', [], function($req, $a, $u) { return [$a, $u]; }))
+            ->route();
+
+        $this->assertEquals('view', $action);
+        $this->assertEquals('trq', $username);
+    }
+
+    public function testCallbackGetsArgsOfType()
+    {
+        $request = \Proem\Http\Request::create('/user/123');
+        list($action, $id) = (new RouteManager($request))
+            ->attach('r1', new \Proem\Routing\Route(
+                '/{action}/{id}',
+                ['filters' => [
+                    'action' => '{alpha}',
+                    'id' => '{int}'
+                ]],
+                function($req, $action, $id) {
+                    return [$action, $id];
+                }
+            ))
+            ->route();
+
+        $this->assertEquals('user', $action);
+        $this->assertEquals(123, $id);
     }
 }

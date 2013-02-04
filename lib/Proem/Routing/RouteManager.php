@@ -187,7 +187,13 @@ class RouteManager implements RouteManagerInterface
 
             // If match found, return matching route.
             if ($route->process($this->request) !== false) {
-                return $route;
+                if ($route->hasCallback()) {
+                    $arguments = $route->getPayload();
+                    array_unshift($arguments, $this->request);
+                    return call_user_func_array($route->getCallback(), $arguments);
+                } else {
+                    return $route;
+                }
             } else {
                 // Recurse through the next route.
                 return $this->route();

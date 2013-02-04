@@ -189,7 +189,6 @@ class RouteManager implements RouteManagerInterface
             if ($route->process($this->request) !== false) {
                 if ($route->hasCallback()) {
                     $arguments = $route->getPayload();
-                    array_unshift($arguments, $this->request);
                     return call_user_func_array($route->getCallback(), $arguments);
                 } else {
                     return $route;

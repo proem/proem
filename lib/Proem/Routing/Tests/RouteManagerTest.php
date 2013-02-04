@@ -436,7 +436,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
     {
         $request = \Proem\Http\Request::create('/foo');
         $result  = (new RouteManager($request))
-            ->attach('r1', new \Proem\Routing\Route('/foo', [], function($req) { return $req; }))
+            ->attach('r1', new \Proem\Routing\Route('/foo', [], function() use($request) { return $request; }))
             ->route();
 
         $this->assertInstanceOf('\Proem\Http\Request', $result);
@@ -446,7 +446,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
     {
         $request = \Proem\Http\Request::create('/view/trq');
         list($action, $username) = (new RouteManager($request))
-            ->attach('r1', new \Proem\Routing\Route('/{action}/{username}', [], function($req, $a, $u) { return [$a, $u]; }))
+            ->attach('r1', new \Proem\Routing\Route('/{action}/{username}', [], function($a, $u) { return [$a, $u]; }))
             ->route();
 
         $this->assertEquals('view', $action);
@@ -463,7 +463,7 @@ class RouteManagerTest extends \PHPUnit_Framework_TestCase
                     'action' => '{alpha}',
                     'id' => '{int}'
                 ]],
-                function($req, $action, $id) {
+                function($action, $id) {
                     return [$action, $id];
                 }
             ))

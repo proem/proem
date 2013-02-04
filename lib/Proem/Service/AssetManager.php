@@ -234,7 +234,7 @@ class AssetManager implements AssetManagerInterface
         foreach ($params as $param) {
             $dependency = $param->getClass();
             if ($dependency !== null) {
-                if ($dependency->name == 'AssetManager' || $dependency->name == 'AssetManagerInterface') {
+                if ($dependency->name == 'Proem\Service\AssetManager' || $dependency->name == 'Proem\Service\AssetManagerInterface') {
                     $deps[] = $this;
                 } else {
                     $deps[] = $this->resolve($dependency->name);
@@ -316,7 +316,7 @@ class AssetManager implements AssetManagerInterface
                 return $object;
             }
         } catch (\ReflectionException $e) {
-           throw new \LogicException("Unable to resolve '{$name}'");
+            throw new \LogicException("Unable to resolve '{$name}'");
         }
     }
 }

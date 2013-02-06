@@ -59,7 +59,7 @@ class Dispatch extends ChainEventAbstract
             new Event('proem.in.setup.dispatch'),
             function ($responseEvent) use ($assetManager) {
                 // Check for a customized Dispatch\Dispatcher.
-                if ($responseEvent->has('dispatcherAsset')) {
+                if ($responseEvent instanceof Event && $responseEvent->has('dispatcherAsset')) {
                     $assetManager->overrideAsSingleton('dispatcher', $responseEvent->get('dispatcherAsset'));
                 }
             }
@@ -70,7 +70,7 @@ class Dispatch extends ChainEventAbstract
             new Event('proem.in.dispatch'),
             function ($responseEvent) use ($assetManager) {
                 // Check for a customised dispatch handler.
-                if ($responseEvent->has('dispatchHandler') && $responseEvent->get('dispatcherHandler') instanceof \Closure) {
+                if ($responseEvent instanceof Event && $responseEvent->has('dispatchHandler') && $responseEvent->get('dispatcherHandler') instanceof \Closure) {
                     $action = $responseEvent->get('dispatcherHandler');
                     $action($assetManager->resolve('request'));
                 } else {

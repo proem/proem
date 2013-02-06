@@ -65,7 +65,7 @@ class Route extends ChainEventAbstract
         $assetManager->resolve('eventManager')->trigger(
             new Event('proem.in.setup.route'),
             function ($responseEvent) use ($assetManager) {
-                if ($responseEvent->has('routeManagerAsset')) {
+                if ($responseEvent instanceof Event && $responseEvent->has('routeManagerAsset')) {
                     $assetManager->override('routeManager', $responseEvent->get('routeManagerAsset'));
                 }
             }

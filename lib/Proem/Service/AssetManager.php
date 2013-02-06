@@ -127,6 +127,9 @@ class AssetManager implements AssetManagerInterface
         } elseif (($resolver === null) && $single) {
             $this->setParam('instances', $name, $name, $override);
 
+        } elseif ($single) {
+            $this->setParam('instances', $name, $resolver, $override);
+
         } elseif ($resolver === null) {
             $this->setParam('assets', $name, $name, $override);
         }
@@ -137,7 +140,7 @@ class AssetManager implements AssetManagerInterface
     /**
      * A convenience method for adding a singleton.
      *
-     * @param string name
+     * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
      * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
      * @param bool
      */
@@ -160,7 +163,7 @@ class AssetManager implements AssetManagerInterface
     /**
      * A convenience method for overriding an existing singleton.
      *
-     * @param string name
+     * @param string|array $name The name to index the asset by. Also excepts an array so as to alias.
      * @param Proem\Service\Asset|closure|object $resolver Some means of resolving this asset.
      * @param bool
      */
@@ -199,18 +202,39 @@ class AssetManager implements AssetManagerInterface
             }
         }
 
+        // Assets are simple.
         if (isset($this->assets[$name])) {
-            if (is_callable($this->assets[$name])) {
+            if ($this->assets[$name] instanceof Asset || $this->assets[$name] instanceof \Closure) {
                 return $this->assets[$name]($params, $this);
             }
         }
 
+        // Singletons are more complex if they haven't been instantiated as yet.
         if (isset($this->instances[$name])) {
-            if (is_object($this->instances[$name])) {
-                return $this->instances[$name];
-            } else {
-                $object = $this->autoResolve($name, $params);
+            // If we have a resolver (closure or asset) that hasn't been
+            // instantiated into an actual instance of our asset yet, do so.
+            if ($this->instances[$name] instanceof Asset || $this->instances[$name] instanceof \Closure) {
+                $object = $this->instances[$name]($params, $this);
                 $this->setParam('instances', $name, $object, true);
+
+            // If we have an instance, return it.
+            } else if (is_object($this->instances[$name])) {
+                return $this->instances[$name];
+
+            // Do what ever we can to resolve this asset.
+            } else {
+                try {
+                    // Attempt to resolve by name.
+                    $object = $this->autoResolve($name, $params);
+                    $this->setParam('instances', $name, $object, true);
+                } catch (\LogicException $e) {
+                    try {
+                        $object = $this->autoResolve($this->instances[$name], $params);
+                        $this->setParam('instances', $name, $object, true);
+                    } catch (\LogicException $e) {
+                        throw $e;
+                    }
+                }
             }
         }
 
@@ -220,6 +244,8 @@ class AssetManager implements AssetManagerInterface
             return $this->resolve($this->aliases[$name]);
         }
 
+        // At this point, we still haven't resolved anything.
+        // Try resolving by name alone.
         return $this->autoResolve($name, $params);
     }
 

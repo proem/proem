@@ -134,6 +134,12 @@ class AssetManager implements AssetManagerInterface
             $this->setParam('assets', $name, $name, $override);
         }
 
+        // If we have a singleton, make sure it is only in
+        // the *instances* array and not within *aliases*.
+        if ($single && isset($this->aliases[$name])) {
+            unset($this->aliases[$name]);
+        }
+
         return $this;
     }
 
@@ -227,10 +233,12 @@ class AssetManager implements AssetManagerInterface
                     // Attempt to resolve by name.
                     $object = $this->autoResolve($name, $params);
                     $this->setParam('instances', $name, $object, true);
+                    return $this->resolve($name);
                 } catch (\LogicException $e) {
                     try {
                         $object = $this->autoResolve($this->instances[$name], $params);
                         $this->setParam('instances', $name, $object, true);
+                        return $this->resolve($name);
                     } catch (\LogicException $e) {
                         throw $e;
                     }

@@ -35,14 +35,13 @@ class ProemTest extends \PHPUnit_Framework_TestCase
     {
         $assetManager = m::mock('\Proem\Service\AssetManagerInterface');
         $assetManager
-            ->shouldReceive('alias')
+            ->shouldReceive('singleton')
             ->once()
-            ->with([
-                'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'eventManager'                       => 'Proem\Signal\EventManagerInterface',
-                'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-                'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
-            ]);
+            ->with(['eventManager' => '\Proem\Signal\EventManager'])
+
+            ->shouldReceive('singleton')
+            ->once()
+            ->with(['chainManager' => '\Proem\Filter\ChainManager']);
 
         $this->assertInstanceOf('Proem\Proem', new Proem($assetManager));
     }
@@ -70,14 +69,13 @@ class ProemTest extends \PHPUnit_Framework_TestCase
         $assetManager = m::mock('\Proem\Service\AssetManagerInterface');
 
         $assetManager
-            ->shouldReceive('alias')
+            ->shouldReceive('singleton')
             ->once()
-            ->with([
-                'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-                'eventManager'                       => 'Proem\Signal\EventManagerInterface',
-                'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-                'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
-            ])
+            ->with(['eventManager' => '\Proem\Signal\EventManager'])
+
+            ->shouldReceive('singleton')
+            ->once()
+            ->with(['chainManager' => '\Proem\Filter\ChainManager'])
 
             ->shouldReceive('resolve')
             ->once()

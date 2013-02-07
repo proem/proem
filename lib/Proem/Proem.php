@@ -65,12 +65,13 @@ class Proem
             $this->assetManager = $assetManager;
         }
 
-        $this->assetManager->alias([
-            'Proem\Signal\EventManagerInterface' => 'Proem\Signal\EventManager',
-            'eventManager'                       => 'Proem\Signal\EventManagerInterface',
-            'Proem\Filter\ChainManagerInterface' => 'Proem\Filter\ChainManager',
-            'chainManager'                       => 'Proem\Filter\ChainManagerInterface'
-        ]);
+        $this->assetManager->singleton(['eventManager' => '\Proem\Signal\EventManager']);
+        $this->assetManager->singleton(['chainManager' => '\Proem\Filter\ChainManager']);
+    }
+
+    public function getEventManager()
+    {
+        return $this->assetManager->resolve('eventManager');
     }
 
     /**

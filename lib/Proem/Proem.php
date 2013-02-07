@@ -71,13 +71,6 @@ class Proem
 
     public function getEventManager()
     {
-
-        var_dump($this->assetManager);
-        var_dump($this->assetManager->resolve('eventManager') === $this->assetManager->resolve('eventManager'));
-        //$this->assetManager->resolve('eventManager');
-        var_dump($this->assetManager);
-        var_dump($this->assetManager->resolve('eventManager') === $this->assetManager->resolve('eventManager'));
-        var_dump($this->assetManager);
         return $this->assetManager->resolve('eventManager');
     }
 

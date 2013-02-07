@@ -76,6 +76,10 @@ class AssetManager implements AssetManagerInterface
             foreach ($type as $alias => $asset) {
                 $this->setParam('aliases', $alias, $asset, $override);
             }
+        } else if (is_array($alias)) {
+            foreach ($alias as $a) {
+                $this->setParam('aliases', $a, $type, $override);
+            }
         } else {
             $this->setParam('aliases', $alias, $type, $override);
         }

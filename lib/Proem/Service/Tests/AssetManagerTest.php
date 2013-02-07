@@ -122,6 +122,15 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($am->resolve('stdClass'), $am->resolve('stdClass'));
     }
 
+    public function testCanAliasAndResolveSingletonWithoutResolver()
+    {
+        $am = new AssetManager;
+        $am->singleton(['sClass' => '\stdClass']);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('sClass'));
+        $this->assertSame($am->resolve('sClass'), $am->resolve('sClass'));
+    }
+
     public function testCanAlias()
     {
         $am = new AssetManager;
@@ -142,6 +151,16 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\stdClass', $am->resolve('stdClass'));
     }
 
+    public function testCanAliasSingeToMultiple()
+    {
+        $am = new AssetManager;
+        $am->alias('stdClass', ['foo', 'bar', 'bob']);
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('foo'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('bar'));
+        $this->assertInstanceOf('\stdClass', $am->resolve('bob'));
+    }
+
     public function testComplexAlias()
     {
         $am = new AssetManager;
@@ -153,6 +172,19 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testComplexAliasWithSingleton()
+    {
+        $am = new AssetManager;
+        $am->alias([
+            'abcObjectInterface' => 'abcObject',
+            'abcAlias'           => 'abcObjectInterface'
+        ])->singleton('abcObjectInterface', '\stdClass');
+
+        $this->assertInstanceOf('\stdClass', $am->resolve('abcAlias'));
+        $this->assertSame($am->resolve('abcAlias'), $am->resolve('abcAlias'));
+        $this->assertSame($am->resolve('abcAlias'), $am->resolve('abcObjectInterface'));
+    }
+
+    public function testComplexAliasWithSingletonVerbose()
     {
         $am = new AssetManager;
         $am->alias([

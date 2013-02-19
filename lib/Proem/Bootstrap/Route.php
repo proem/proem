@@ -44,31 +44,37 @@ class Route extends ChainEventAbstract
     /**
      * Called on the way *in* to the filter chain.
      *
-     * First triggers a *proem.in.route* event. This event allows a client to
+     * First triggers a *proem.in.init.route* event. This event allows a client to
      * attach a custom Proem\Routing\RouteManagerInterface asset to the Asset Manager.
      *
      * If no such asset has been attached, this method will then go ahead and attach
      * a default Proem\Routing\RouteManager.
      *
+     * We then trigger an *proem.in.conf.route* event allowing the routeManager to have
+     * routes attached to it.
+     *
      * @param Proem\Service\AssetManagerInterface $assetManager
-     * @triggers proem.in.route
+     * @triggers proem.in.init.route
+     * @triggers proem.in.conf.route
      */
     public function in(AssetManagerInterface $assetManager)
     {
         // Setup defaults.
-        $assetManager->alias([
-            'Proem\Routing\RouteManagerInterface' => 'Proem\Routing\RouteManager',
-            'routeManager'                        => 'Proem\Routing\RouteManagerInterface',
-        ])->singleton('routeManager');
+        $assetManager->singleton(['routeManager' => 'Proem\Routing\RouteManager']);
 
-        // Trigger an event allowing client code to override defaults.
+        // Trigger an event allowing client code to override default router implemmentation.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.setup.route'),
+            new Event('proem.in.init.route'),
             function ($responseEvent) use ($assetManager) {
                 if ($responseEvent instanceof Event && $responseEvent->has('routeManagerAsset')) {
-                    $assetManager->override('routeManager', $responseEvent->get('routeManagerAsset'));
+                    $assetManager->overrideAsSingleton('routeManager', $responseEvent->get('routeManagerAsset'));
                 }
             }
+        );
+
+        // Trigger an event allowing client code to add routes to the routeManager..
+        $assetManager->resolve('eventManager')->trigger(
+            new Event('proem.in.conf.route', ['routeManager' => $assetManager->resolve('routeManager')])
         );
     }
 

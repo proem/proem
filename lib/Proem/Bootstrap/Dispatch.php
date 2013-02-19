@@ -48,15 +48,11 @@ class Dispatch extends ChainEventAbstract
     public function in(AssetManagerInterface $assetManager)
     {
         // Setup defaults.
-        $assetManager->alias([
-            'Proem\Dispatch\DispatcherInterface' => 'Proem\Dispatch\Dispatcher',
-            'dispatcher'                         => 'Proem\Dispatch\DispatcherInterface'
-        ])
-        ->singleton('dispatcher');
+        $assetManager->singleton(['dispatcher' => 'Proem\Dispatch\Dispatcher']);
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.setup.dispatch'),
+            new Event('proem.in.init.dispatch'),
             function ($responseEvent) use ($assetManager) {
                 // Check for a customized Dispatch\Dispatcher.
                 if ($responseEvent instanceof Event && $responseEvent->has('dispatcherAsset')) {

@@ -42,26 +42,26 @@ class Request extends ChainEventAbstract
     /**
      * Called on the way *in* to the filter chain.
      *
-     * First triggers a *proem.in.request* event. This event allows a client to
+     * First triggers a *proem.in.init.request* event. This event allows a client to
      * attach a custom Proem\Http\Request asset to the Asset Manager.
      *
      * If no such asset has been attached, this method will then go ahead and attach
      * a default Proem\Http\Request.
      *
      * @param Proem\Service\AssetManagerInterface $assetManager
-     * @triggers proem.in.request
+     * @triggers proem.in.init.request
      */
     public function in(AssetManagerInterface $assetManager)
     {
         // Setup defaults.
-        $assetManager->alias(['request' => 'Proem\Http\Request'])->singleton('request');
+        $assetManager->singleton(['request' => 'Proem\Http\Request']);
 
         // Trigger an event allowing client code to override defaults.
         $assetManager->resolve('eventManager')->trigger(
-            new Event('proem.in.setup.request'),
+            new Event('proem.in.init.request'),
             function ($responseEvent) use ($assetManager) {
                 if ($responseEvent instanceof Event && $responseEvent->has('requestAsset')) {
-                    $assetManager->override('request', $responseEvent->get('requestAsset'));
+                    $assetManager->overrideAsSingleton('request', $responseEvent->get('requestAsset'));
                 }
             }
         );

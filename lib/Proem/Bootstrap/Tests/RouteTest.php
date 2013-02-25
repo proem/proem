@@ -42,24 +42,26 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $eventManager
             ->shouldReceive('trigger')
             ->with('Proem\Signal\EventInterface', 'closure')
+            ->once()
+
+            ->shouldReceive('trigger')
+            ->with('Proem\Signal\EventInterface')
             ->once();
 
         $assetManager = m::mock('Proem\Service\AssetManagerInterface');
 
         $assetManager
-            ->shouldReceive('alias')
-            ->once()
-            ->andReturn($assetManager);
-
-        $assetManager
             ->shouldReceive('singleton')
             ->once()
-            ->andReturn($assetManager);
+            ->andReturn($assetManager)
 
-        $assetManager
+            ->shouldReceive('resolve')
+            ->with('routeManager')
+            ->once()
+
             ->shouldReceive('resolve')
             ->with('eventManager')
-            ->once()
+            ->twice()
             ->andReturn($eventManager);
 
         $route = new Route;

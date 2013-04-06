@@ -25,6 +25,8 @@ group('dev', function() {
                 mkdir('tests/coverage');
             }
             $report = ' --coverage-html tests/coverage ';
+        } else {
+            $report = ' --coverage-text="php://stdout" ';
         }
         if (isset($args['verbose'])) {
             system('vendor/bin/phpunit' . $report . '--colors --debug --verbose --configuration tests/phpunit.xml');

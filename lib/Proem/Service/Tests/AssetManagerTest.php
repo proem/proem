@@ -383,6 +383,7 @@ class AssetManagerTest extends \PHPUnit_Framework_TestCase
     public function testCanAutoResolveAliasedDependency()
     {
         require_once __DIR__ . '/AssetManagerFixtures/Foo.php';
+        require_once __DIR__ . '/AssetManagerFixtures/Bar.php';
         require_once __DIR__ . '/AssetManagerFixtures/Bar2.php';
         $am = new AssetManager;
         $am->alias('Bar2', 'Bar');
